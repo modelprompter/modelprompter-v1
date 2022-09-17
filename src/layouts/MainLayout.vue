@@ -10,10 +10,12 @@ q-layout(view='lHh Lpr lFf')
             img.lt-md.q-mr-sm(src='/src/assets/logo-title-favicon.png' height=32 style='vertical-align: middle')
           a(href='https://github.com/modelprompter/modelprompter/releases' target='_blank')
             small.gt-xs.q-ml-sm(style='font-size: .65em; display: inline-block; transform: translate(0, -3px)') {{pkg.version}}
+
   q-drawer(v-model='leftDrawerOpen' show-if-above='' bordered='')
     q-list
       q-item-label(header='') Site navigation
       EssentialLink(v-for='link in essentialLinks' :key='link.title' v-bind='link')
+
   q-page-container
     router-view
 </template>
@@ -28,7 +30,7 @@ const linksList = [
     title: 'Quick Prompter',
     caption: 'Ask a model for something',
     icon: 'space_bar',
-    link: '/',
+    link: '/quick',
   },
 ]
 
