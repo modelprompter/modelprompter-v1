@@ -80,6 +80,28 @@ q-page
 
 <script setup>
 /**
+ * Store
+ */
+const settings = $ref({
+  servers: [
+    {
+      base: 'http://localhost:7860/',
+      width: 0,
+      height: 0,
+      enabled: true,
+      api: 'AUTOMATIC1111-2'
+    }
+  ]
+})
+
+
+
+
+
+
+
+
+/**
  * Props
  */
 const queue = $ref([])
@@ -115,5 +137,141 @@ const imageModalActiveImage = $ref({
     dream: {}
   }
 })
+
+
+
+
+
+
+
+
+
+/**
+ * Fields used for prompting/autosaving
+ */
+const promptFields = {prompt: null, negative: null, sessionHash: null, width: null, height: null, steps: null, numBatches: null, batchSize: null}
+const autosaveFields = [
+  // 'imgs', // Only during testing!
+  'queue', 'tab', 'prompt', 'sessionHash', 'lastImg', 'width', 'height', 'steps', 'batchSize'
+]
+
+
+
+
+
+
+
+
+
+/**
+ * Computed
+ */
+const servers = $computed(() => settings.servers.filter(server => server.enabled))
+
+const isDreaming = $computed(() => {
+  return servers.some(server => server.isDreaming)
+})
+
+const isWakingUp = $computed(() => {
+  return servers.some(server => server.isWakingUp)
+})
+
+// @todo this smells like gefilte fish
+const overallProgress = $computed(() => {
+  if (!queue.length) {
+    return 1
+  } else {
+    return servers.length / queue.length
+  }
+})
+
+
+
+
+
+
+
+
+
+
+/**
+ *
+ */
+function getQueueData () {
+  console.log('getQueueData')
+}
+
+/**
+ * Queues up the dream and runs them if able to
+ */
+function queueDream () {
+  console.log('queueDream')
+}
+
+/**
+ * Check dream
+ */
+function checkDream (server, api) {
+  console.log('checkDream')
+}
+
+/**
+ * Starts the dream and occasionally checks in to update progress
+ */
+function startDream (server, api) {
+  console.log('startDream')
+}
+
+/**
+ * Frees up local data and allows the server to be pinged again
+ */
+function wakeUp (server, api) {
+  console.log('wakeUp')
+}
+
+function stopServer (server) {
+  console.log('stopServer')
+}
+
+// @todo Add this as a generic prototype
+// @todo Let's revisit how we save after vuex upgrade
+// @todo 🚨 This should be throttled
+function autosave () {
+  console.log('autosave')
+}
+
+function expandImage (ev) {
+
+}
+
+/**
+ * Converts data into a format for specific Stable Diffusion apis
+ */
+function prepareData (context, server) {
+  console.log('prepareData')
+}
+
+/**
+ * Stopp all servers and clear the queue
+ */
+function stopAll () {
+  console.log('stopAll')
+}
+
+/**
+ * Deletes image (and attempts to cancel the click event)
+ */
+function deleteImage (ev, img) {
+  console.log('deleteImage')
+}
+
+/**
+ * Downloads the image as PNG
+ * @param {*} ev
+ * @param {*} img
+ */
+function downloadImage (ev, img) {
+  console.log('downloadImage')
+}
 </script>
 
