@@ -1,16 +1,42 @@
-// app global css in Sass form
+// Core
+a
+  color: $primary
+
+// Header
 .q-header
   background: $dark
-
   a
     color: $primary
 
+// Buttons
 .q-btn:not(.q-btn--flat)
   background: $primary
   color: $primary-fg
 .q-btn.bg-primary.text-white
   color: $primary-fg !important
 
+// Badges
 .q-badge
   background: $white
   color: $primary-fg
+
+// Fields
+.q-field--standard
+  .q-field__control:before
+    border-color: $teal
+  .q-field__control:hover:before
+    border-color: $teal
+
+.q-slider--dark
+  .q-slider__track
+    background: $red
+  .q-slider__selection
+    background: $teal
+
+// Tabs
+.q-tab-panel
+  .q-card.q-card--dark.q-dark
+    background: lighten($dark, 8%)
+
+    .q-table__container
+      background: lighten($dark, 16%)

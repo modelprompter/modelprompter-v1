@@ -5,11 +5,12 @@ q-page
       q-card
         q-card-section
           q-tabs(v-model='tab' dense='' align='left' narrow-indicator='')
-            q-tab(name='Images' label='Quick Prompt')
+            q-tab(name='prompt' label='Quick Prompt')
+            q-tab(name='servers' label='GPU Servers')
           q-separator
-          //- Images tab
+          //- Prompt tab
           q-tab-panels(v-model='tab' animated='')
-            q-tab-panel(name='Images')
+            q-tab-panel(name='prompt')
               //- @todo Add random placeholders
               div
                 q-input(v-model='prompt' label='Prompt' placeholder='a dr seuss illustration of robots building a city' autogrow @change='autosave')
@@ -27,58 +28,63 @@ q-page
                         span(style='position: absolute; width: 100%; text-align: center; color: #fff; display: block; font-size: .8em')
                     div(style='flex: 0 0 120px')
                       q-btn.q-ml-md(style='height: 100%' color='negative' width='100px' icon='cancel' label='stop' @click='stopServer(server)' :loading='server.isStopping' :disabled='server.isStopping')
+            q-tab-panel(name='servers')
+              GPUServerSetup
 
-  .q-pa-md
-    .q-col-gutter-md.row.items-start
-      //- Config
-      .col-xs-12.col-sm-6.col-md-4
-        q-card
+  q-tab-panels.transparent(v-model='tab' animated='')
+    q-tab-panel(name='prompt')
+      .q-col-gutter-md.row.items-start
+        //- Config
+        .col-xs-12.col-sm-6.col-md-4
+          q-card
+            q-card-section
+              //- Basics
+              q-badge Steps: {{ steps }}
+              q-slider(v-model='steps' :min='1' :max='150' :step='1' @change='autosave')
+              q-badge Width: {{ width }}
+              q-slider(v-model='width' :min='64' :max='2048' :step='64' @change='autosave' snap='')
+              q-badge Height: {{ height }}
+              q-slider(v-model='height' :min='64' :max='2048' :step='64' @change='autosave' snap='')
+              //- Batches
+              q-badge Batch Size: {{ batchSize }}
+              q-input(dense='' type='number' min='1' v-model.number='batchSize' @change='autosave')
+        //- Gallery
+        .col-xs-12.col-sm-6.col-md-8
+          .q-col-gutter-md.row.items-start
+            .col-xs-12.col-sm-6.col-md-4.col-lg-3(v-for='(img, key) in imgs' :key='key')
+              q-card.cursor-pointer(@click='expandImage(img)')
+                q-card-section.q-pa-sm
+                  q-img(native-context-menu :src='img.src')
+                q-card-actions(align='right')
+                  q-btn(flat round color='negative' icon='delete' @click='deleteImage($event, img)')
+                  q-space
+                  q-btn(flat round color='secondary' icon='save' @click='downloadImage($event, img)')
+
+      //- Image Modal
+      q-dialog(v-model='imageModal')
+        q-card(style='min-width: 300px')
+          q-img(native-context-menu :src='imageModalActiveImage.src' :style='{width: imageModalActiveImage.width, height: imageModalActiveImage.height}')
           q-card-section
-            //- Basics
-            q-badge Steps: {{ steps }}
-            q-slider(v-model='steps' :min='1' :max='150' :step='1' @change='autosave')
-            q-badge Width: {{ width }}
-            q-slider(v-model='width' :min='64' :max='2048' :step='64' @change='autosave' snap='')
-            q-badge Height: {{ height }}
-            q-slider(v-model='height' :min='64' :max='2048' :step='64' @change='autosave' snap='')
-            //- Batches
-            q-badge Batch Size: {{ batchSize }}
-            q-input(dense='' type='number' min='1' v-model.number='batchSize' @change='autosave')
-      //- Gallery
-      .col-xs-12.col-sm-6.col-md-8
-        .q-col-gutter-md.row.items-start
-          .col-xs-12.col-sm-6.col-md-4.col-lg-3(v-for='(img, key) in imgs' :key='key')
-            q-card.cursor-pointer(@click='expandImage(img)')
-              q-card-section.q-pa-sm
-                q-img(native-context-menu :src='img.src')
-              q-card-actions(align='right')
-                q-btn(flat round color='negative' icon='delete' @click='deleteImage($event, img)')
-                q-space
-                q-btn(flat round color='secondary' icon='save' @click='downloadImage($event, img)')
-
-  //- Image Modal
-  q-dialog(v-model='imageModal')
-    q-card(style='min-width: 300px')
-      q-img(native-context-menu :src='imageModalActiveImage.src' :style='{width: imageModalActiveImage.width, height: imageModalActiveImage.height}')
-      q-card-section
-        pre(style='font-size:1.15em') {{imageModalActiveImage.server.dream.prompt}}
-        table
-          tr
-            td width
-            td {{imageModalActiveImage.width}}px
-          tr
-            td height
-            td {{imageModalActiveImage.height}}px
-          tr
-            td steps
-            td {{imageModalActiveImage.server.dream.steps}}
-      q-card-actions(align='right')
-          q-btn(flat round color='negative' icon='delete' @click='deleteImage($event, imageModalActiveImage)')
-          q-space
-          q-btn(flat round color='secondary' icon='save' @click='downloadImage($event, imageModalActiveImage)')
+            pre(style='font-size:1.15em') {{imageModalActiveImage.server.dream.prompt}}
+            table
+              tr
+                td width
+                td {{imageModalActiveImage.width}}px
+              tr
+                td height
+                td {{imageModalActiveImage.height}}px
+              tr
+                td steps
+                td {{imageModalActiveImage.server.dream.steps}}
+          q-card-actions(align='right')
+              q-btn(flat round color='negative' icon='delete' @click='deleteImage($event, imageModalActiveImage)')
+              q-space
+              q-btn(flat round color='secondary' icon='save' @click='downloadImage($event, imageModalActiveImage)')
 </template>
 
 <script setup>
+import GPUServerSetup from '../components/GPUServerSetup.vue'
+
 /**
  * Store
  */
@@ -105,7 +111,7 @@ const settings = $ref({
  * Props
  */
 const queue = $ref([])
-const tab = $ref('Images')
+const tab = $ref('prompt')
 const prompt = $ref('')
 const negative = $ref('')
 
