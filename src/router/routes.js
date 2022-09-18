@@ -2,10 +2,18 @@
 const routes = [
   {
     path: '/',
-    component: () => import('layouts/MainLayout.vue'),
+    component: () => import('layouts/Full.vue'),
     children: [
-      { path: '', component: () => import('pages/QuickPrompter.vue') },
-      { path: '/quick', component: () => import('pages/QuickPrompter.vue') }
+      { path: '', component: () => import('pages/IndexPage.vue') },
+    ]
+  },
+
+  {
+    path: '/quick',
+    component: () => import('layouts/QuickPrompter.vue'),
+    children: [
+      { path: '/quick', component: () => import('pages/quick/Prompter.vue') },
+      { path: '/quick/servers', component: () => import('pages/quick/Servers.vue') }
     ]
   },
 

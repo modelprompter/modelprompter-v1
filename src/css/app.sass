@@ -33,10 +33,13 @@ a
   .q-slider__selection
     background: $teal
 
-// Tabs
-.q-tab-panel
-  .q-card.q-card--dark.q-dark
-    background: lighten($dark, 8%)
+// Cards
+.q-card.q-card--dark.q-dark
+  background: $dark
 
-    .q-table__container
-      background: lighten($dark, 16%)
+  .q-tab-panel
+    .q-card.q-card--dark.q-dark
+      background: lighten($dark, 8%)
+
+      .q-table__container
+        background: lighten($dark, 16%)

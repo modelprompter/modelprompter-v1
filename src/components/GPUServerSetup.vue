@@ -45,11 +45,14 @@ q-card
 
 <script setup>
 import {watch} from 'vue'
+// import {useSettingsStore} from '../stores/settings'
+
 
 /**
  * Store
  */
- const settings = $ref({
+// const settings = useSettingsStore()
+const settings = $ref({
   servers: [
     {
       base: 'http://localhost:7860/',
@@ -60,8 +63,6 @@ import {watch} from 'vue'
     }
   ]
 })
-
-
 
 
 
