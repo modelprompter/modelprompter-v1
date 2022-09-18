@@ -132,7 +132,7 @@ const imageModalActiveImage = $ref(localData.imageModalActiveImage || {
 /**
  * Setup last image on load
  */
-if (lastImg) {
+if (lastImg.src) {
   imgs.push(lastImg)
 }
 

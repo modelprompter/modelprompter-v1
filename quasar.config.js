@@ -10,7 +10,7 @@
 
 
 const { configure } = require('quasar/wrappers');
-
+const path = require('path')
 
 module.exports = configure(function (/* ctx */) {
   return {
@@ -48,8 +48,31 @@ module.exports = configure(function (/* ctx */) {
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#build
     build: {
-      vueLoaderOptions: { reactivityTransform: true },
-      viteVuePluginOptions: { reactivityTransform: true },
+      viteVuePluginOptions: {
+        reactivityTransform: true,
+        template: {
+          compilerOptions: {
+            isCustomElement: tag => [
+              "field",
+              "block",
+              "category",
+              "xml",
+              "mutation",
+              "value",
+              "sep",
+              "shadow",
+            ].includes(tag)
+          }
+        },
+        viteStaticCopy: {
+          targets: [
+            {
+              src: path.resolve(__dirname, './node_modules/blockly/media/'),
+              dest: "public/media",
+            },
+          ],
+        }
+      },
 
       target: {
         browser: [ 'es2019', 'edge88', 'firefox78', 'chrome87', 'safari13.1' ],

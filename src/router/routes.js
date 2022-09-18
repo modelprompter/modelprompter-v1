@@ -17,6 +17,14 @@ const routes = [
     ]
   },
 
+  {
+    path: '/block',
+    component: () => import('layouts/Full.vue'),
+    children: [
+      { path: '/block', component: () => import('src/pages/block/Editor.vue') },
+    ]
+  },
+
   // Always leave this as last one,
   // but you can also remove it
   {

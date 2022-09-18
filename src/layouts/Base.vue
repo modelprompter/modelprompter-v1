@@ -32,6 +32,12 @@ const linksList = [
     icon: 'space_bar',
     link: '/quick',
   },
+  {
+    title: 'Block Prompter',
+    caption: 'Ask a model for something',
+    icon: 'extension',
+    link: '/block',
+  }
 ]
 
 export default defineComponent({

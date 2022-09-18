@@ -1,6 +1,7 @@
 <template lang="pug">
 q-page.flex.flex-center
-  img(alt='Model Prompter' src='~assets/favicon.png' style='width: 200px; height: 200px')
+  div.text-center
+    img(alt='Model Prompter' src='~assets/favicon.png' style='width: 200px; height: 200px')
 </template>
 
 <script>
