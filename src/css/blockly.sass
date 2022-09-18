@@ -1,0 +1,48 @@
+.blocklyTreeRow
+  height: 4em
+  color: $white
+  width: 180px
+  transition: color 0.3s ease, background 0.3s ease
+
+  &:hover
+    cursor: pointer
+
+.blocklyTreeLabel
+  position: relative
+
+  &:before
+    font-family: 'Material Icons'
+    -webkit-font-feature-settings: 'liga'
+    font-size: 1.8em
+    margin-right: 1em
+    position: relative
+    top: .3em
+
+  &[id='blockly-1.label']:before
+    content: 'space_bar'
+
+  &[id='blockly-2.label']:before
+    content: 'calculate'
+
+  &[id='blockly-3.label']:before
+    content: 'list_alt'
+
+  &[id='blockly-4.label']:before
+    content: 'account_tree'
+
+  &[id='blockly-5.label']:before
+    content: 'all_inclusive'
+
+  &[id='blockly-7.label']:before
+    content: 'subscript'
+
+  &[id='blockly-8.label']:before
+    content: 'functions'
+
+.blocklyToolboxCategory
+  &[aria-selected="true"]
+    .blocklyTreeRow
+      background: none !important
+
+      .blocklyTreeLabel
+        color: $yellow
