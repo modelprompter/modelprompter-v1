@@ -1,5 +1,6 @@
 .blocklyTreeRow
   height: 4em
+  line-height: 3em
   color: $white
   width: 180px
   transition: color 0.3s ease, background 0.3s ease
@@ -18,26 +19,34 @@
     position: relative
     top: .3em
 
-  &[id='blockly-1.label']:before
-    content: 'space_bar'
+.blocklyToolboxContents
+  .blocklyToolboxCategory:nth-child(1)
+    .blocklyTreeLabel:before
+      content: 'space_bar'
 
-  &[id='blockly-2.label']:before
-    content: 'calculate'
+  .blocklyToolboxCategory:nth-child(2)
+    .blocklyTreeLabel:before
+      content: 'calculate'
 
-  &[id='blockly-3.label']:before
-    content: 'list_alt'
+  .blocklyToolboxCategory:nth-child(3)
+    .blocklyTreeLabel:before
+      content: 'list_alt'
 
-  &[id='blockly-4.label']:before
-    content: 'account_tree'
+  .blocklyToolboxCategory:nth-child(4)
+    .blocklyTreeLabel:before
+      content: 'account_tree'
 
-  &[id='blockly-5.label']:before
-    content: 'all_inclusive'
+  .blocklyToolboxCategory:nth-child(5)
+    .blocklyTreeLabel:before
+      content: 'all_inclusive'
 
-  &[id='blockly-7.label']:before
-    content: 'subscript'
+  .blocklyToolboxCategory:nth-child(7)
+    .blocklyTreeLabel:before
+      content: 'subscript'
 
-  &[id='blockly-8.label']:before
-    content: 'functions'
+  .blocklyToolboxCategory:nth-child(8)
+    .blocklyTreeLabel:before
+      content: 'functions'
 
 .blocklyToolboxCategory
   &[aria-selected="true"]
@@ -46,3 +55,46 @@
 
       .blocklyTreeLabel
         color: $yellow
+
+.blocklyTreeSeparator
+  margin: 1.5em 0
+  border-bottom: solid 1px lighten($black, 20%)
+
+// Light colored blocks
+.blockly-category-text_blocks,
+.blockly-category-math_blocks,
+.blockly-category-variable_blocks,
+.blockly-category-procedure_blocks
+  .blocklyText
+    fill: $dark !important
+
+  .blocklyEditableText
+    &:not(.editing):hover>rect
+      stroke: $dark !important
+
+    .blocklyDropdownRect, .blocklyFieldRect
+      fill: #afafaf !important
+
+  .blocklyDropdownText > tspan
+    fill: $dark !important
+
+.blocklyWidgetDiv
+  input, textarea
+    border: 2px solid $black
+
+.blocklyFlyoutButton
+  fill: $primary
+  cursor: pointer
+  transition: fill 0.3s ease
+  padding: 4px 16px
+
+  &:hover
+    fill: darken($primary, 5%)
+
+  .blocklyText
+    fill: $dark !important
+
+// Light blocks with base64 images
+.blockly-block-text, .blockly-block-text_multiline
+  image
+    filter: invert(1)

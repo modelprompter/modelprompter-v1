@@ -138,10 +138,6 @@ const options = {
           },
           {
             kind: 'block',
-            type: 'math_change'
-          },
-          {
-            kind: 'block',
             type: 'math_round'
           },
           {
@@ -304,18 +300,18 @@ const options = {
             kind: 'block',
             type: 'logic_ternary'
           },
-          {
-            kind: 'block',
-            type: 'controls_if_if'
-          },
-          {
-            kind: 'block',
-            type: 'controls_if_elseif'
-          },
-          {
-            kind: 'block',
-            type: 'controls_if_else'
-          },
+          // {
+          //   kind: 'block',
+          //   type: 'controls_if_if'
+          // },
+          // {
+          //   kind: 'block',
+          //   type: 'controls_if_elseif'
+          // },
+          // {
+          //   kind: 'block',
+          //   type: 'controls_if_else'
+          // },
         ]
       },
       {
@@ -324,7 +320,7 @@ const options = {
         contents: [
           {
             kind: 'block',
-            type: 'controls_repeat_ext'
+            type: 'controls_repeat_ext',
           },
           {
             kind: 'block',
