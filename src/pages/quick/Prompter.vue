@@ -16,7 +16,7 @@ q-tab-panel(name='')
           q-linear-progress.q-mt-sm(color='negative' size='10px' :value='servers.length/(servers.length+queue.length)')
             span(style='position: absolute; width: 100%; text-align: center; color: #fff; display: block; font-size: .8em')
         div(style='flex: 0 0 120px')
-          q-btn.q-ml-md(style='height: 100%' color='negative' width='100px' icon='cancel' label='stop' @click='stopServer(server)' :loading='server.isStopping' :disabled='server.isStopping')
+          q-btn.q-ml-md(style='height: 100%' color='negative' width='100px' icon='cancel' label='stop' @click='stopServer(server)')
 
   .q-mt-lg.q-col-gutter-md.row.items-start
     //- Config
@@ -128,6 +128,13 @@ const imageModalActiveImage = $ref(localData.imageModalActiveImage || {
 
 
 
+
+/**
+ * Setup last image on load
+ */
+if (lastImg) {
+  imgs.push(lastImg)
+}
 
 
 
@@ -389,7 +396,7 @@ function startDream (server, api) {
 
       // Gets the image size and adds it to the queue
       if (data[0]) {
-        const imgs = []
+        const _imgs = []
         data[0].forEach(img => {
           const $img = new Image()
           img = {
@@ -408,10 +415,10 @@ function startDream (server, api) {
           }
           $img.src = img.src
 
-          imgs.unshift(img)
+          _imgs.unshift(img)
         })
 
-        imgs.unshift(...imgs)
+        imgs.unshift(..._imgs)
         lastImg = imgs[imgs.length-1]
       } else {
         Notify.create({
@@ -469,6 +476,9 @@ function stopServer (server) {
   api
     .post('/api/predict', {
       fn_index: 5,
+    })
+    .finally(() => {
+      server.isStopping = false
     })
     .catch((err) => {
       Notify.create({
@@ -568,16 +578,16 @@ function deleteImage (ev, img) {
   ev.stopPropagation()
 
   let idxToRemove = 0
-  this.imageModal = false
-  this.imgs.find((i, n) => {
+  imageModal = false
+  imgs.find((i, n) => {
     const isImg = i.id === img.id
     idxToRemove = n
     return isImg
   })
 
-  this.imgs.splice(idxToRemove, 1)
+  imgs.splice(idxToRemove, 1)
 
-  this.autosave()
+  autosave()
 }
 
 /**
