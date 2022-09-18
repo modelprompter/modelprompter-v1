@@ -4,16 +4,21 @@ import {watch} from 'vue'
 import {LocalStorage} from 'quasar'
 
 export const useSettingsStore = defineStore('counter', () => {
+  let localData = LocalStorage.getItem('settings') || {}
+
   /**
    * Saves this store locally
    */
   const autosave = function () {
-    LocalStorage.set('settings', servers)
+    LocalStorage.set('settings', {
+      servers
+    })
   }
 
-  // Servers
-  const localData = LocalStorage.getItem('settings')
-  const servers = $ref(localData || [
+  /**
+   * Servers
+   */
+  const servers = $ref(localData.servers || [
     {
       base: 'http://localhost:7860/',
       enabled: true,
@@ -23,7 +28,6 @@ export const useSettingsStore = defineStore('counter', () => {
   watch(servers, autosave)
 
   return {
-    servers,
-    autosave
+    servers
   }
 })
