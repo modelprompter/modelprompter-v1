@@ -40,9 +40,9 @@ q-card
                 p(key='api' :props='props')
                   q-select(v-model='props.row.api' :options='apiVersions' default='1.4' label='API')
                 //- Actions
-                p(key='actions' :props='props' v-if='settings.servers.length > 1')
+                p(key='actions' :props='props')
                   q-toggle.q-mr-md(v-model='props.row.enabled' :label='props.row.enabled ? "Enabled" : "Disabled"' color='yellow')
-                  q-btn(color='negative' icon='delete' @click='deleteRow(props)')
+                  q-btn(v-if='settings.servers.length > 1' color='negative' icon='delete' @click='deleteRow(props)')
 </template>
 
 <script setup>
@@ -50,11 +50,9 @@ import {useSettingsStore} from '../stores/settings'
 import {useQuasar} from 'quasar'
 
 const $q = useQuasar()
-
-/**
- * Store
- */
 const settings = useSettingsStore()
+
+
 
 
 

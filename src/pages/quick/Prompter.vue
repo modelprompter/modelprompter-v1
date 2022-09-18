@@ -68,21 +68,19 @@ q-tab-panel(name='')
 </template>
 
 <script setup>
-/**
- * Store
- */
- const settings = $ref({
-  servers: [
-    {
-      base: 'http://localhost:7860/',
-      width: 0,
-      height: 0,
-      enabled: true,
-      api: 'AUTOMATIC1111-2'
-    }
-  ]
-})
+import {useSettingsStore} from '../../stores/settings'
+import {useQuasar} from 'quasar'
+import axios from 'axios'
+import {cloneDeep} from 'lodash-es'
+import {LocalStorage, uid, Notify} from 'quasar'
+import {useRouter, useRoute} from 'vue-router'
+import {nextTick, getCurrentInstance} from 'vue'
 
+const $q = useQuasar()
+const settings = useSettingsStore()
+const router = useRouter()
+const route = useRoute()
+const instance = getCurrentInstance()
 
 
 
@@ -93,32 +91,32 @@ q-tab-panel(name='')
 /**
  * Props
  */
-const queue = $ref([])
-const tab = $ref('prompt')
-const prompt = $ref('')
-const negative = $ref('')
+const localData = LocalStorage.getItem('quickprompt') || {}
+
+const queue = $ref(localData.queue || [])
+const prompt = $ref(localData.prompt || '')
+const negative = $ref(localData.negative || '')
 
 // @todo add this to config
-const defaultPrompt = $ref('a dr seuss illustration of robots building a city')
+const defaultPrompt = $ref(localData.defaultPrompt || 'a dr seuss illustration of robots building a city')
 // @todo generate and persist this (and do we even need this?)
-const sessionHash = $ref('3exs9au2lti')
+const sessionHash = $ref(localData.sessionHash || '3exs9au2lti')
 
-const lastImg = $ref({})
-const imgs = $ref([])
-const width = $ref(512)
-const height = $ref(512)
-const steps = $ref(40)
+const lastImg = $ref(localData.lastImg || {})
+const imgs = $ref(localData.imgs || [])
+const width = $ref(localData.width || 512)
+const height = $ref(localData.height || 512)
+const steps = $ref(localData.steps || 40)
 
 // milliseconds
-const dreamCheckInterval = $ref(750)
+const dreamCheckInterval = $ref(localData.dreamCheckInterval || 750)
 
-const numBatches = $ref(1)
-const batchSize = $ref(1)
+const numBatches = $ref(localData.numBatches || 1)
+const batchSize = $ref(localData.batchSize || 1)
+const totalBatched = $ref(localData.totalBatched || 0)
 
-const totalBatched = $ref(0)
-
-const imageModal = $ref(false)
-const imageModalActiveImage = $ref({
+const imageModal = $ref(localData.imageModal || false)
+const imageModalActiveImage = $ref(localData.imageModalActiveImage || {
   src: '',
   width: 0,
   height: 0,
@@ -130,19 +128,6 @@ const imageModalActiveImage = $ref({
 
 
 
-
-
-
-
-
-/**
- * Fields used for prompting/autosaving
- */
-const promptFields = {prompt: null, negative: null, sessionHash: null, width: null, height: null, steps: null, numBatches: null, batchSize: null}
-const autosaveFields = [
-  // 'imgs', // Only during testing!
-  'queue', 'tab', 'prompt', 'sessionHash', 'lastImg', 'width', 'height', 'steps', 'batchSize'
-]
 
 
 
@@ -179,6 +164,40 @@ const overallProgress = $computed(() => {
 
 
 
+/**
+ * Ping all enabled servers
+ */
+// Let's ping all servers on load to get current status
+if (servers.length) {
+  servers.forEach(server => {
+    // Let's force-start checking
+    server.isChecking = false
+
+    // @todo Use a method instead of axios.create directly incase of update
+    const api = axios.create({baseURL: server.base})
+    checkDream(server, api)
+  })
+} else {
+  Notify.create({
+    color: 'negative',
+    position: 'top',
+    multiLine: true,
+    message: `No GPUs are enabled.`,
+    actions: [
+      {
+        label: 'Enable GPUs',
+        color: 'white',
+        handler: () => {
+          router.push({path: '/quick/gpus'})
+        }
+      }
+    ],
+    icon: 'report_problem',
+  })
+}
+
+
+
 
 
 
@@ -187,71 +206,378 @@ const overallProgress = $computed(() => {
  *
  */
 function getQueueData () {
-  console.log('getQueueData')
+  const data = {
+    prompt,
+    negative,
+    sessionHash,
+    width,
+    height,
+    steps,
+    numBatches,
+    batchSize,
+    defaultPrompt
+  }
+
+  return data
 }
 
 /**
  * Queues up the dream and runs them if able to
  */
 function queueDream () {
-  console.log('queueDream')
+  // Exit if no servers
+  if (!servers.length) {
+    Notify.create({
+      message: 'No GPUs enabled.',
+      position: 'top',
+      color: 'red',
+      multiline: true,
+      actions: [
+        {
+          label: 'Enable GPUs',
+          color: 'white',
+          handler: () => {
+            $router.push({path: '/quick/gpus'})
+          }
+        }
+      ],
+    })
+    return
+  }
+
+  // Create the batch
+  const batch = []
+  for (let i = 0; i < batchSize; i++) {
+    batch.push(getQueueData())
+  }
+  queue.push(...batch)
+
+  // Check and start the next dream
+  servers.forEach(server => {
+    if (!server.isChecking) {
+      // Loop through each server and try to find an available one to run
+      const api = axios.create({ baseURL: server.base })
+
+      server.isChecking = true
+      checkDream(server, api)
+    }
+  })
+
+  // Save the queue to localstorage
+  autosave()
 }
 
 /**
  * Check dream
  */
 function checkDream (server, api) {
-  console.log('checkDream')
+  api
+  .post('/api/predict', {
+    fn_index: 4,
+    data: [],
+    session_hash: 'wnjumdy1m18',
+  })
+  .then((response) => {
+    const data = response.data.data[0]
+    server.lastResponse = data
+
+    // Pick up from where we left off
+    if (data) {
+      server.isDreaming = true
+      server.isChecking = true
+    } else {
+      server.isDreaming = false
+      server.isStopping = false
+    }
+    // console.log('isChecking', server.base, response.data.data[0])
+
+    // If we're dreaming, update the progress
+    // @todo handle multiple dreams
+    if (data) {
+      // Create a dummy DOM to extract the progress
+      const $dom = document.createElement('div')
+      $dom.innerHTML = data
+      const $width = $dom.querySelector('.progress')
+
+      // Update progress in UI
+      if ($width) {
+        server.dreamProgress = parseInt($width.style.width.replace('%', ''))
+      } else {
+        server.dreamProgress = 0
+      }
+
+      // Check the dream again
+      if (server.dreamProgress < 100) {
+        setTimeout(() => {
+          checkDream(server, api)
+        }, dreamCheckInterval)
+      } else {
+        wakeUp(server, api)
+      }
+
+      // Update UI
+      nextTick(() => {
+        instance?.proxy?.$forceUpdate()
+      })
+    // Otherwise start dreaming if not dreaming
+    } else if (!server.isDreaming) {
+      startDream(server, api)
+    }
+  })
+  .catch(err => {
+    Notify.create({
+      color: 'negative',
+      position: 'top',
+      multiLine: true,
+      message: `${server.base} -- ${err}`,
+      actions: [
+        {
+          label: 'Check GPUs',
+          color: 'white',
+          handler: () => {
+            router.push({path: '/quick/gpus'})
+          }
+        }
+      ],
+      icon: 'report_problem',
+    })
+    server.isDreaming = false
+    server.isChecking = false
+    console.log(err)
+  })
 }
 
 /**
  * Starts the dream and occasionally checks in to update progress
  */
 function startDream (server, api) {
-  console.log('startDream')
+  if (!queue.length) {
+    wakeUp(server, api)
+    return
+  }
+
+  // Start checking for progress
+  server.isDreaming = true
+  server.isChecking = true
+  server.dreamProgress = 0
+  nextTick(() => {
+    instance?.proxy?.$forceUpdate()
+
+    setTimeout(() => {
+      checkDream(server, api)
+    }, dreamCheckInterval)
+  })
+
+  // Actuall start dream
+  const dream = queue.shift()
+  dream.prompt = dream.prompt || dream.defaultPrompt
+  server.dream = dream
+  const $server = cloneDeep(server)
+
+  api
+    .post('/api/predict', {
+      fn_index: 3,
+      data: prepareData($server.dream, $server),
+      session_hash: 'wnjumdy1m18',
+    })
+    .then((response) => {
+      // Clean data
+      const data = []
+      response.data.data.forEach((val) => {
+        data.push(val)
+      })
+
+      // Gets the image size and adds it to the queue
+      if (data[0]) {
+        const imgs = []
+        data[0].forEach(img => {
+          const $img = new Image()
+          img = {
+            src: img,
+            width: 0,
+            height: 0,
+            id: uid()
+          }
+          img.server = Object.assign({}, $server)
+
+          // Load the image to get the dimensions
+          $img.onload = () => {
+            img.width = $img.width
+            img.height = $img.height
+            $img.remove()
+          }
+          $img.src = img.src
+
+          imgs.unshift(img)
+        })
+
+        imgs.unshift(...imgs)
+        lastImg = imgs[imgs.length-1]
+      } else {
+        Notify.create({
+          color: 'negative',
+          position: 'top',
+          message: `${$server.base} -- No images generated`,
+          icon: 'report_problem'
+        })
+      }
+
+      // Run next in queue
+      wakeUp($server, api)
+      if (queue.length) {
+        startDream($server, api)
+      }
+    })
+    .catch((err) => {
+      Notify.create({
+        color: 'negative',
+        position: 'top',
+        multiline: true,
+        message: `${$server.base} -- Prompting failed: ${err}`,
+        icon: 'report_problem',
+        actions: [
+          {
+            label: 'Check server API',
+            color: 'white',
+            handler: () => {
+              $router.push({path: '/quick/gpus'})
+            }
+          }
+        ],
+      })
+      console.log(err)
+    })
 }
 
 /**
  * Frees up local data and allows the server to be pinged again
  */
 function wakeUp (server, api) {
-  console.log('wakeUp')
+  server.isChecking = false
+  server.isDreaming = false
+  server.dream = {}
+
+  nextTick(() => {
+    instance?.proxy?.$forceUpdate()
+  })
 }
 
 function stopServer (server) {
-  console.log('stopServer')
+  const api = axios.create({baseURL: server.base})
+  server.isStopping = true
+
+  api
+    .post('/api/predict', {
+      fn_index: 5,
+    })
+    .catch((err) => {
+      Notify.create({
+        color: 'negative',
+        position: 'top',
+        message: `${server.base} -- Stopping txt2Img failed: ${err}`,
+        icon: 'report_problem',
+      })
+    })
 }
 
 // @todo Add this as a generic prototype
 // @todo Let's revisit how we save after vuex upgrade
 // @todo 🚨 This should be throttled
 function autosave () {
-  console.log('autosave')
+  const data = {
+    // 'imgs', // Only during testing!
+    queue,
+    prompt,
+    sessionHash,
+    lastImg,
+    width,
+    height,
+    steps,
+    batchSize
+  }
+
+  LocalStorage.set('quickprompt', data)
 }
 
 function expandImage (ev) {
-
+  imageModal = true
+  imageModalActiveImage = ev
 }
 
 /**
  * Converts data into a format for specific Stable Diffusion apis
  */
 function prepareData (context, server) {
-  console.log('prepareData')
+  let data, promptDictionary, defaults
+
+  // Select statement based on data api
+  switch (server.api || '1') {
+    // @see https://github.com/AUTOMATIC1111/stable-diffusion-webui
+    case 'AUTOMATIC1111-1':
+      data = []
+      promptDictionary = ['prompt', 'negative', '', 'steps', '', '', '', '', '', '', '', '', '', '', '', 'height', 'width', '', '', '', '', '', '', '', '']
+      // promptDictionary = ['prompt', 'negative', '', 'steps', '', '', '', 'numBatches', 'batchSize', '', '', '', '', '', '', 'height', 'width', '', '', '', '', '', '', '', '']
+      defaults = [context.defaultPrompt, '', 'None', 40, 'Euler a', false, false, 1, 1, 7, -1, -1, 0, 0, 0, context.height, context.width, 'None', null, 'Seed', '', 'Steps', '', false, []]
+
+      // Build the data fro the given dictionary and defaults
+      promptDictionary.forEach((key, n) => {
+        if (key) {
+          data.push(context[key] || defaults[n])
+        } else {
+          data.push(defaults[n])
+        }
+      })
+    break
+
+    // @see https://github.com/AUTOMATIC1111/stable-diffusion-webui
+    case 'AUTOMATIC1111-2':
+      data = []
+      promptDictionary = ['prompt', 'negative', '', '', 'steps', '', '', '', '', '', '', '', '', '', '', '', 'height', 'width', '', '', '', '', '', '', '', '', '']
+      // promptDictionary = ['prompt', 'negative', '', 'steps', '', '', '', 'numBatches', 'batchSize', '', '', '', '', '', '', 'height', 'width', '', '', '', '', '', '', '', '']
+      defaults = [context.defaultPrompt, '', 'None', 'None', 40, 'Euler a', false, false, 1, 1, 7, -1, -1, 0, 0, 0, context.height, context.width, 'None', false, 'Seed', '', 'Steps', '', true, null, [], '', '']
+
+      // Build the data fro the given dictionary and defaults
+      promptDictionary.forEach((key, n) => {
+        if (key) {
+          data.push(context[key] || defaults[n])
+        } else {
+          data.push(defaults[n])
+        }
+      })
+    break
+  }
+
+  return data
 }
 
 /**
  * Stopp all servers and clear the queue
  */
 function stopAll () {
-  console.log('stopAll')
+  servers.forEach(server => {
+    stopServer(server)
+  })
+  queue = []
+  autosave()
 }
 
 /**
  * Deletes image (and attempts to cancel the click event)
  */
 function deleteImage (ev, img) {
-  console.log('deleteImage')
+  ev.stopPropagation()
+
+  let idxToRemove = 0
+  this.imageModal = false
+  this.imgs.find((i, n) => {
+    const isImg = i.id === img.id
+    idxToRemove = n
+    return isImg
+  })
+
+  this.imgs.splice(idxToRemove, 1)
+
+  this.autosave()
 }
 
 /**
@@ -260,6 +586,25 @@ function deleteImage (ev, img) {
  * @param {*} img
  */
 function downloadImage (ev, img) {
-  console.log('downloadImage')
+  ev.stopPropagation()
+
+  const a = document.createElement('a')
+  a.href = img.src
+
+  let filename = img.server.dream.prompt.substr(0, 300)
+  filename = filename.replace(/\s/g, '_')
+  filename = filename.replace(/\W/g, '')
+
+  const date = new Date()
+    .getFullYear()
+      + '-' + ('0' + (new Date().getMonth() + 1)).slice(-2)
+      + '-' + ('0' + new Date().getDate()).slice(-2)
+
+  a.download = `${date + '---' + filename}.png`
+  a.click()
+
+  nextTick(() => {
+    a.remove()
+  })
 }
 </script>

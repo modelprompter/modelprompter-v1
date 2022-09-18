@@ -7,7 +7,7 @@ BaseLayout
           q-card-section
             q-tabs(dense align='left' narrow-indicator)
               q-route-tab(to='/quick' label='Quick Prompt')
-              q-route-tab(to='/quick/servers' label='GPU Servers')
+              q-route-tab(to='/quick/gpus' label='GPU Servers')
             div
               router-view
 </template>

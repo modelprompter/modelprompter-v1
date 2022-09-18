@@ -13,7 +13,7 @@ const routes = [
     component: () => import('layouts/QuickPrompter.vue'),
     children: [
       { path: '/quick', component: () => import('pages/quick/Prompter.vue') },
-      { path: '/quick/servers', component: () => import('pages/quick/Servers.vue') }
+      { path: '/quick/gpus', component: () => import('pages/quick/GPUs.vue') }
     ]
   },
 

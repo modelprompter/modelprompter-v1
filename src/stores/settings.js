@@ -19,11 +19,6 @@ export const useSettingsStore = defineStore('counter', () => {
    * Servers
    */
   const servers = $ref(localData.servers || [
-    {
-      base: 'http://localhost:7860/',
-      enabled: true,
-      api: 'AUTOMATIC1111-2'
-    }
   ])
   watch(servers, autosave)
 
