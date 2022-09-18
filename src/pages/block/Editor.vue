@@ -22,17 +22,19 @@ q-page
 
 <script setup>
 import Blockly from 'components/Blockly.vue'
+import theme from 'assets/blockly-theme.js'
 
 const foo = $ref()
 const code = $ref()
 const options = {
   media: "media/",
   grid: {
-    spacing: 25,
-    length: 3,
+    spacing: 40,
+    length: 1,
     colour: "#ccc",
     snap: true,
   },
+  theme
 }
 </script>
 
