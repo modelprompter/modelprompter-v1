@@ -4,8 +4,8 @@ export default {
   base: Blockly.Theme.Zelos,
   componentStyles: {
     workspaceBackgroundColour: '#2d2b55',
-    toolboxBackgroundColour: '#ff0000',
-    toolboxForegroundColour: '#ff0000',
+    toolboxBackgroundColour: '#1e1e3f',
+    toolboxForegroundColour: '#fad000',
     flyoutBackgroundColour: '#343162', // $black +5%
     flyoutForegroundColour: '#ff0000',
     flyoutOpacity: 1,
