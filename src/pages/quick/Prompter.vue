@@ -175,33 +175,33 @@ const overallProgress = $computed(() => {
  * Ping all enabled servers
  */
 // Let's ping all servers on load to get current status
-if (servers.length) {
-  servers.forEach(server => {
-    // Let's force-start checking
-    server.isChecking = false
+// if (servers.length) {
+//   servers.forEach(server => {
+//     // Let's force-start checking
+//     server.isChecking = false
 
-    // @todo Use a method instead of axios.create directly incase of update
-    const api = axios.create({baseURL: server.base})
-    checkDream(server, api)
-  })
-} else {
-  Notify.create({
-    color: 'negative',
-    position: 'top',
-    multiLine: true,
-    message: `No GPUs are enabled.`,
-    actions: [
-      {
-        label: 'Enable GPUs',
-        color: 'white',
-        handler: () => {
-          router.push({path: '/quick/gpus'})
-        }
-      }
-    ],
-    icon: 'report_problem',
-  })
-}
+//     // @todo Use a method instead of axios.create directly incase of update
+//     const api = axios.create({baseURL: server.base})
+//     checkDream(server, api)
+//   })
+// } else {
+//   Notify.create({
+//     color: 'negative',
+//     position: 'top',
+//     multiLine: true,
+//     message: `No GPUs are enabled.`,
+//     actions: [
+//       {
+//         label: 'Enable GPUs',
+//         color: 'white',
+//         handler: () => {
+//           router.push({path: '/quick/gpus'})
+//         }
+//       }
+//     ],
+//     icon: 'report_problem',
+//   })
+// }
 
 
 

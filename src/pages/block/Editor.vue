@@ -12,7 +12,7 @@ import blocks from 'assets/blockly/blocks.js'
 import {LocalStorage, uid} from 'quasar'
 import {defaultsDeep} from 'lodash-es'
 import {nextTick, ref, onMounted} from 'vue'
-
+import defaultWorkspace from '../../stores/workspaces/index.js'
 
 const options = {
   media: "media/",
@@ -42,7 +42,7 @@ const data = defaultsDeep(LocalStorage.getItem('blockprompter.current'), {
   workspace: ''
 })
 onMounted(() => {
-  workspaceRef.value.load(data.workspace)
+  workspaceRef.value.load(data.workspace || defaultWorkspace.workspace)
 })
 
 

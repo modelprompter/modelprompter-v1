@@ -3,8 +3,12 @@ export default {
   contents: [
     {
       kind: 'category',
-      name: 'Models',
+      name: 'API',
       contents: [
+        {
+          kind: 'block',
+          type: 'on_start'
+        },
         {
           kind: 'block',
           type: 'server_message_post'

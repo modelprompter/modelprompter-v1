@@ -34,6 +34,24 @@ Blockly.common.defineBlocksWithJsonArray([
     "nextStatement": null,
     "tooltip": "",
     "helpUrl": ""
+  },
+
+  {
+    "type": "on_start",
+    "message0": "🤖 On start do the following: %1 %2",
+    'style': 'procedure_blocks',
+    "args0": [
+      {
+        "type": "input_dummy"
+      },
+      {
+        "type": "input_statement",
+        "name": "statements"
+      }
+    ],
+    "nextStatement": null,
+    "tooltip": "",
+    "helpUrl": ""
   }
 ])
 
