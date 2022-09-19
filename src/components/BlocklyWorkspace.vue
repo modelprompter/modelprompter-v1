@@ -7,13 +7,14 @@
 
 <script setup>
 import Blockly from 'blockly'
-import {onMounted, shallowRef} from 'vue'
+import {onMounted, shallowRef, watch} from 'vue'
 
-const props = defineProps(['options'])
+const props = defineProps(['options', 'loadData'])
 const blocklyToolbox = $ref()
 const blockly = $ref()
 let workspace = shallowRef()
-defineExpose({workspace})
+
+const emit = defineEmits(['change'])
 
 /**
  * Mount
@@ -24,6 +25,7 @@ onMounted(() => {
     options.toolbox = blocklyToolbox
   }
   workspace = Blockly.inject(blockly, options)
+  workspace.addChangeListener(onChange)
 
   // Add class names to blocks
   // @see https://groups.google.com/g/blockly/c/SwGzTvSo1H8/m/LjIRnlXbDAAJ
@@ -41,6 +43,50 @@ onMounted(() => {
     }
   })
 })
+
+
+/**
+ * Load initial data
+ */
+const load = function (data) {
+  if (data) {
+    Blockly.Xml.domToWorkspace(
+      Blockly.Xml.textToDom(data),
+      workspace
+    )
+  } else {
+    Blockly.Xml.domToWorkspace(
+      Blockly.Xml.textToDom('<xml xmlns="https://developers.google.com/blockly/xml"></xml>'),
+      workspace
+    )
+  }
+}
+
+
+
+/**
+ * Gets the Blockly workspace as a string for saving
+ * @return the current workspace string
+ */
+const getWorkspaceString = function (data) {
+  return Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(workspace))
+}
+
+
+
+
+/**
+ * Emits the workspace and triggers an autosave in the component above
+ */
+function onChange (ev) {
+  emit('change', ev, workspace)
+}
+
+
+/**
+ * Final stuff
+ */
+defineExpose({workspace, getWorkspaceString, load})
 </script>
 
 <style scoped>
