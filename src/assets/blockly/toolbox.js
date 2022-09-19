@@ -7,7 +7,7 @@ export default {
       contents: [
         {
           kind: 'block',
-          type: 'server_on_gpu_ready'
+          type: 'server_message_post'
         },
       ]
     },

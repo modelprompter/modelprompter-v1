@@ -28,7 +28,7 @@ export default {
   },
 
   blockStyles: {
-    model_blocks: {
+    api_blocks: {
       colourPrimary: '#fff',
       colourSecondary: '#ff628c',
       colourTertiary: '#aaa',
@@ -39,9 +39,9 @@ export default {
       colourTertiary: '#ffe563'
     },
     math_blocks: {
-      colourPrimary: '#FF9D00',
+      colourPrimary: '#9effff',
       colourSecondary: '#ff628c',
-      colourTertiary: '#ffc466',
+      colourTertiary: '#c5ffff'
     },
     list_blocks: {
       colourPrimary: '#ff628c',
@@ -59,11 +59,14 @@ export default {
       colourTertiary: '#ae9bf7',
     },
     variable_blocks: {
+      colourPrimary: '#FB94FF',
+      colourSecondary: '#ff628c',
+      colourTertiary: '#fdd4ff',
     },
     procedure_blocks: {
-      colourPrimary: '#9effff',
+      colourPrimary: '#FF9D00',
       colourSecondary: '#ff628c',
-      colourTertiary: '#c5ffff'
+      colourTertiary: '#ffc466',
     },
   }
 }

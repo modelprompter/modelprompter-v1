@@ -17,8 +17,8 @@ import {nextTick, ref, onMounted} from 'vue'
 const options = {
   media: "media/",
   grid: {
-    spacing: 40,
-    length: 40,
+    spacing: 20,
+    length: 20,
     colour: "#4f4b94",
     snap: true,
   },
