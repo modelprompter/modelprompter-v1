@@ -13,6 +13,14 @@ export default {
           kind: 'block',
           type: 'server_message_post'
         },
+        {
+          kind: 'block',
+          type: 'server_message_post_response'
+        },
+        {
+          kind: 'block',
+          type: 'feed_send_data'
+        },
       ]
     },
     {

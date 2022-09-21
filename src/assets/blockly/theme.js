@@ -2,6 +2,7 @@ import Blockly from 'blockly'
 
 export default {
   base: Blockly.Theme.Zelos,
+  startHats: true,
   componentStyles: {
     workspaceBackgroundColour: '#2d2b55',
     toolboxBackgroundColour: '#1e1e3f',
@@ -28,6 +29,12 @@ export default {
   },
 
   blockStyles: {
+    event_blocks: {
+      colourPrimary: '#FF9D00',
+      colourSecondary: '#ff628c',
+      colourTertiary: '#ffc466',
+      hat: 'cap'
+    },
     api_blocks: {
       colourPrimary: '#fff',
       colourSecondary: '#ff628c',
@@ -44,9 +51,9 @@ export default {
       colourTertiary: '#c5ffff'
     },
     list_blocks: {
-      colourPrimary: '#ff628c',
-      colourSecondary: '#2ca300',
-      colourTertiary: '#ffa1ba'
+      colourPrimary: '#FB94FF',
+      colourSecondary: '#ff628c',
+      colourTertiary: '#fdd4ff',
     },
     logic_blocks: {
       colourPrimary: '#2ca300',
@@ -59,14 +66,15 @@ export default {
       colourTertiary: '#ae9bf7',
     },
     variable_blocks: {
-      colourPrimary: '#FB94FF',
-      colourSecondary: '#ff628c',
-      colourTertiary: '#fdd4ff',
+      colourPrimary: '#ff628c',
+      colourSecondary: '#2ca300',
+      colourTertiary: '#ffa1ba'
     },
     procedure_blocks: {
       colourPrimary: '#FF9D00',
       colourSecondary: '#ff628c',
       colourTertiary: '#ffc466',
+      hat: 'none'
     },
   }
 }
