@@ -2,7 +2,7 @@
 const routes = [
   {
     path: '/',
-    component: () => import('layouts/Full.vue'),
+    component: () => import('layouts/Base.vue'),
     children: [
       { path: '', component: () => import('pages/IndexPage.vue') },
     ]
@@ -19,9 +19,15 @@ const routes = [
 
   {
     path: '/block',
-    component: () => import('layouts/Full.vue'),
+    component: () => import('layouts/Base.vue'),
     children: [
-      { path: '/block', component: () => import('src/pages/block/Editor.vue') },
+      {
+        path: '/block',
+        components: {
+          default: () => import('src/pages/block/Editor.vue'),
+          toolbar: () => import('src/pages/block/EditorToolbar.vue'),
+        },
+      }
     ]
   },
 

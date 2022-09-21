@@ -10,6 +10,7 @@ q-layout(view='lHh Lpr lFf')
             img.lt-md.q-mr-sm(src='/src/assets/logo-title-favicon.png' height=32 style='vertical-align: middle')
           a(href='https://github.com/modelprompter/modelprompter/releases' target='_blank')
             small.gt-xs.q-ml-sm(style='font-size: .65em; display: inline-block; transform: translate(0, -3px)') {{pkg.version}}
+      router-view(name='toolbar')
 
   q-drawer(v-model='leftDrawerClosed' bordered)
     q-list
@@ -17,7 +18,7 @@ q-layout(view='lHh Lpr lFf')
       EssentialLink(v-for='link in essentialLinks' :key='link.title' v-bind='link')
 
   q-page-container
-    slot
+    router-view
 </template>
 
 
@@ -57,7 +58,6 @@ export default defineComponent({
   setup() {
     const localData = LocalStorage.getItem('layout.base') || {}
     const leftDrawerClosed = ref(!!localData.leftDrawerClosed)
-    console.log(localData, leftDrawerClosed.value)
 
     return {
       essentialLinks: linksList,

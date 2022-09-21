@@ -11,8 +11,10 @@ import toolbox from 'assets/blockly/toolbox.js'
 import blocks from 'assets/blockly/blocks.js'
 import {LocalStorage, uid} from 'quasar'
 import {defaultsDeep} from 'lodash-es'
-import {nextTick, ref, onMounted} from 'vue'
+import {nextTick, inject, ref, onMounted} from 'vue'
 import defaultWorkspace from '../../stores/workspaces/index.js'
+
+const $bus = inject('$bus')
 
 const options = {
   media: "media/",
@@ -80,4 +82,11 @@ function autosave () {
     workspace: workspaceRef.value.getWorkspaceString()
   })
 }
+
+/**
+ * Run the blocks
+ */
+$bus.on('page.editor.runBlocks', () => {
+  console.log('runBlocks')
+})
 </script>
