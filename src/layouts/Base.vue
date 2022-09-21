@@ -11,7 +11,7 @@ q-layout(view='lHh Lpr lFf')
           a(href='https://github.com/modelprompter/modelprompter/releases' target='_blank')
             small.gt-xs.q-ml-sm(style='font-size: .65em; display: inline-block; transform: translate(0, -3px)') {{pkg.version}}
 
-  q-drawer(v-model='leftDrawerOpen' show-if-above bordered)
+  q-drawer(v-model='leftDrawerClosed' bordered)
     q-list
       q-item-label(header) Site navigation
       EssentialLink(v-for='link in essentialLinks' :key='link.title' v-bind='link')
@@ -20,10 +20,15 @@ q-layout(view='lHh Lpr lFf')
     slot
 </template>
 
+
+
 <script>
 import { defineComponent, ref } from 'vue'
 import EssentialLink from 'components/EssentialLink.vue'
 import pkg from '/package.json'
+import { LocalStorage } from 'quasar'
+
+
 
 const linksList = [
   {
@@ -40,6 +45,8 @@ const linksList = [
   }
 ]
 
+
+
 export default defineComponent({
   name: 'MainLayout',
 
@@ -48,13 +55,18 @@ export default defineComponent({
   },
 
   setup() {
-    const leftDrawerOpen = ref(false)
+    const localData = LocalStorage.getItem('layout.base') || {}
+    const leftDrawerClosed = ref(!!localData.leftDrawerClosed)
+    console.log(localData, leftDrawerClosed.value)
 
     return {
       essentialLinks: linksList,
-      leftDrawerOpen,
+      leftDrawerClosed,
       toggleLeftDrawer() {
-        leftDrawerOpen.value = !leftDrawerOpen.value
+        leftDrawerClosed.value = !leftDrawerClosed.value
+        LocalStorage.set('layout.base', {
+          leftDrawerClosed: leftDrawerClosed.value
+        })
       },
       pkg
     }
