@@ -18,7 +18,8 @@ q-layout(view='lHh Lpr lFf')
       EssentialLink(v-for='link in essentialLinks' :key='link.title' v-bind='link')
 
   q-page-container
-    router-view
+    slot
+      router-view
 </template>
 
 
@@ -49,7 +50,7 @@ const linksList = [
 
 
 export default defineComponent({
-  name: 'MainLayout',
+  name: 'BaseLayout',
 
   components: {
     EssentialLink,
