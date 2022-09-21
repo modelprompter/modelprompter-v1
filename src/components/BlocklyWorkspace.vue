@@ -8,6 +8,8 @@
 <script setup>
 import Blockly from 'blockly'
 import {onMounted, shallowRef, watch} from 'vue'
+import {inject} from 'vue'
+const $bus = inject('$bus')
 
 const props = defineProps(['options', 'loadData'])
 const blocklyToolbox = $ref()
@@ -81,6 +83,30 @@ const getWorkspaceString = function (data) {
 function onChange (ev) {
   emit('change', ev, workspace)
 }
+
+
+/**
+ * Handle resize event caused by sidebar
+ */
+$bus.on('layout.base.togggledSidebar', () => {
+  // @fixme haha this is fine
+  setTimeout(() => {
+    Blockly.svgResize(workspace)
+    setTimeout(() => {
+      Blockly.svgResize(workspace)
+      setTimeout(() => {
+        Blockly.svgResize(workspace)
+        setTimeout(() => {
+          Blockly.svgResize(workspace)
+          setTimeout(() => {
+            Blockly.svgResize(workspace)
+          }, 50)
+        }, 50)
+      }, 50)
+    }, 50)
+  }, 50)
+})
+
 
 
 /**

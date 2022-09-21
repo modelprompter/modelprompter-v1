@@ -24,15 +24,20 @@ q-layout(view='lHh Lpr lFf')
 
 
 
-<script>
-import { defineComponent, ref } from 'vue'
+<script setup>
 import EssentialLink from 'components/EssentialLink.vue'
-import pkg from '/package.json'
+import PKG from '/package.json'
 import { LocalStorage } from 'quasar'
+import {inject} from 'vue'
+const $bus = inject('$bus')
 
 
 
-const linksList = [
+
+
+const localData = LocalStorage.getItem('layout.base') || {}
+const leftDrawerClosed = $ref(!!localData.leftDrawerClosed)
+const essentialLinks = $ref([
   {
     title: 'Quick Prompter',
     caption: 'Ask a model for something',
@@ -45,32 +50,22 @@ const linksList = [
     icon: 'extension',
     link: '/block',
   }
-]
+])
+const pkg = $ref(PKG)
 
 
 
-export default defineComponent({
-  name: 'BaseLayout',
 
-  components: {
-    EssentialLink,
-  },
 
-  setup() {
-    const localData = LocalStorage.getItem('layout.base') || {}
-    const leftDrawerClosed = ref(!!localData.leftDrawerClosed)
+/**
+ * Autosaves after toggling sidebar and triggeres `page.editor.runBlocks`
+ */
+function toggleLeftDrawer () {
+  leftDrawerClosed = !leftDrawerClosed
+  LocalStorage.set('layout.base', {
+    leftDrawerClosed: leftDrawerClosed
+  })
 
-    return {
-      essentialLinks: linksList,
-      leftDrawerClosed,
-      toggleLeftDrawer() {
-        leftDrawerClosed.value = !leftDrawerClosed.value
-        LocalStorage.set('layout.base', {
-          leftDrawerClosed: leftDrawerClosed.value
-        })
-      },
-      pkg
-    }
-  },
-})
+  $bus.emit('layout.base.togggledSidebar')
+}
 </script>

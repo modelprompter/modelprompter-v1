@@ -18,6 +18,6 @@ function runBlocks () {
 
 function stopBlocks () {
   isPlaying = false
-  $bus.emit('page.editor.runBlocks', isPlaying)
+  $bus.emit('page.editor.stopBlocks', isPlaying)
 }
 </script>
