@@ -39,9 +39,15 @@ Blockly.JavaScript['on_start'] = function (block) {
  */
 Blockly.common.defineBlocksWithJsonArray([{
   "type": "server_message_post",
-  "message0": "POST message with: %1 on success: %2 on error: %3",
+  "message0": "POST message to %1 with %2 on success: %3 on error: %4",
   'style': 'api_blocks',
+  "inputsInline": true,
   "args0": [
+    {
+      "type": "input_value",
+      "name": "URL",
+      "align": "RIGHT"
+    },
     {
       "type": "input_value",
       "name": "DATA",
@@ -65,11 +71,12 @@ Blockly.common.defineBlocksWithJsonArray([{
 }])
 
 Blockly.JavaScript['server_message_post'] = function (block) {
+  const url = Blockly.JavaScript.valueToCode(block, 'URL', Blockly.JavaScript.ORDER_NONE) || []
   const data = Blockly.JavaScript.valueToCode(block, 'DATA', Blockly.JavaScript.ORDER_NONE) || []
   const onThen = Blockly.JavaScript.statementToCode(block, 'THEN_STATEMENTS') || 'null'
   const onError = Blockly.JavaScript.statementToCode(block, 'ERROR_STATEMENTS') || 'null'
 
-  let code = `serverMessagePost(${data}, function () {return ${onThen}}, function () {return ${onError}});\n`
+  let code = `serverMessagePost(${url}, ${data}, function () {return ${onThen}}, function () {return ${onError}});\n`
   return code
 }
 

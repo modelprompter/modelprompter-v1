@@ -9,14 +9,14 @@
 <script setup>
 import Blockly from 'blockly'
 import {onMounted, shallowRef, inject} from 'vue'
-import Interpreter from 'js-interpreter'
+import axios from 'axios'
+import {LocalStorage, uid, Notify} from 'quasar'
 
 const $bus = inject('$bus')
 const props = defineProps(['options', 'loadData'])
 const blocklyToolbox = $ref()
 const blockly = $ref()
 let workspace = shallowRef()
-let interpreter = shallowRef()
 let code = $ref('')
 
 const emit = defineEmits(['change'])
@@ -99,6 +99,29 @@ function resize () {
 
 
 
+/**
+ * POST to a server
+ */
+const serverMessagePost = function (url, data, onThen, onError) {
+  console.log(data)
+
+  const api = axios({
+    method: 'post',
+    url,
+    data: {
+      fn_index: 3,
+      data
+    }
+  }).then((res) => {
+    console.log('test', res)
+    onThen()
+  }).catch((err) => {
+    console.log('ERROR', err)
+    onError()
+  })
+}
+
+
 
 
 /**
@@ -107,24 +130,7 @@ function resize () {
  */
 $bus.on('page.editor.runBlocks', () => {
   code = Blockly.JavaScript.workspaceToCode(workspace)
-
-  interpreter = new Interpreter(code, (acorn, globalObj) => {
-    /**
-     * Send a POST message
-     */
-    acorn.setProperty(globalObj, 'serverMessagePost', acorn.createNativeFunction(function () {
-      console.log('serverMessagePost', arguments)
-    }))
-
-    /**
-     * Send data to the feed
-     */
-    acorn.setProperty(globalObj, 'feedSendData', acorn.createNativeFunction(function () {
-      console.log('feedSendData', arguments)
-    }))
-  })
-
-  interpreter.run()
+  eval(code)
 })
 
 
