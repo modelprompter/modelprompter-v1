@@ -13,19 +13,16 @@ Blockly.common.defineBlocksWithJsonArray([{
     },
     {
       "type": "input_statement",
-      "name": "statements"
+      "name": "POST_DATA"
     }
   ],
   // "nextStatement": null,
   "tooltip": "",
   "helpUrl": ""
 }])
-
 Blockly.JavaScript['on_start'] = function (block) {
-  const code = Blockly.JavaScript.statementToCode(block, 'args0')
-  console.log(code)
+  const code = Blockly.JavaScript.statementToCode(block, 'POST_DATA')
   return code
-  // return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL]
 }
 
 
@@ -47,17 +44,17 @@ Blockly.common.defineBlocksWithJsonArray([{
   "args0": [
     {
       "type": "input_value",
-      "name": "data",
+      "name": "DATA",
       "align": "RIGHT"
     },
     {
       "type": "input_statement",
-      "name": "thenStatements",
+      "name": "THEN_STATEMENTS",
       "align": "RIGHT"
     },
     {
       "type": "input_statement",
-      "name": "errorStatements",
+      "name": "ERROR_STATEMENTS",
       "align": "RIGHT"
     },
   ],
@@ -66,6 +63,18 @@ Blockly.common.defineBlocksWithJsonArray([{
   "tooltip": "",
   "helpUrl": ""
 }])
+
+Blockly.JavaScript['server_message_post'] = function (block) {
+  const data = Blockly.JavaScript.valueToCode(block, 'DATA', Blockly.JavaScript.ORDER_NONE) || []
+  const onThen = Blockly.JavaScript.statementToCode(block, 'THEN_STATEMENTS') || 'null'
+  const onError = Blockly.JavaScript.statementToCode(block, 'ERROR_STATEMENTS') || 'null'
+
+  let code = `serverMessagePost(${data}, ${onThen}, ${onError});\n`
+  return code
+}
+
+
+
 
 /**
  * Contains the data
