@@ -103,14 +103,12 @@ function resize () {
  * POST to a server
  */
 const serverMessagePost = function (url, data, onThen, onError) {
-  console.log(data)
-
   const api = axios({
     method: 'post',
     url,
     data: {
       fn_index: 3,
-      data
+      data: data.data
     }
   }).then((res) => {
     console.log('test', res)
@@ -122,7 +120,7 @@ const serverMessagePost = function (url, data, onThen, onError) {
 }
 
 
-
+globalThis.LocalStorage = LocalStorage
 
 /**
  * Run the code and setup the API
@@ -130,6 +128,7 @@ const serverMessagePost = function (url, data, onThen, onError) {
  */
 $bus.on('page.editor.runBlocks', () => {
   code = Blockly.JavaScript.workspaceToCode(workspace)
+  console.log('code', code)
   eval(code)
 })
 

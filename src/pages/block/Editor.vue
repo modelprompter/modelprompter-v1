@@ -42,11 +42,9 @@ const options = {
 
 // Load initial data
 const workspaceRef = ref()
-const data = defaultsDeep(LocalStorage.getItem('blockprompter.current'), {
-  workspace: ''
-})
+const data = defaultsDeep(LocalStorage.getItem('blockprompter.current'), defaultWorkspace["blockprompter.current"].workspace)
 onMounted(() => {
-  workspaceRef.value.load(data.workspace || defaultWorkspace.workspace)
+  workspaceRef.value.load(data.workspace || defaultWorkspace["blockprompter.current"].workspace)
 })
 
 

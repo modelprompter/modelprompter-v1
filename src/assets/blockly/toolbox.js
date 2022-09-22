@@ -168,7 +168,11 @@ export default {
       contents: [
         {
           kind: 'block',
-          type: 'lists_create_empty'
+          type: 'json_object'
+        },
+        {
+          kind: 'block',
+          type: 'json_object_key_value'
         },
         {
           kind: 'block',

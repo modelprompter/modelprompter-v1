@@ -22,7 +22,7 @@ Blockly.common.defineBlocksWithJsonArray([{
 }])
 Blockly.JavaScript['on_start'] = function (block) {
   const code = Blockly.JavaScript.statementToCode(block, 'POST_DATA')
-  return code
+  return `setTimeout(() => {${code}}, 0)`
 }
 
 
@@ -121,10 +121,68 @@ Blockly.common.defineBlocksWithJsonArray([{
 }])
 
 Blockly.JavaScript['server_message_post_response'] = function (block) {
-  return ''
+  return 'arguments'
 }
 
 
 
+
+
+/**
+ * JSON/Object
+ */
+Blockly.common.defineBlocksWithJsonArray([{
+  "type": "json_object",
+  "message0": "Objects {key: value} %1 %2",
+  'style': 'list_blocks',
+  "output": null,
+  "args0": [
+    {
+      "type": "input_dummy"
+    },
+    {
+      "type": "input_statement",
+      "name": "STATEMENTS"
+    }
+  ],
+  "tooltip": "",
+  "hat": "none",
+  "helpUrl": ""
+}])
+
+Blockly.JavaScript['json_object'] = function (block) {
+  const data = Blockly.JavaScript.statementToCode(block, 'STATEMENTS', Blockly.JavaScript.ORDER_NONE) || ''
+  return [`{${data}}`, Blockly.JavaScript.ORDER_ATOMIC]
+}
+
+/**
+ * Object key:value pair
+ */
+Blockly.common.defineBlocksWithJsonArray([{
+  "type": "json_object_key_value",
+  "message0": "key %1 value %2",
+  'style': 'list_blocks',
+  "args0": [
+    {
+      "type": "input_value",
+      "name": "KEY"
+    },
+    {
+      "type": "input_value",
+      "name": "VALUE"
+    }
+  ],
+  "inputsInline": true,
+  "previousStatement": null,
+  "nextStatement": null,
+  "tooltip": "",
+  "helpUrl": ""
+}])
+
+Blockly.JavaScript['json_object_key_value'] = function (block) {
+  const key = Blockly.JavaScript.valueToCode(block, 'KEY', Blockly.JavaScript.ORDER_NONE) || []
+  const value = Blockly.JavaScript.valueToCode(block, 'VALUE', Blockly.JavaScript.ORDER_NONE) || []
+  return `${key}: ${value},\n`
+}
 
 export default {}
