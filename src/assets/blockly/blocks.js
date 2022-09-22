@@ -69,11 +69,36 @@ Blockly.JavaScript['server_message_post'] = function (block) {
   const onThen = Blockly.JavaScript.statementToCode(block, 'THEN_STATEMENTS') || 'null'
   const onError = Blockly.JavaScript.statementToCode(block, 'ERROR_STATEMENTS') || 'null'
 
-  let code = `serverMessagePost(${data}, ${onThen}, ${onError});\n`
+  let code = `serverMessagePost(${data}, function () {return ${onThen}}, function () {return ${onError}});\n`
   return code
 }
 
 
+
+
+/**
+ * Sends data to the feed
+ */
+Blockly.common.defineBlocksWithJsonArray([{
+  "type": "feed_send_data",
+  "message0": "Send data to feed %1",
+  'style': 'math_blocks',
+  "args0": [
+    {
+      "type": "input_value",
+      "name": "DATA"
+    }
+  ],
+  "previousStatement": null,
+  "nextStatement": null,
+  "tooltip": "",
+  "helpUrl": ""
+}])
+
+Blockly.JavaScript['feed_send_data'] = function (block) {
+  const data = Blockly.JavaScript.statementToCode(block, 'DATA', Blockly.JavaScript.ORDER_NONE) || []
+  return `feedSendData(${data})`
+}
 
 
 /**
@@ -88,26 +113,9 @@ Blockly.common.defineBlocksWithJsonArray([{
   "helpUrl": ""
 }])
 
-
-
-/**
- * Sends data to the feed
- */
-Blockly.common.defineBlocksWithJsonArray([{
-  "type": "feed_send_data",
-  "message0": "Send data to feed %1",
-  'style': 'math_blocks',
-  "args0": [
-    {
-      "type": "input_value",
-      "name": "data"
-    }
-  ],
-  "previousStatement": null,
-  "nextStatement": null,
-  "tooltip": "",
-  "helpUrl": ""
-}])
+Blockly.JavaScript['server_message_post_response'] = function (block) {
+  return ''
+}
 
 
 

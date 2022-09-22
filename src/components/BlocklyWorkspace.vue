@@ -9,12 +9,15 @@
 <script setup>
 import Blockly from 'blockly'
 import {onMounted, shallowRef, inject} from 'vue'
+import Interpreter from 'js-interpreter'
 
 const $bus = inject('$bus')
 const props = defineProps(['options', 'loadData'])
 const blocklyToolbox = $ref()
 const blockly = $ref()
 let workspace = shallowRef()
+let interpreter = shallowRef()
+let code = $ref('')
 
 const emit = defineEmits(['change'])
 
@@ -96,11 +99,33 @@ function resize () {
 
 
 
+
+
 /**
- * Run the code
+ * Run the code and setup the API
+ * @todo move the API into a separate folder
  */
 $bus.on('page.editor.runBlocks', () => {
-  console.log('code', Blockly.JavaScript.workspaceToCode(workspace))
+  code = Blockly.JavaScript.workspaceToCode(workspace)
+  console.log('code', code)
+
+  interpreter = new Interpreter(code, (acorn, globalObj) => {
+    /**
+     * Send a POST message
+     */
+    acorn.setProperty(globalObj, 'serverMessagePost', acorn.createNativeFunction(function () {
+      console.log('serverMessagePost', arguments)
+    }))
+
+    /**
+     * Send data to the feed
+     */
+    acorn.setProperty(globalObj, 'feedSendData', acorn.createNativeFunction(function () {
+      console.log('feedSendData', arguments)
+    }))
+  })
+
+  interpreter.run()
 })
 
 
@@ -108,7 +133,7 @@ $bus.on('page.editor.runBlocks', () => {
 /**
  * Final stuff
  */
-defineExpose({workspace, getWorkspaceString, load})
+defineExpose({workspace, getWorkspaceString, load, code})
 </script>
 
 <style scoped>
