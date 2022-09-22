@@ -107,7 +107,6 @@ function resize () {
  */
 $bus.on('page.editor.runBlocks', () => {
   code = Blockly.JavaScript.workspaceToCode(workspace)
-  console.log('code', code)
 
   interpreter = new Interpreter(code, (acorn, globalObj) => {
     /**

@@ -1,8 +1,8 @@
 <template lang="pug">
-q-layout(view='lHh Lpr lFf')
+q-layout(view='hHh lpR fFf')
   q-header(elevated)
     q-toolbar
-      q-btn(flat dense round icon='menu' aria-label='Menu' @click='toggleLeftDrawer')
+      q-btn(flat dense round icon='menu' aria-label='Menu' @click='toggleLeftSidebar')
       q-toolbar-title
         span
           router-link.text-decoration-none.text-white(:to='{path: "/"}')
@@ -10,12 +10,16 @@ q-layout(view='lHh Lpr lFf')
             img.lt-md.q-mr-sm(src='/src/assets/logo-title-favicon.png' height=32 style='vertical-align: middle')
           a(href='https://github.com/modelprompter/modelprompter/releases' target='_blank')
             small.gt-xs.q-ml-sm(style='font-size: .65em; display: inline-block; transform: translate(0, -3px)') {{pkg.version}}
+      q-space
       router-view(name='toolbar')
+      q-btn.q-ml-md(flat dense round icon='menu' aria-label='Menu' @click='toggleRightSidebar')
 
-  q-drawer(v-model='leftDrawerClosed' bordered)
+  q-drawer(v-model='isLeftSidebarClosed' bordered)
     q-list
       q-item-label(header) Site navigation
       EssentialLink(v-for='link in essentialLinks' :key='link.title' v-bind='link')
+
+  q-drawer(v-model='isRightSidebarClosed' bordered side='right')
 
   q-page-container
     slot
@@ -36,7 +40,8 @@ const $bus = inject('$bus')
 
 
 const localData = LocalStorage.getItem('layout.base') || {}
-const leftDrawerClosed = $ref(!!localData.leftDrawerClosed)
+const isLeftSidebarClosed = $ref(!!localData.isLeftSidebarClosed)
+const isRightSidebarClosed = $ref(!!localData.isRightSidebarClosed)
 const essentialLinks = $ref([
   {
     title: 'Quick Prompter',
@@ -60,12 +65,23 @@ const pkg = $ref(PKG)
 /**
  * Autosaves after toggling sidebar and triggeres `page.editor.runBlocks`
  */
-function toggleLeftDrawer () {
-  leftDrawerClosed = !leftDrawerClosed
-  LocalStorage.set('layout.base', {
-    leftDrawerClosed: leftDrawerClosed
-  })
+function toggleLeftSidebar () {
+  isLeftSidebarClosed = !isLeftSidebarClosed
+  autosave()
+}
 
-  $bus.emit('layout.base.togggledSidebar')
+function toggleRightSidebar () {
+  isRightSidebarClosed = !isRightSidebarClosed
+  autosave()
+}
+
+/**
+ * Autosave
+ */
+function autosave () {
+  LocalStorage.set('layout.base', {
+    isLeftSidebarClosed: isLeftSidebarClosed,
+    isRightSidebarClosed: isRightSidebarClosed
+  })
 }
 </script>
