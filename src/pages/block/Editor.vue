@@ -25,6 +25,8 @@ const options = {
     snap: true,
   },
   trashcan: true,
+  // @todo make this optional
+  // horizontalLayout: true,
   zoom: {
     controls: true,
     wheel: true,
@@ -82,11 +84,4 @@ function autosave () {
     workspace: workspaceRef.value.getWorkspaceString()
   })
 }
-
-/**
- * Run the blocks
- */
-$bus.on('page.editor.runBlocks', () => {
-  console.log('runBlocks')
-})
 </script>

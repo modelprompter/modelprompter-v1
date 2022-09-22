@@ -1,16 +1,16 @@
 <template lang="pug">
 .blockly-container
   .blockly(ref='blockly')
+    q-resize-observer(@resize='resize')
   .hidden(ref='blocklyToolbox')
     slot
 </template>
 
 <script setup>
 import Blockly from 'blockly'
-import {onMounted, shallowRef, watch} from 'vue'
-import {inject} from 'vue'
-const $bus = inject('$bus')
+import {onMounted, shallowRef, inject} from 'vue'
 
+const $bus = inject('$bus')
 const props = defineProps(['options', 'loadData'])
 const blocklyToolbox = $ref()
 const blockly = $ref()
@@ -85,26 +85,22 @@ function onChange (ev) {
 }
 
 
+
+
 /**
- * Handle resize event caused by sidebar
+ * Handle resize event
  */
-$bus.on('layout.base.togggledSidebar', () => {
-  // @fixme haha this is fine
-  setTimeout(() => {
-    Blockly.svgResize(workspace)
-    setTimeout(() => {
-      Blockly.svgResize(workspace)
-      setTimeout(() => {
-        Blockly.svgResize(workspace)
-        setTimeout(() => {
-          Blockly.svgResize(workspace)
-          setTimeout(() => {
-            Blockly.svgResize(workspace)
-          }, 50)
-        }, 50)
-      }, 50)
-    }, 50)
-  }, 50)
+function resize () {
+  Blockly.svgResize(workspace)
+}
+
+
+
+/**
+ * Run the code
+ */
+$bus.on('page.editor.runBlocks', () => {
+  console.log('code', Blockly.JavaScript.workspaceToCode(workspace))
 })
 
 
