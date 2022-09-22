@@ -21,7 +21,9 @@ q-layout(view='hHh lpR fFf')
 
   q-drawer(v-model='isRightSidebarClosed' bordered side='right')
     q-list
-        q-item-label(header) Data feed
+      q-item-label(header) Data feed
+    .q-pa-md
+      DataFeedItem.q-mb-md(v-for='(item, i) in dataFeed.data' :data='item')
 
   q-page-container
     slot
@@ -32,6 +34,8 @@ q-layout(view='hHh lpR fFf')
 
 <script setup>
 import EssentialLink from 'components/EssentialLink.vue'
+import DataFeedItem from 'components/DataFeedItem.vue'
+import {useServerResponses} from '../stores/server-responses'
 import PKG from '/package.json'
 import { LocalStorage } from 'quasar'
 import {inject} from 'vue'
@@ -40,7 +44,7 @@ const $bus = inject('$bus')
 
 
 
-
+const dataFeed = useServerResponses()
 const localData = LocalStorage.getItem('layout.base') || {}
 const isLeftSidebarClosed = $ref(!!localData.isLeftSidebarClosed)
 const isRightSidebarClosed = $ref(!!localData.isRightSidebarClosed)

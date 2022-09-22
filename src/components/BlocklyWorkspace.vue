@@ -11,7 +11,9 @@ import Blockly from 'blockly'
 import {onMounted, shallowRef, inject} from 'vue'
 import axios from 'axios'
 import {LocalStorage, uid, Notify} from 'quasar'
+import {useServerResponses} from '../stores/server-responses'
 
+const dataFeed = useServerResponses()
 const $bus = inject('$bus')
 const props = defineProps(['options', 'loadData'])
 const blocklyToolbox = $ref()
@@ -98,6 +100,17 @@ function resize () {
 }
 
 
+/**
+ * Send data to feed
+ */
+function feedSendData (res) {
+  const data = res[0]
+
+  $bus.emit('data.responses.push', data)
+  dataFeed.data.push(data)
+  console.log('added', data)
+}
+
 
 /**
  * POST to a server
@@ -106,15 +119,10 @@ const serverMessagePost = function (url, data, onThen, onError) {
   const api = axios({
     method: 'post',
     url,
-    data: {
-      fn_index: 3,
-      data: data.data
-    }
+    data
   }).then((res) => {
-    console.log('test', res)
-    onThen()
+    onThen(res.data)
   }).catch((err) => {
-    console.log('ERROR', err)
     onError()
   })
 }
@@ -128,7 +136,6 @@ globalThis.LocalStorage = LocalStorage
  */
 $bus.on('page.editor.runBlocks', () => {
   code = Blockly.JavaScript.workspaceToCode(workspace)
-  console.log('code', code)
   eval(code)
 })
 

@@ -3,7 +3,7 @@ import {defineStore} from 'pinia'
 import {watch} from 'vue'
 import {LocalStorage} from 'quasar'
 
-export const useSettingsStore = defineStore('counter', () => {
+export const useSettingsStore = defineStore('settings', () => {
   let localData = LocalStorage.getItem('settings') || {}
 
   /**
