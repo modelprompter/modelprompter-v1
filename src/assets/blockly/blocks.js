@@ -120,13 +120,21 @@ Blockly.JavaScript['server_message_post'] = function (block) {
  */
 Blockly.common.defineBlocksWithJsonArray([{
   "type": "feed_send_data",
-  "message0": "Send data to feed %1",
+  "message0": "Send data to feed %1 with title %2 and image URL %3",
   'style': 'math_blocks',
   "args0": [
     {
       "type": "input_value",
       "name": "DATA"
-    }
+    },
+    {
+      "type": "input_value",
+      "name": "TITLE"
+    },
+    {
+      "type": "input_value",
+      "name": "IMAGE"
+    },
   ],
   "previousStatement": null,
   "nextStatement": null,
@@ -135,8 +143,11 @@ Blockly.common.defineBlocksWithJsonArray([{
 }])
 
 Blockly.JavaScript['feed_send_data'] = function (block) {
-  const data = Blockly.JavaScript.statementToCode(block, 'DATA', Blockly.JavaScript.ORDER_NONE) || []
-  return `feedSendData(${data})`
+  const data = Blockly.JavaScript.valueToCode(block, 'DATA', Blockly.JavaScript.ORDER_NONE) || 'null'
+  const title = Blockly.JavaScript.valueToCode(block, 'TITLE', Blockly.JavaScript.ORDER_NONE) || 'null'
+  const image = Blockly.JavaScript.valueToCode(block, 'IMAGE', Blockly.JavaScript.ORDER_NONE) || 'null'
+
+  return `feedSendData({title: ${title}, data: ${data}, image: ${image}});`
 }
 
 
@@ -153,7 +164,7 @@ Blockly.common.defineBlocksWithJsonArray([{
 }])
 
 Blockly.JavaScript['server_message_post_response'] = function (block) {
-  return 'arguments'
+  return ['arguments[0]', Blockly.JavaScript.ORDER_ATOMIC]
 }
 
 
@@ -216,5 +227,40 @@ Blockly.JavaScript['json_object_key_value'] = function (block) {
   const value = Blockly.JavaScript.valueToCode(block, 'VALUE', Blockly.JavaScript.ORDER_NONE) || []
   return `${key}: ${value},\n`
 }
+
+
+/**
+ * Object get
+ */
+Blockly.common.defineBlocksWithJsonArray([{
+  "type": "json_object_get",
+  "message0": "Get field %1 from %2",
+  'style': 'list_blocks',
+  "args0": [
+    {
+      "type": "input_value",
+      "name": "PATH"
+    },
+    {
+      "type": "input_value",
+      "name": "OBJECT"
+    }
+  ],
+  "inputsInline": true,
+  "output": null,
+  "tooltip": "",
+  "helpUrl": ""
+}])
+
+Blockly.JavaScript['json_object_get'] = function (block) {
+  const path = Blockly.JavaScript.valueToCode(block, 'PATH', Blockly.JavaScript.ORDER_NONE) || []
+  const obj = Blockly.JavaScript.valueToCode(block, 'OBJECT', Blockly.JavaScript.ORDER_NONE) || []
+
+  return [`get(${obj}, ${path})`, Blockly.JavaScript.ORDER_ATOMIC]
+}
+
+
+
+
 
 export default {}

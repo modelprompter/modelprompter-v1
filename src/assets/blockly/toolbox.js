@@ -202,6 +202,10 @@ export default {
         },
         {
           kind: 'block',
+          type: 'json_object_get'
+        },
+        {
+          kind: 'block',
           type: 'lists_repeat'
         },
         {

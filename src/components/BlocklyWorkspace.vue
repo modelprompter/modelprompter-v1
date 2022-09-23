@@ -12,6 +12,7 @@ import {onMounted, shallowRef, inject} from 'vue'
 import axios from 'axios'
 import {LocalStorage, uid, Notify} from 'quasar'
 import {useDatafeedResponses} from '../stores/datafeed'
+import {get} from 'lodash-es'
 
 const dataFeed = useDatafeedResponses()
 const $bus = inject('$bus')
@@ -103,12 +104,19 @@ function resize () {
 /**
  * Send data to feed
  */
-function feedSendData (data) {
-  data = data[0]
+function feedSendData (feedData) {
+  const data = {
+    title: feedData.title,
+    data: feedData.data,
+    image: feedData.image,
+    id: uid(),
+  }
 
   $bus.emit('data.responses.push', data)
   dataFeed.data.unshift(data)
 }
+
+window.LocalStorage = LocalStorage
 
 
 /**
@@ -137,7 +145,7 @@ const serverMessagePost = function (url, data, onThen, onError, onFinally) {
  */
 $bus.on('page.editor.runBlocks', () => {
   code = Blockly.JavaScript.workspaceToCode(workspace)
-  console.log(code)
+  //console.log(code)
   eval(code)
 })
 
