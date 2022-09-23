@@ -8,9 +8,9 @@
 
 <script setup>
 import Blockly from 'blockly'
-import {onMounted, shallowRef, inject} from 'vue'
+import {onMounted, shallowRef, inject, watch} from 'vue'
 import axios from 'axios'
-import {LocalStorage, uid, Notify} from 'quasar'
+import {LocalStorage, uid} from 'quasar'
 import {useDatafeedResponses} from '../stores/datafeed'
 import {get} from 'lodash-es'
 
@@ -121,8 +121,11 @@ window.LocalStorage = LocalStorage
 
 /**
  * POST to a server
+ * Callbacks will get halted
  */
 const serverMessagePost = function (url, data, onThen, onError, onFinally) {
+  if (!dataFeed.isRunning) return
+
   $bus.emit('blockly.runBlocks.serverMessagePost', url, data)
 
   const api = axios({
@@ -140,22 +143,18 @@ const serverMessagePost = function (url, data, onThen, onError, onFinally) {
 }
 
 /**
- * Run the code and setup the API
- * @todo move the API into a separate folder
+ * Run start/close blocks
  */
-$bus.on('page.editor.runBlocks', () => {
-  code = Blockly.JavaScript.workspaceToCode(workspace)
-  //console.log(code)
-  eval(code)
-})
-
-/**
- * Run closing blocks
- */
-$bus.on('page.editor.stopBlocks', () => {
-  dataFeed.onEndMethods.forEach(func => {
-    func()
-  })
+watch(() => dataFeed.isRunning, () => {
+  if (dataFeed.isRunning) {
+    code = Blockly.JavaScript.workspaceToCode(workspace)
+    console.log(code)
+    eval(code)
+  } else {
+    dataFeed.onEndMethods.forEach(func => {
+      func()
+    })
+  }
 })
 
 

@@ -22,7 +22,9 @@ Blockly.common.defineBlocksWithJsonArray([{
 }])
 Blockly.JavaScript['on_start'] = function (block) {
   const code = Blockly.JavaScript.statementToCode(block, 'POST_DATA')
-  return `setTimeout(() => {${code}}, 0)`
+  return `setTimeout(() => {
+  ${code}
+}, 0)`
 }
 
 
@@ -49,8 +51,8 @@ Blockly.common.defineBlocksWithJsonArray([{
 Blockly.JavaScript['on_end'] = function (block) {
   const code = Blockly.JavaScript.statementToCode(block, 'POST_DATA')
   return `dataFeed.onEndMethods.push(() => {
-    setTimeout(() => {${code}}, 0)
-  })`
+  setTimeout(() => {${code}}, 0)
+})`
 }
 
 
@@ -108,7 +110,22 @@ Blockly.JavaScript['server_message_post'] = function (block) {
   const onError = Blockly.JavaScript.statementToCode(block, 'ERROR_STATEMENTS') || 'null'
   const onFinally = Blockly.JavaScript.statementToCode(block, 'FINALLY_STATEMENTS') || 'null'
 
-  let code = `serverMessagePost(${url}, ${data}, function () {return ${onThen}}, function () {return ${onError}}, function () {return ${onFinally}});\n`
+  let code = `serverMessagePost(
+  ${url},
+  ${data},
+  function () {
+    ${onThen};
+    return arguments;
+  },
+  function () {
+    ${onError};
+    return arguments;
+  },
+  function () {
+    ${onFinally};
+    return arguments;
+  }
+);\n`
   return code
 }
 

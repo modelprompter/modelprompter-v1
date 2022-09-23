@@ -38,10 +38,7 @@ import DataFeedItem from 'components/DataFeedItem.vue'
 import {useDatafeedResponses} from '../stores/datafeed'
 import PKG from '/package.json'
 import { LocalStorage } from 'quasar'
-import {inject} from 'vue'
-const $bus = inject('$bus')
-
-
+import {inject, watch} from 'vue'
 
 
 const dataFeed = useDatafeedResponses()
@@ -68,15 +65,17 @@ const pkg = $ref(PKG)
 /**
  * Open the data feed
  */
-$bus.on('page.editor.runBlocks', () => {
-  isRightSidebarOpened = true
+watch(() => dataFeed.isRunning, () => {
+  if (dataFeed.isRunning) {
+    isRightSidebarOpened = true
+  }
 })
 
 
 
 
 /**
- * Autosaves after toggling sidebar and triggeres `page.editor.runBlocks`
+ * Autosaves after toggling sidebar
  */
 function toggleLeftSidebar () {
   isLeftSidebarOpened = !isLeftSidebarOpened
