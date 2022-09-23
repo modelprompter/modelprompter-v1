@@ -26,6 +26,32 @@ Blockly.JavaScript['on_start'] = function (block) {
 }
 
 
+/**
+ * Main end block
+ */
+Blockly.common.defineBlocksWithJsonArray([{
+  "type": "on_end",
+  "message0": "🛑 On end do the following: %1 %2",
+  'style': 'event_blocks',
+  "args0": [
+    {
+      "type": "input_dummy"
+    },
+    {
+      "type": "input_statement",
+      "name": "POST_DATA"
+    }
+  ],
+  // "nextStatement": null,
+  "tooltip": "",
+  "helpUrl": ""
+}])
+Blockly.JavaScript['on_end'] = function (block) {
+  const code = Blockly.JavaScript.statementToCode(block, 'POST_DATA')
+  return `dataFeed.onEndMethods.push(() => {
+    setTimeout(() => {${code}}, 0)
+  })`
+}
 
 
 

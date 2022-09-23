@@ -11,6 +11,10 @@ export default {
         },
         {
           kind: 'block',
+          type: 'on_end',
+        },
+        {
+          kind: 'block',
           type: 'server_message_post',
           inputs: {
             URL: {

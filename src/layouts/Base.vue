@@ -35,7 +35,7 @@ q-layout(view='hHh lpR fFf')
 <script setup>
 import EssentialLink from 'components/EssentialLink.vue'
 import DataFeedItem from 'components/DataFeedItem.vue'
-import {useServerResponses} from '../stores/server-responses'
+import {useDatafeedResponses} from '../stores/datafeed'
 import PKG from '/package.json'
 import { LocalStorage } from 'quasar'
 import {inject} from 'vue'
@@ -44,7 +44,7 @@ const $bus = inject('$bus')
 
 
 
-const dataFeed = useServerResponses()
+const dataFeed = useDatafeedResponses()
 const localData = LocalStorage.getItem('layout.base') || {}
 const isLeftSidebarOpened = $ref(!!localData.isLeftSidebarOpened)
 const isRightSidebarOpened = $ref(!!localData.isRightSidebarOpened)

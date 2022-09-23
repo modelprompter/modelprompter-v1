@@ -11,9 +11,9 @@ import Blockly from 'blockly'
 import {onMounted, shallowRef, inject} from 'vue'
 import axios from 'axios'
 import {LocalStorage, uid, Notify} from 'quasar'
-import {useServerResponses} from '../stores/server-responses'
+import {useDatafeedResponses} from '../stores/datafeed'
 
-const dataFeed = useServerResponses()
+const dataFeed = useDatafeedResponses()
 const $bus = inject('$bus')
 const props = defineProps(['options', 'loadData'])
 const blocklyToolbox = $ref()
@@ -137,9 +137,18 @@ const serverMessagePost = function (url, data, onThen, onError, onFinally) {
  */
 $bus.on('page.editor.runBlocks', () => {
   code = Blockly.JavaScript.workspaceToCode(workspace)
+  console.log(code)
   eval(code)
 })
 
+/**
+ * Run closing blocks
+ */
+$bus.on('page.editor.stopBlocks', () => {
+  dataFeed.onEndMethods.forEach(func => {
+    func()
+  })
+})
 
 
 /**
