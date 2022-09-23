@@ -31,48 +31,48 @@ export default {
   blockStyles: {
     event_blocks: {
       colourPrimary: '#FF9D00',
-      colourSecondary: '#ff628c',
+      colourSecondary: '#cc7e00',
       colourTertiary: '#ffc466',
       hat: 'cap'
     },
     api_blocks: {
       colourPrimary: '#fff',
-      colourSecondary: '#ff628c',
+      colourSecondary: '#ccc',
       colourTertiary: '#aaa',
     },
     text_blocks: {
       colourPrimary: '#fad000',
-      colourSecondary: '#ff628c',
+      colourSecondary: '#c8a600',
       colourTertiary: '#ffe563'
     },
     math_blocks: {
       colourPrimary: '#9effff',
-      colourSecondary: '#ff628c',
+      colourSecondary: '#4bffff',
       colourTertiary: '#c5ffff'
     },
     list_blocks: {
       colourPrimary: '#FB94FF',
-      colourSecondary: '#ff628c',
+      colourSecondary: '#f843ff',
       colourTertiary: '#fdd4ff',
     },
     logic_blocks: {
       colourPrimary: '#2ca300',
-      colourSecondary: '#ff628c',
+      colourSecondary: '#238200',
       colourTertiary: '#67ff2f'
     },
     loop_blocks: {
       colourPrimary: '#5D37F0',
-      colourSecondary: '#ff628c',
+      colourSecondary: '#3a10dc',
       colourTertiary: '#ae9bf7',
     },
     variable_blocks: {
       colourPrimary: '#ff628c',
-      colourSecondary: '#2ca300',
+      colourSecondary: '#ff1b58',
       colourTertiary: '#ffa1ba'
     },
     procedure_blocks: {
       colourPrimary: '#FF9D00',
-      colourSecondary: '#ff628c',
+      colourSecondary: '#cc7e00',
       colourTertiary: '#ffc466',
       hat: 'none'
     },

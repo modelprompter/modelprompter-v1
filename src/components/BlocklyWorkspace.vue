@@ -114,7 +114,7 @@ function feedSendData (data) {
 /**
  * POST to a server
  */
-const serverMessagePost = function (url, data, onThen, onError) {
+const serverMessagePost = function (url, data, onThen, onError, onFinally) {
   $bus.emit('blockly.runBlocks.serverMessagePost', url, data)
 
   const api = axios({
@@ -123,8 +123,11 @@ const serverMessagePost = function (url, data, onThen, onError) {
     data
   }).then((res) => {
     onThen(res.data)
+    return res
   }).catch((err) => {
     onError(err)
+  }).then((data) => {
+    onFinally(data.data)
   })
 }
 

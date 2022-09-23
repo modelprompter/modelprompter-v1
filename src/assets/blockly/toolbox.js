@@ -7,15 +7,37 @@ export default {
       contents: [
         {
           kind: 'block',
-          type: 'on_start'
+          type: 'on_start',
         },
         {
           kind: 'block',
-          type: 'server_message_post'
+          type: 'server_message_post',
+          inputs: {
+            URL: {
+              shadow: {
+                type: 'text',
+                fields: {
+                  TEXT: 'https://abc.gradio.app/api/predict'
+                }
+              }
+            },
+            FINALLY_STATEMENTS: {
+              block: {
+                type: 'feed_send_data',
+                inputs: {
+                  DATA: {
+                    block: {
+                      type: 'server_message_post_response',
+                    }
+                  }
+                }
+              }
+            }
+          },
         },
         {
           kind: 'block',
-          type: 'server_message_post_response'
+          type: 'server_message_post_response',
         },
         {
           kind: 'block',
