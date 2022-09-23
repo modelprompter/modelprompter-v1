@@ -56,17 +56,24 @@ onMounted(() => {
 /**
  * Load initial data
  */
-const load = function (data) {
+const load = function (data, view) {
   if (data) {
     Blockly.Xml.domToWorkspace(
       Blockly.Xml.textToDom(data),
       workspace
     )
+    workspace.setScale(view.scale)
   } else {
     Blockly.Xml.domToWorkspace(
       Blockly.Xml.textToDom('<xml xmlns="https://developers.google.com/blockly/xml"></xml>'),
       workspace
     )
+  }
+
+  if (!view.viewLeft && !view.viewTop && !view.scale) {
+    workspace.scrollCenter()
+  } else {
+    workspace.scroll(view.viewLeft*-1, view.viewTop*-1)
   }
 }
 

@@ -8,13 +8,11 @@ import Blockly from 'blockly'
 import BlocklyWorkspace from 'src/components/BlocklyWorkspace.vue'
 import theme from 'assets/blockly/theme.js'
 import toolbox from 'assets/blockly/toolbox.js'
-import blocks from 'assets/blockly/blocks.js'
-import {LocalStorage, uid} from 'quasar'
+import 'assets/blockly/blocks.js'
+import {LocalStorage} from 'quasar'
 import {defaultsDeep} from 'lodash-es'
-import {nextTick, inject, ref, onMounted} from 'vue'
+import {ref, onMounted} from 'vue'
 import defaultWorkspace from '../../stores/workspaces/index.js'
-
-const $bus = inject('$bus')
 
 const options = {
   media: "media/",
@@ -40,11 +38,20 @@ const options = {
   theme
 }
 
+let viewLeft = 0
+let viewTop = 0
+let scale = 0
+
+
 // Load initial data
 const workspaceRef = ref()
-const data = defaultsDeep(LocalStorage.getItem('blockprompter.current'), defaultWorkspace["blockprompter.current"].workspace)
 onMounted(() => {
-  workspaceRef.value.load(data.workspace || defaultWorkspace["blockprompter.current"].workspace)
+  const data = defaultsDeep(LocalStorage.getItem('blockprompter.current'), defaultWorkspace["blockprompter.current"])
+  workspaceRef.value.load(data.workspace || defaultWorkspace["blockprompter.current"].workspace, {
+    viewLeft: data.viewLeft,
+    viewTop: data.viewTop,
+    scale: data.scale,
+  })
 })
 
 
@@ -54,22 +61,21 @@ onMounted(() => {
  */
 function workspaceEventHandler (ev, workspace) {
   switch (ev.type) {
-    // case Blockly.Events.FINISHED_LOADING:
-    //   hasLoaded = true
-    // break
-
-    // case Blockly.Events.BLOCK_CREATE:
+    case Blockly.Events.VIEWPORT_CHANGE:
     case Blockly.Events.BLOCK_DELETE:
     case Blockly.Events.BLOCK_CHANGE:
     case Blockly.Events.BLOCK_MOVE:
     case Blockly.Events.VAR_CREATE:
     case Blockly.Events.VAR_DELETE:
     case Blockly.Events.VAR_RENAME:
-      // $refs.workspace.run()
-      // checkBookmarks()
-      // hasLoaded && autosave()
-      autosave({workspace})
-    break
+      if (ev.type === Blockly.Events.VIEWPORT_CHANGE) {
+        viewLeft = ev.viewLeft
+        viewTop = ev.viewTop
+        scale = ev.scale
+      }
+      const data = {viewLeft, viewTop, scale}
+      data.workspace = workspaceRef.value.getWorkspaceString()
+      autosave(data)
   }
 }
 
@@ -77,9 +83,7 @@ function workspaceEventHandler (ev, workspace) {
  * Autosave the workspace
  */
 // @todo debounce
-function autosave () {
-  LocalStorage.set('blockprompter.current', {
-    workspace: workspaceRef.value.getWorkspaceString()
-  })
+function autosave (data) {
+  LocalStorage.set('blockprompter.current', data)
 }
 </script>
