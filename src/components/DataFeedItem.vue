@@ -1,7 +1,7 @@
 <template lang="pug">
 q-card(clickable)
-  q-img(v-if='props.data.image' :src='props.data.image')
-  q-card-section
+  q-img.clickable(v-if='props.data.image' :src='props.data.image')
+  q-card-section(v-else)
     pre {{props.data}}
 </template>
 
