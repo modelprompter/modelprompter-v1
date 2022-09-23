@@ -103,12 +103,11 @@ function resize () {
 /**
  * Send data to feed
  */
-function feedSendData (res) {
-  const data = res[0]
+function feedSendData (data) {
+  data = data[0]
 
   $bus.emit('data.responses.push', data)
-  dataFeed.data.push(data)
-  console.log('added', data)
+  dataFeed.data.unshift(data)
 }
 
 
@@ -116,6 +115,8 @@ function feedSendData (res) {
  * POST to a server
  */
 const serverMessagePost = function (url, data, onThen, onError) {
+  $bus.emit('blockly.runBlocks.serverMessagePost', url, data)
+
   const api = axios({
     method: 'post',
     url,
@@ -123,12 +124,9 @@ const serverMessagePost = function (url, data, onThen, onError) {
   }).then((res) => {
     onThen(res.data)
   }).catch((err) => {
-    onError()
+    onError(err)
   })
 }
-
-
-globalThis.LocalStorage = LocalStorage
 
 /**
  * Run the code and setup the API

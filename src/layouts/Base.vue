@@ -14,12 +14,12 @@ q-layout(view='hHh lpR fFf')
       router-view(name='toolbar')
       q-btn.q-ml-md(flat dense round icon='menu' aria-label='Menu' @click='toggleRightSidebar')
 
-  q-drawer(v-model='isLeftSidebarClosed' bordered)
+  q-drawer(v-model='isLeftSidebarOpened' bordered)
     q-list
       q-item-label(header) Site navigation
       EssentialLink(v-for='link in essentialLinks' :key='link.title' v-bind='link')
 
-  q-drawer(v-model='isRightSidebarClosed' bordered side='right')
+  q-drawer(v-model='isRightSidebarOpened' bordered side='right')
     q-list
       q-item-label(header) Data feed
     .q-pa-md
@@ -46,8 +46,8 @@ const $bus = inject('$bus')
 
 const dataFeed = useServerResponses()
 const localData = LocalStorage.getItem('layout.base') || {}
-const isLeftSidebarClosed = $ref(!!localData.isLeftSidebarClosed)
-const isRightSidebarClosed = $ref(!!localData.isRightSidebarClosed)
+const isLeftSidebarOpened = $ref(!!localData.isLeftSidebarOpened)
+const isRightSidebarOpened = $ref(!!localData.isRightSidebarOpened)
 const essentialLinks = $ref([
   {
     title: 'Quick Prompter',
@@ -65,6 +65,13 @@ const essentialLinks = $ref([
 const pkg = $ref(PKG)
 
 
+/**
+ * Open the data feed
+ */
+$bus.on('page.editor.runBlocks', () => {
+  isRightSidebarOpened = true
+})
+
 
 
 
@@ -72,12 +79,12 @@ const pkg = $ref(PKG)
  * Autosaves after toggling sidebar and triggeres `page.editor.runBlocks`
  */
 function toggleLeftSidebar () {
-  isLeftSidebarClosed = !isLeftSidebarClosed
+  isLeftSidebarOpened = !isLeftSidebarOpened
   autosave()
 }
 
 function toggleRightSidebar () {
-  isRightSidebarClosed = !isRightSidebarClosed
+  isRightSidebarOpened = !isRightSidebarOpened
   autosave()
 }
 
@@ -86,8 +93,8 @@ function toggleRightSidebar () {
  */
 function autosave () {
   LocalStorage.set('layout.base', {
-    isLeftSidebarClosed: isLeftSidebarClosed,
-    isRightSidebarClosed: isRightSidebarClosed
+    isLeftSidebarOpened: isLeftSidebarOpened,
+    isRightSidebarOpened: isRightSidebarOpened
   })
 }
 </script>
