@@ -155,7 +155,13 @@ const serverMessagePost = function (url, data, onThen, onError, onFinally) {
 watch(() => dataFeed.isRunning, () => {
   if (dataFeed.isRunning) {
     code = Blockly.JavaScript.workspaceToCode(workspace)
-    console.log(code)
+
+    console.log(`
+
+☆.。.:*・°☆.。.:*・°☆.。.:*・°☆.。.:*・°☆☆.。.:*・°☆.。.:*・°☆.。.:*・°☆.。.
+*・°☆.。.:*・°☆.。.:*・°☆. GENERATING CODE ☆.。.:*・°☆.。.:*・°☆.。.:*・°☆
+☆.。.:*・°☆.。.:*・°☆.。.:*・°☆.。.:*・°☆☆.。.:*・°☆.。.:*・°☆.。.:*・°☆.。.`)
+    console.dir({code})
     eval(code)
   } else {
     dataFeed.onEndMethods.forEach(func => {

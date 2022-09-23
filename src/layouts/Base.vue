@@ -19,11 +19,7 @@ q-layout(view='hHh lpR fFf')
       q-item-label(header) Site navigation
       EssentialLink(v-for='link in essentialLinks' :key='link.title' v-bind='link')
 
-  q-drawer(v-model='isRightSidebarOpened' bordered side='right')
-    q-list
-      q-item-label(header) Data feed
-    .q-pa-md
-      DataFeedItem.q-mb-md(v-for='(item, i) in dataFeed.data' :data='item')
+  DataFeed(:isRightSidebarOpened='isRightSidebarOpened' :data='dataFeed.data')
 
   q-page-container
     slot
@@ -34,7 +30,7 @@ q-layout(view='hHh lpR fFf')
 
 <script setup>
 import EssentialLink from 'components/EssentialLink.vue'
-import DataFeedItem from 'components/DataFeedItem.vue'
+import DataFeed from 'components/DataFeed.vue'
 import {useDatafeedResponses} from '../stores/datafeed'
 import PKG from '/package.json'
 import { LocalStorage } from 'quasar'
