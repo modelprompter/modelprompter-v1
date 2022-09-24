@@ -6,7 +6,12 @@
   "author": "modelprompter@gmail.com",
   "private": true,
   "scripts": {
-    "start": "quasar dev",
+    "start": "npx quasar dev",
+    "clone-servers": "git submodule update --init --recursive",
+    "dream-server": "python servers/AUTOMATIC1111/stable-diffusion-webui/webui.py --listen",
+    "dream-server-med": "python servers/AUTOMATIC1111/stable-diffusion-webui/webui.py --medvram --opt-split-attention --listen",
+    "dream-server-16xx": "python servers/AUTOMATIC1111/stable-diffusion-webui/webui.py --medvram --opt-split-attention --precision full --no-half --listen",
+    "dream-server-low": "python servers/AUTOMATIC1111/stable-diffusion-webui/webui.py --lowvram --opt-split-attention --precision full --no-half --listen",
     "test": "echo \"No test specified\" && exit 0"
   },
   "dependencies": {

@@ -124,7 +124,7 @@ Blockly.JavaScript['server_message_post'] = function (block) {
     ${onFinally};
     return arguments;
   }
-)`
+);`
   return code
 }
 
