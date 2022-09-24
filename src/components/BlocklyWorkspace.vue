@@ -111,7 +111,7 @@ function resize () {
 /**
  * Send data to feed
  */
-function feedSendData (feedData) {
+window.feedSendData = function (feedData) {
   const data = {
     title: feedData.title,
     data: feedData.data,
@@ -130,7 +130,7 @@ window.LocalStorage = LocalStorage
  * POST to a server
  * Callbacks will get halted
  */
-const serverMessagePost = function (url, data, onThen, onError, onFinally) {
+window.serverMessagePost = function (url, data, onThen, onError, onFinally) {
   setTimeout(() => {
     $bus.emit('blockly.runBlocks.serverMessagePost', url, data)
     console.log('Sending POST:', url, data)
