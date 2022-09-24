@@ -29,6 +29,48 @@ export default {
   },
 
   blockStyles: {
+    red: {
+      colourPrimary: '#ff628c',
+      colourSecondary: '#ff1b58',
+      colourTertiary: '#ffa1ba'
+    },
+    orange: {
+      colourPrimary: '#FF9D00',
+      colourSecondary: '#cc7e00',
+      colourTertiary: '#ffc466',
+      hat: 'cap'
+    },
+    yellow: {
+      colourPrimary: '#fad000',
+      colourSecondary: '#c8a600',
+      colourTertiary: '#ffe563'
+    },
+    green: {
+      colourPrimary: '#2ca300',
+      colourSecondary: '#238200',
+      colourTertiary: '#67ff2f'
+    },
+    ice_blue: {
+      colourPrimary: '#9effff',
+      colourSecondary: '#4bffff',
+      colourTertiary: '#c5ffff'
+    },
+    purple: {
+      colourPrimary: '#5D37F0',
+      colourSecondary: '#3a10dc',
+      colourTertiary: '#ae9bf7',
+    },
+    white: {
+      colourPrimary: '#fff',
+      colourSecondary: '#ccc',
+      colourTertiary: '#aaa',
+    },
+    pink: {
+      colourPrimary: '#FB94FF',
+      colourSecondary: '#f843ff',
+      colourTertiary: '#fdd4ff',
+    },
+
     event_blocks: {
       colourPrimary: '#FF9D00',
       colourSecondary: '#cc7e00',

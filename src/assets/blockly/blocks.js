@@ -6,7 +6,7 @@ import Blockly from 'blockly'
 Blockly.common.defineBlocksWithJsonArray([{
   "type": "on_start",
   "message0": "🤖 On start do the following: %1 %2",
-  'style': 'event_blocks',
+  'style': 'api_blocks',
   "args0": [
     {
       "type": "input_dummy"
@@ -34,7 +34,7 @@ Blockly.JavaScript['on_start'] = function (block) {
 Blockly.common.defineBlocksWithJsonArray([{
   "type": "on_end",
   "message0": "🛑 On end do the following: %1 %2",
-  'style': 'event_blocks',
+  'style': 'api_blocks',
   "args0": [
     {
       "type": "input_dummy"
@@ -69,7 +69,6 @@ Blockly.common.defineBlocksWithJsonArray([{
   "type": "server_message_post",
   "message0": "POST message to %1 with %2 on success: %3 on error: %4 finally, always: %5",
   'style': 'api_blocks',
-  "inputsInline": true,
   "args0": [
     {
       "type": "input_value",
@@ -125,7 +124,7 @@ Blockly.JavaScript['server_message_post'] = function (block) {
     ${onFinally};
     return arguments;
   }
-);\n`
+)`
   return code
 }
 
@@ -164,7 +163,12 @@ Blockly.JavaScript['feed_send_data'] = function (block) {
   const title = Blockly.JavaScript.valueToCode(block, 'TITLE', Blockly.JavaScript.ORDER_NONE) || 'null'
   const image = Blockly.JavaScript.valueToCode(block, 'IMAGE', Blockly.JavaScript.ORDER_NONE) || 'null'
 
-  return `feedSendData({title: ${title}, data: ${data}, image: ${image}});`
+  return `
+  feedSendData({
+    title: ${title},
+    data: ${data},
+    image: ${image}
+  });`
 }
 
 
@@ -222,6 +226,7 @@ Blockly.common.defineBlocksWithJsonArray([{
   "type": "json_object_key_value",
   "message0": "key %1 value %2",
   'style': 'list_blocks',
+  "inputsInline": true,
   "args0": [
     {
       "type": "input_value",
@@ -232,7 +237,6 @@ Blockly.common.defineBlocksWithJsonArray([{
       "name": "VALUE"
     }
   ],
-  "inputsInline": true,
   "previousStatement": null,
   "nextStatement": null,
   "tooltip": "",
@@ -263,7 +267,6 @@ Blockly.common.defineBlocksWithJsonArray([{
       "name": "OBJECT"
     }
   ],
-  "inputsInline": true,
   "output": null,
   "tooltip": "",
   "helpUrl": ""

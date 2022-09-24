@@ -131,9 +131,17 @@ window.LocalStorage = LocalStorage
  * Callbacks will get halted
  */
 const serverMessagePost = function (url, data, onThen, onError, onFinally) {
-  if (!dataFeed.isRunning) return
+  // This gobbledegook helps prevent recursive API calls after last call
+  if (!dataFeed.isRunning && dataFeed.hasRanLast) {
+    return
+  } else if (!dataFeed.isRunning && !dataFeed.hasRanLast) {
+    dataFeed.hasRanLast = true
+  } else {
+    dataFeed.hasRanLast = false
+  }
 
   $bus.emit('blockly.runBlocks.serverMessagePost', url, data)
+  console.log('Sending POST:', url, data)
 
   const api = axios({
     method: 'post',
@@ -145,7 +153,7 @@ const serverMessagePost = function (url, data, onThen, onError, onFinally) {
   }).catch((err) => {
     onError(err)
   }).then((data) => {
-    onFinally(data.data)
+    onFinally(data?.data)
   })
 }
 
