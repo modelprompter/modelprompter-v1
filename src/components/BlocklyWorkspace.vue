@@ -131,14 +131,7 @@ window.LocalStorage = LocalStorage
  * Callbacks will get halted
  */
 const serverMessagePost = function (url, data, onThen, onError, onFinally) {
-  // This gobbledegook helps prevent recursive API calls after last call
-  if (!dataFeed.isRunning && dataFeed.hasRanLast) {
-    return
-  } else if (!dataFeed.isRunning && !dataFeed.hasRanLast) {
-    dataFeed.hasRanLast = true
-  } else {
-    dataFeed.hasRanLast = false
-  }
+  if (dataFeed.isRunning) return
 
   $bus.emit('blockly.runBlocks.serverMessagePost', url, data)
   console.log('Sending POST:', url, data)
@@ -172,9 +165,12 @@ watch(() => dataFeed.isRunning, () => {
     console.dir({code})
     eval(code)
   } else {
+    dataFeed.hasRanLastMethods = false
     dataFeed.onEndMethods.forEach(func => {
       func()
     })
+    dataFeed.onEndMethods = []
+    dataFeed.hasRanLastMethods = true
   }
 })
 

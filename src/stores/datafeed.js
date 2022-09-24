@@ -4,7 +4,7 @@ export const useDatafeedResponses = defineStore('datafeedResponses', () => {
   const data = $ref([])
   const onEndMethods = $ref([])
   const isRunning = $ref(false)
-  const hasRanLast = $ref(false)
+  const hasRanLastMethods = $ref(false)
 
-  return {data, onEndMethods, isRunning, hasRanLast}
+  return {data, onEndMethods, isRunning, hasRanLastMethods}
 })
