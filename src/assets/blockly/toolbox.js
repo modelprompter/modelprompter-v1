@@ -47,6 +47,7 @@ export default {
           kind: 'block',
           type: 'feed_send_data'
         },
+
       ]
     },
     {
@@ -203,6 +204,10 @@ export default {
         {
           kind: 'block',
           type: 'json_object_get'
+        },
+        {
+          kind: 'block',
+          type: 'json_object_extract_values',
         },
         {
           kind: 'block',

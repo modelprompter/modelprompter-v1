@@ -3,6 +3,7 @@ import Blockly from 'blockly'
 /**
  * Main start block
  */
+// @todo We're getting warning because blocks already exist during hot reload
 Blockly.common.defineBlocksWithJsonArray([{
   "type": "on_start",
   "message0": "🤖 On start do the following: %1 %2",
@@ -117,7 +118,7 @@ Blockly.JavaScript['server_message_post'] = function (block) {
     return arguments;
   },
   function () {
-    ${onError};
+    ${onError};serverMessagePost
     return arguments;
   },
   function () {
@@ -187,8 +188,6 @@ Blockly.common.defineBlocksWithJsonArray([{
 Blockly.JavaScript['server_message_post_response'] = function (block) {
   return ['arguments[0]', Blockly.JavaScript.ORDER_ATOMIC]
 }
-
-
 
 
 
@@ -280,6 +279,29 @@ Blockly.JavaScript['json_object_get'] = function (block) {
 }
 
 
+/**
+ * Object.values
+ */
+Blockly.common.defineBlocksWithJsonArray([{
+  "type": "json_object_extract_values",
+  "message0": "Extract values: %1",
+  'style': 'list_blocks',
+  "args0": [
+    {
+      "type": "input_value",
+      "name": "OBJECT"
+    }
+  ],
+  "output": null,
+  "tooltip": "",
+  "helpUrl": ""
+}])
+
+Blockly.JavaScript['json_object_extract_values'] = function (block) {
+  const obj = Blockly.JavaScript.valueToCode(block, 'OBJECT', Blockly.JavaScript.ORDER_NONE) || []
+
+  return [`Object.values(${obj})`, Blockly.JavaScript.ORDER_ATOMIC]
+}
 
 
 

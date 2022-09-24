@@ -131,23 +131,23 @@ window.LocalStorage = LocalStorage
  * Callbacks will get halted
  */
 const serverMessagePost = function (url, data, onThen, onError, onFinally) {
-  if (dataFeed.isRunning) return
+  setTimeout(() => {
+    $bus.emit('blockly.runBlocks.serverMessagePost', url, data)
+    console.log('Sending POST:', url, data)
 
-  $bus.emit('blockly.runBlocks.serverMessagePost', url, data)
-  console.log('Sending POST:', url, data)
-
-  const api = axios({
-    method: 'post',
-    url,
-    data
-  }).then((res) => {
-    onThen(res.data)
-    return res
-  }).catch((err) => {
-    onError(err)
-  }).then((data) => {
-    onFinally(data?.data)
-  })
+    const api = axios({
+      method: 'post',
+      url,
+      data
+    }).then((res) => {
+      dataFeed.isRunning && onThen(res.data)
+      return res
+    }).catch((err) => {
+      onError(err)
+    }).then((data) => {
+      dataFeed.isRunning && onFinally(data?.data)
+    })
+  }, 0)
 }
 
 /**
