@@ -1,11 +1,11 @@
 <template lang="pug">
-div(:class='{"mp-drawer-is-maximized": isExpanded}')
-  q-drawer(v-model='isRightSidebarOpened' bordered side='right')
+div(:class='{"mp-drawer-is-maximized": settings.ui.sidebar.right.maximized}')
+  q-drawer(v-model='settings.ui.sidebar.right.open' bordered side='right')
     q-list
       q-item-label(header)
-        q-btn.bg-dark.text-white(v-if='isExpanded' icon='east' @click='toggleExpand')
+        q-btn.bg-dark.text-white(v-if='settings.ui.sidebar.right.maximized' icon='east' @click='settings.ui.sidebar.right.maximized = false')
           span.q-ml-sm Collapse Data Feed
-        q-btn.bg-dark.text-white(v-else icon='west' @click='toggleExpand')
+        q-btn.bg-dark.text-white(v-else icon='west' @click='settings.ui.sidebar.right.maximized = true')
           span.q-ml-sm Expand Data Feed
     .q-pa-md
       .row.q-col-gutter-md.items-start
@@ -28,27 +28,17 @@ div(:class='{"mp-drawer-is-maximized": isExpanded}')
 
 <script setup>
 import {useDatafeedResponses} from '../stores/datafeed'
-import {inject} from 'vue'
+import { useSettingsStore } from '../stores/settings';
 
-const props = defineProps(['data', 'isRightSidebarOpened'])
+const props = defineProps(['data'])
 const dataFeed = useDatafeedResponses()
+const settings = useSettingsStore()
 const imageModal = $ref(false)
 const imageModalActiveImage = $ref({})
 const isExpanded = $ref(false)
-const $bus = inject('$bus')
 
 function expandImage (data) {
   imageModal = true
   imageModalActiveImage = data
-}
-
-
-$bus.on('layout.sidebar.right.close', () => {
-  isExpanded = false
-  $bus.emit('layout.sidebar.right.resize', isExpanded)
-})
-function toggleExpand () {
-  isExpanded = !isExpanded
-  $bus.emit('layout.sidebar.right.resize', isExpanded)
 }
 </script>

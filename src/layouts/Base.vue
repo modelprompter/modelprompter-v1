@@ -1,8 +1,9 @@
 <template lang="pug">
-q-layout(view='hHh lpR fFf' :class='{"mp-has-maximized-drawer": isExpanded || isRightExpanded}')
+q-layout(view='hHh lpR fFf' :class='{"mp-has-maximized-drawer": hasExpandedDrawer}')
+  //- Toolbar
   q-header(elevated)
     q-toolbar
-      q-btn(flat dense round icon='menu' aria-label='Menu' @click='toggleLeftSidebar')
+      q-btn(flat dense round icon='menu' aria-label='Menu' @click='settings.ui.sidebar.left.open = !settings.ui.sidebar.left.open')
       q-toolbar-title
         span
           router-link.text-decoration-none.text-white(:to='{path: "/"}')
@@ -12,20 +13,23 @@ q-layout(view='hHh lpR fFf' :class='{"mp-has-maximized-drawer": isExpanded || is
             small.gt-xs.q-ml-sm(style='font-size: .65em; display: inline-block; transform: translate(0, -3px)') {{pkg.version}}
       q-space
       router-view(name='toolbar')
-      q-btn.q-ml-md(flat dense round icon='menu' aria-label='Menu' @click='toggleRightSidebar')
+      q-btn.q-ml-md(flat dense round icon='menu' aria-label='Menu' @click='settings.ui.sidebar.right.open = !settings.ui.sidebar.right.open')
 
-  div(:class='{"mp-drawer-is-maximized": isExpanded}')
-    q-drawer(v-model='isLeftSidebarOpened' bordered)
+  //- Left Sidebar
+  div(:class='{"mp-drawer-is-maximized": settings.ui.sidebar.left.maximized}')
+    q-drawer(v-model='settings.ui.sidebar.left.open' bordered)
       q-list
         q-item-label(header align='right')
-          q-btn.bg-dark.text-white(v-if='isExpanded' icon-right='west' @click='isExpanded = false')
-            span.q-mr-sm Collapse Data Feed
-          q-btn.bg-dark.text-white(v-else icon-right='east' @click='isExpanded = true')
-            span.q-mr-sm Expand Data Feed
+          q-btn.bg-dark.text-white(v-if='settings.ui.sidebar.left.maximized' icon-right='west' @click='settings.ui.sidebar.left.maximized = false')
+            span.q-mr-sm Collapse Dashboard
+          q-btn.bg-dark.text-white(v-else icon-right='east' @click='settings.ui.sidebar.left.maximized = true')
+            span.q-mr-sm Expand Dashboard
         EssentialLink(v-for='link in essentialLinks' :key='link.title' v-bind='link')
 
-  DataFeed(:isRightSidebarOpened='isRightSidebarOpened' :data='dataFeed.data')
+  //- Right Sidebar
+  DataFeed(:data='dataFeed.data')
 
+  //- Main Content
   q-page-container
     slot
       router-view
@@ -34,23 +38,20 @@ q-layout(view='hHh lpR fFf' :class='{"mp-has-maximized-drawer": isExpanded || is
 
 
 <script setup>
+import PKG from '/package.json'
 import EssentialLink from 'components/EssentialLink.vue'
 import DataFeed from 'components/DataFeed.vue'
 import {useDatafeedResponses} from '../stores/datafeed'
-import PKG from '/package.json'
+import { useSettingsStore } from '../stores/settings'
 import { LocalStorage } from 'quasar'
-import {inject, watch} from 'vue'
+import {inject, watch, computed} from 'vue'
 
 const $bus = inject('$bus')
+const settings = useSettingsStore()
 const dataFeed = useDatafeedResponses()
-const localData = LocalStorage.getItem('layout.base') || {}
-const isLeftSidebarOpened = $ref(!!localData.isLeftSidebarOpened)
-const isRightSidebarOpened = $ref(!!localData.isRightSidebarOpened)
-const isExpanded = $ref(false)
-const isRightExpanded = $ref(false)
 
-$bus.on('layout.sidebar.right.resize', (isExpanded) => {
-  isRightExpanded = isExpanded
+const hasExpandedDrawer = computed(() => {
+  return (settings.ui.sidebar.left.open && settings.ui.sidebar.left.maximized) || (settings.ui.sidebar.right.open && settings.ui.sidebar.right.maximized)
 })
 
 const essentialLinks = $ref([
@@ -75,35 +76,7 @@ const pkg = $ref(PKG)
  */
 watch(() => dataFeed.isRunning, () => {
   if (dataFeed.isRunning) {
-    isRightSidebarOpened = true
+    settings.ui.sidebar.left.open = true
   }
 })
-
-
-
-
-/**
- * Autosaves after toggling sidebar
- */
-function toggleLeftSidebar () {
-  isLeftSidebarOpened = !isLeftSidebarOpened
-  $bus.emit('layout.sidebar.left.close', isLeftSidebarOpened)
-  autosave()
-}
-
-function toggleRightSidebar () {
-  isRightSidebarOpened = !isRightSidebarOpened
-  $bus.emit('layout.sidebar.right.close', isRightSidebarOpened)
-  autosave()
-}
-
-/**
- * Autosave
- */
-function autosave () {
-  LocalStorage.set('layout.base', {
-    isLeftSidebarOpened: isLeftSidebarOpened,
-    isRightSidebarOpened: isRightSidebarOpened
-  })
-}
 </script>
