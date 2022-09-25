@@ -76,7 +76,7 @@ const pkg = $ref(PKG)
  */
 watch(() => dataFeed.isRunning, () => {
   if (dataFeed.isRunning) {
-    settings.ui.sidebar.left.open = true
+    settings.ui.sidebar.right.open = true
   }
 })
 </script>

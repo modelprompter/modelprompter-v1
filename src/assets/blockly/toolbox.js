@@ -226,7 +226,7 @@ export default {
         },
         {
           kind: 'block',
-          type: 'json_object_defaults'
+          type: 'json_object_merge'
         },
         {
           kind: 'block',
