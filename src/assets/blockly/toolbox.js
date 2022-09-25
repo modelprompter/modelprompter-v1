@@ -199,11 +199,34 @@ export default {
         },
         {
           kind: 'block',
-          type: 'json_object_key_value'
+          type: 'json_object_key_value',
+          inputs: {
+            KEY: {
+              shadow: {
+                type: 'text',
+                fields: {
+                  // @todo this should be dynamic otherwise we'll get duplicate key bugs
+                  TEXT: 'untitled'
+                }
+              }
+            },
+            VALUE: {
+              shadow: {
+                type: 'text',
+                fields: {
+                  TEXT: ''
+                }
+              }
+            }
+          },
         },
         {
           kind: 'block',
           type: 'json_object_get'
+        },
+        {
+          kind: 'block',
+          type: 'json_object_defaults'
         },
         {
           kind: 'block',

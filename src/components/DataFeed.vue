@@ -1,16 +1,16 @@
 <template lang="pug">
-div(:class='{"is-drawer-maximized": isExpanded}')
+div(:class='{"mp-drawer-is-maximized": isExpanded}')
   q-drawer(v-model='isRightSidebarOpened' bordered side='right')
     q-list
       q-item-label(header)
-        q-btn.bg-dark.text-white(v-if='isExpanded' icon='east' @click='isExpanded = false')
+        q-btn.bg-dark.text-white(v-if='isExpanded' icon='east' @click='toggleExpand')
           span.q-ml-sm Collapse Data Feed
-        q-btn.bg-dark.text-white(v-else icon='west' @click='isExpanded = true')
+        q-btn.bg-dark.text-white(v-else icon='west' @click='toggleExpand')
           span.q-ml-sm Expand Data Feed
     .q-pa-md
       .row.q-col-gutter-md.items-start
         q-card.q-mb-md(v-for='(item, i) in dataFeed.data' :data='item' :class='[isExpanded ? "col-xs-6 col-sm-4 col-md-3 col-lg-2 col-xl-1" : "col-6"]')
-          q-img.clickable(v-if='item.image' :src='item.image' @click='expand(item)')
+          q-img.clickable(v-if='item.image' :src='item.image' @click='expandImagine(item)')
           q-card-section(v-else)
             pre {{item.data}}
 
@@ -28,15 +28,27 @@ div(:class='{"is-drawer-maximized": isExpanded}')
 
 <script setup>
 import {useDatafeedResponses} from '../stores/datafeed'
+import {inject} from 'vue'
 
 const props = defineProps(['data', 'isRightSidebarOpened'])
 const dataFeed = useDatafeedResponses()
 const imageModal = $ref(false)
 const imageModalActiveImage = $ref({})
 const isExpanded = $ref(false)
+const $bus = inject('$bus')
 
-function expand (data) {
+function expandImage (data) {
   imageModal = true
   imageModalActiveImage = data
+}
+
+
+$bus.on('layout.sidebar.right.close', () => {
+  isExpanded = false
+  $bus.emit('layout.sidebar.right.resize', isExpanded)
+})
+function toggleExpand () {
+  isExpanded = !isExpanded
+  $bus.emit('layout.sidebar.right.resize', isExpanded)
 }
 </script>

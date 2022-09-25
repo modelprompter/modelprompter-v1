@@ -280,6 +280,36 @@ Blockly.JavaScript['json_object_get'] = function (block) {
 
 
 /**
+ * Object defaultsDeep
+ */
+Blockly.common.defineBlocksWithJsonArray([{
+  "type": "json_object_defaults",
+  "message0": "Merge list %1 into %2",
+  'style': 'list_blocks',
+  "args0": [
+    {
+      "type": "input_value",
+      "name": "DATA"
+    },
+    {
+      "type": "input_value",
+      "name": "DEFAULTS"
+    }
+  ],
+  "output": null,
+  "tooltip": "",
+  "helpUrl": ""
+}])
+
+Blockly.JavaScript['json_object_defaults'] = function (block) {
+  const DATA = Blockly.JavaScript.valueToCode(block, 'DATA', Blockly.JavaScript.ORDER_NONE) || []
+  const DEFAULTS = Blockly.JavaScript.valueToCode(block, 'DEFAULTS', Blockly.JavaScript.ORDER_NONE) || []
+
+  return [`defaultsDeep(${DEFAULTS}, ${DATA})`, Blockly.JavaScript.ORDER_ATOMIC]
+}
+
+
+/**
  * Object.values
  */
 Blockly.common.defineBlocksWithJsonArray([{

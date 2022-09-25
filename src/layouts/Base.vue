@@ -1,5 +1,5 @@
 <template lang="pug">
-q-layout(view='hHh lpR fFf')
+q-layout(view='hHh lpR fFf' :class='{"mp-has-maximized-drawer": isExpanded || isRightExpanded}')
   q-header(elevated)
     q-toolbar
       q-btn(flat dense round icon='menu' aria-label='Menu' @click='toggleLeftSidebar')
@@ -14,10 +14,15 @@ q-layout(view='hHh lpR fFf')
       router-view(name='toolbar')
       q-btn.q-ml-md(flat dense round icon='menu' aria-label='Menu' @click='toggleRightSidebar')
 
-  q-drawer(v-model='isLeftSidebarOpened' bordered)
-    q-list
-      q-item-label(header) Site navigation
-      EssentialLink(v-for='link in essentialLinks' :key='link.title' v-bind='link')
+  div(:class='{"mp-drawer-is-maximized": isExpanded}')
+    q-drawer(v-model='isLeftSidebarOpened' bordered)
+      q-list
+        q-item-label(header align='right')
+          q-btn.bg-dark.text-white(v-if='isExpanded' icon-right='west' @click='isExpanded = false')
+            span.q-mr-sm Collapse Data Feed
+          q-btn.bg-dark.text-white(v-else icon-right='east' @click='isExpanded = true')
+            span.q-mr-sm Expand Data Feed
+        EssentialLink(v-for='link in essentialLinks' :key='link.title' v-bind='link')
 
   DataFeed(:isRightSidebarOpened='isRightSidebarOpened' :data='dataFeed.data')
 
@@ -36,18 +41,25 @@ import PKG from '/package.json'
 import { LocalStorage } from 'quasar'
 import {inject, watch} from 'vue'
 
-
+const $bus = inject('$bus')
 const dataFeed = useDatafeedResponses()
 const localData = LocalStorage.getItem('layout.base') || {}
 const isLeftSidebarOpened = $ref(!!localData.isLeftSidebarOpened)
 const isRightSidebarOpened = $ref(!!localData.isRightSidebarOpened)
+const isExpanded = $ref(false)
+const isRightExpanded = $ref(false)
+
+$bus.on('layout.sidebar.right.resize', (isExpanded) => {
+  isRightExpanded = isExpanded
+})
+
 const essentialLinks = $ref([
-  {
-    title: 'Quick Prompter',
-    caption: 'Ask a model for something',
-    icon: 'space_bar',
-    link: '/quick',
-  },
+  // {
+  //   title: 'Quick Prompter',
+  //   caption: 'Ask a model for something',
+  //   icon: 'space_bar',
+  //   link: '/quick',
+  // },
   {
     title: 'Block Prompter',
     caption: 'Ask a model for something',
@@ -75,11 +87,13 @@ watch(() => dataFeed.isRunning, () => {
  */
 function toggleLeftSidebar () {
   isLeftSidebarOpened = !isLeftSidebarOpened
+  $bus.emit('layout.sidebar.left.close', isLeftSidebarOpened)
   autosave()
 }
 
 function toggleRightSidebar () {
   isRightSidebarOpened = !isRightSidebarOpened
+  $bus.emit('layout.sidebar.right.close', isRightSidebarOpened)
   autosave()
 }
 

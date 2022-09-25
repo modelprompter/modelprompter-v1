@@ -8,14 +8,14 @@ const routes = [
     ]
   },
 
-  {
-    path: '/quick',
-    component: () => import('layouts/QuickPrompter.vue'),
-    children: [
-      { path: '/quick', component: () => import('pages/quick/Prompter.vue') },
-      { path: '/quick/gpus', component: () => import('pages/quick/GPUs.vue') }
-    ]
-  },
+  // {
+  //   path: '/quick',
+  //   component: () => import('layouts/QuickPrompter.vue'),
+  //   children: [
+  //     { path: '/quick', component: () => import('pages/quick/Prompter.vue') },
+  //     { path: '/quick/gpus', component: () => import('pages/quick/GPUs.vue') }
+  //   ]
+  // },
 
   {
     path: '/block',

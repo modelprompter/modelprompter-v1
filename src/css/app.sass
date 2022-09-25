@@ -15,12 +15,21 @@ body.body--dark .q-header, body.body--dark .q-footer, body.body--dark .q-drawer
   border-color: #514d99
 
 .q-drawer
-  transition: width 0.3s ease-in-out, background 0.3s ease
+  transition: width 0.3s ease, background 0.3s ease, opacity 0.3s ease
 
-.is-drawer-maximized .q-drawer
+.q-drawer-container
+  transition: opacity 0.3s ease
+
+.mp-drawer-is-maximized .q-drawer
   width: 100% !important
-  background: #1e1e3faa
-  transition: width 0.3s ease-in-out
+  background: #1e1e3fdd
+  transition: width 0.3s ease
+  z-index: 99999
+
+.mp-has-maximized-drawer > div > .q-drawer-container > .q-drawer
+  opacity: 0 !important
+.mp-has-maximized-drawer > div.mp-drawer-is-maximized > .q-drawer-container > .q-drawer
+  opacity: 1 !important
 
 // Core
 a

@@ -12,7 +12,7 @@ import {onMounted, shallowRef, inject, watch} from 'vue'
 import axios from 'axios'
 import {LocalStorage, uid} from 'quasar'
 import {useDatafeedResponses} from '../stores/datafeed'
-import {get} from 'lodash-es'
+import {get, defaultsDeep} from 'lodash-es'
 
 const dataFeed = useDatafeedResponses()
 const $bus = inject('$bus')
@@ -23,6 +23,10 @@ let workspace = shallowRef()
 let code = $ref('')
 
 const emit = defineEmits(['change'])
+
+// Globals for Blockly
+window.get = get
+window.defaultsDeep = defaultsDeep
 
 /**
  * Mount
