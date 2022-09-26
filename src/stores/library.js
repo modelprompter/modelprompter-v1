@@ -2,16 +2,16 @@ import {defineStore} from 'pinia'
 import {watch} from 'vue'
 import {LocalStorage} from 'quasar'
 import defaultWorkspace from 'stores/workspaces/default'
+import {throttle} from 'lodash-es'
 
 export const useLibraryStore = defineStore('library', () => {
   const library = LocalStorage.getItem('library') || {}
   const workspaces = $ref(library.workspaces || [])
   const currentWorkspace = $ref(library.currentWorkspace || defaultWorkspace.library.currentWorkspace)
 
-  function autosave () {
-    console.log('autosave')
+  const autosave = throttle(() => {
     LocalStorage.set('library', {workspaces, currentWorkspace})
-  }
+  }, 250, {trailing: true})
   watch(workspaces, autosave)
   watch(currentWorkspace, autosave)
 

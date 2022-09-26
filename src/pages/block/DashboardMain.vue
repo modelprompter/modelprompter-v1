@@ -11,11 +11,11 @@ q-card
           q-td(key='title' :props='props') {{ props.row.title }}
           q-td(key='description' :props='props') {{props.row.description}}
           q-td(key='actions' :props='props')
-            .row
-              .col-8.q-pr-md
-                q-btn.full-width(icon='delete' @click='openWorkspace(props)' label='Open')
-              .col-4
-                q-btn.full-width(color='negative' icon='delete' @click='deleteWorkspace(props)')
+            .q-gutter-sm
+              q-btn(icon='folder' color='orange' @click='openWorkspace(props)' label='Open')
+              q-btn(icon='data_object' color='blue' @click='viewCode(props.row)' label='Code')
+              q-btn(icon='fork_right' color='green' @click='remix(props.row)' label='Remix')
+              q-btn(color='negative' icon='delete' @click='deleteWorkspace(props)')
       //- Responsive
       template(v-slot:item='props')
         .q-pa-md
@@ -81,6 +81,31 @@ function addWorkspace () {
     title: 'Untitled',
     id: uid(),
   })
+}
+
+/**
+ * View code
+ */
+function viewCode () {
+
+}
+
+/**
+ * Creates a clone of this workspace
+ * - No need to "open it" as we can just change the current workspace id
+ */
+function remix (row) {
+  // Find workspace with current id
+  const workspace = {...library.find(row.id)}
+  workspace.id = uid()
+  library.workspaces.push(workspace)
+  library.$patch({currentWorkspace: {...workspace}})
+
+  // Minimize sidebar
+  settings.ui.sidebar.left.maximized = false
+  $bus.emit('workspace.dashboard.main.reload', workspace)
+
+  $q.notify({message: 'Workspace remixed and opened into'})
 }
 
 </script>
