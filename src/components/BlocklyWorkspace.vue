@@ -61,6 +61,8 @@ onMounted(() => {
  * Load initial data
  */
 const load = function (data, view) {
+  Blockly.mainWorkspace.clear()
+
   if (data) {
     Blockly.Xml.domToWorkspace(
       Blockly.Xml.textToDom(data),

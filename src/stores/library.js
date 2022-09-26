@@ -9,10 +9,16 @@ export const useLibraryStore = defineStore('library', () => {
   const currentWorkspace = $ref(library.currentWorkspace || defaultWorkspace.library.currentWorkspace)
 
   function autosave () {
+    console.log('autosave')
     LocalStorage.set('library', {workspaces, currentWorkspace})
   }
   watch(workspaces, autosave)
   watch(currentWorkspace, autosave)
 
-  return {workspaces, currentWorkspace}
+  function find (id) {
+    // get workspace with id
+    return workspaces.find(workspace => workspace.id === id)
+  }
+
+  return {workspaces, currentWorkspace, autosave, find}
 })

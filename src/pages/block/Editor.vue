@@ -40,14 +40,25 @@ const options = {
 }
 
 // Load initial data
+function loadWorkspace (workspace) {
+  workspace = workspace || '<xml xmlns="https://developers.google.com/blockly/xml"></xml>'
+
+  workspaceRef.value.load(workspace.workspace, {
+    viewLeft: workspace.viewLeft,
+    viewTop: workspace.viewTop,
+    scale: workspace.scale,
+  })
+}
+
 const workspaceRef = ref()
 onMounted(() => {
-  workspaceRef.value.load(library.currentWorkspace.workspace, {
-    viewLeft: library.currentWorkspace.viewLeft,
-    viewTop: library.currentWorkspace.viewTop,
-    scale: library.currentWorkspace.scale,
-  })
+  loadWorkspace(library.currentWorkspace)
 })
+
+$bus.on('workspace.dashboard.main.reload', workspace => {
+  loadWorkspace(workspace)
+})
+
 
 
 // Saves a copy of the current workspace
@@ -97,7 +108,7 @@ function workspaceEventHandler (ev, workspace) {
         data.title = library.currentWorkspace.title || 'Untitled'
         data.description = library.currentWorkspace.description || ''
 
-        library.currentWorkspace = Object.assign(library.currentWorkspace, data)
+        library.$patch({currentWorkspace: Object.assign(library.currentWorkspace, data)})
       }
   }
 }

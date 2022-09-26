@@ -116,7 +116,10 @@ module.exports = configure(function (/* ctx */) {
     framework: {
       config: {
         dark: true,
-        notify: {}
+        notify: {
+          position: 'top',
+          timeout: 2500,
+        }
       },
 
       // iconSet: 'material-icons', // Quasar icon set
@@ -131,6 +134,7 @@ module.exports = configure(function (/* ctx */) {
 
       // Quasar plugins
       plugins: [
+        'Dialog',
         'Notify'
       ]
     },
