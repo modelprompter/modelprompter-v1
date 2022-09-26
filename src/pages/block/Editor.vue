@@ -42,17 +42,23 @@ const options = {
 // Load initial data
 const workspaceRef = ref()
 onMounted(() => {
-  workspaceRef.value.load(library.workspaces.current.workspace, {
-    viewLeft: library.workspaces.current.viewLeft,
-    viewTop: library.workspaces.current.viewTop,
-    scale: library.workspaces.current.scale,
+  workspaceRef.value.load(library.currentWorkspace.workspace, {
+    viewLeft: library.currentWorkspace.viewLeft,
+    viewTop: library.currentWorkspace.viewTop,
+    scale: library.currentWorkspace.scale,
   })
 })
 
 
 // Saves a copy of the current workspace
 $bus.on('dashboard.sidebar.save', () => {
-  library.workspaces[library.workspaces.current.id] = library.workspaces.current
+  // See if a workspace exists with id, if it does merge it otherwise push it
+  const index = library.workspaces.findIndex(workspace => workspace.id === library.currentWorkspace.id)
+  if (index > -1) {
+    library.workspaces[index] = {...library.currentWorkspace}
+  } else {
+    library.workspaces.push({...library.currentWorkspace})
+  }
 })
 
 
@@ -87,9 +93,11 @@ function workspaceEventHandler (ev, workspace) {
         // Store the workspace and generate an ID
         const data = {viewLeft, viewTop, scale}
         data.workspace = workspaceRef.value.getWorkspaceString()
-        data.id = library.workspaces.current.id || uid()
+        data.id = library.currentWorkspace.id || uid()
+        data.title = library.currentWorkspace.title || 'Untitled'
+        data.description = library.currentWorkspace.description || ''
 
-        library.workspaces.current = Object.assign(library.workspaces.current, data)
+        library.currentWorkspace = Object.assign(library.currentWorkspace, data)
       }
   }
 }
