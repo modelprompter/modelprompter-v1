@@ -11,7 +11,7 @@ div(:class='{"mp-drawer-is-maximized": settings.ui.sidebar.right.maximized}')
       .row.q-col-gutter-none
         div.q-pa-xs(v-for='(item, i) in dataFeed.data' :data='item' :class='[settings.ui.sidebar.right.maximized ? "col-xs-6 col-sm-4 col-md-3 col-lg-2 col-xl-1" : "col-6"]')
           q-card
-            q-img.clickable(v-if='item.image' :src='item.image' @click='expandImagine(item)')
+            q-img.clickable(v-if='item.image' :src='item.image' @click='expandImage(item)')
             q-card-section(v-else)
               pre {{item.data}}
 
@@ -22,9 +22,6 @@ div(:class='{"mp-drawer-is-maximized": settings.ui.sidebar.right.maximized}')
         q-card-section
           pre(style='font-size:1.15em') {{imageModalActiveImage}}
         q-card-actions(align='right')
-          q-btn(flat round color='negative' icon='delete' @click='deleteImage($event, imageModalActiveImage)')
-          q-space
-          q-btn(flat round color='secondary' icon='save' @click='downloadImage($event, imageModalActiveImage)')
 </template>
 
 <script setup>

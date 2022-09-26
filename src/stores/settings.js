@@ -38,7 +38,7 @@ export const useSettingsStore = defineStore('settings', () => {
   const ui = $ref(settings.ui)
   watch(ui, () => {
     if (!ui.sidebar.left.open) ui.sidebar.left.maximized = false
-    if (!ui.sidebar.right.open) ui.sidebar.right.maximized = false
+    else if (!ui.sidebar.right.open) ui.sidebar.right.maximized = false
 
     autosave()
   })
