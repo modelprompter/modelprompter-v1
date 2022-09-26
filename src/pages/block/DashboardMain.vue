@@ -1,7 +1,7 @@
 <template lang="pug">
 q-card
   q-card-section
-    q-table(v-if='settings.ui.sidebar.left.maximized' title='Workspaces' :rows='library.workspaces' :columns='columns' row-key='id' :grid="$q.screen.lt.md")
+    q-table(v-if='settings.ui.sidebar.left.maximized' title='Workspaces' :rows='library.workspaces' :columns='columns' row-key='id' :grid="$q.screen.lt.lg")
       //- Add rows
       template(v-slot:top)
         q-btn(icon='library_add' label='Start a new Workspace' @click='addWorkspace')
@@ -18,9 +18,17 @@ q-card
               q-btn(color='negative' icon='delete' @click='deleteWorkspace(props)')
       //- Responsive
       template(v-slot:item='props')
-        .q-pa-md
-          .col-xs-12.col-sm-6.col-md-4
-            q-card
+        .col-xs-12.col-sm-6.col-md-4.q-pa-xs
+          q-card
+            q-card-section
+              div.text-h6 {{ props.row.title }}
+            q-card-section
+              div.text-body2 {{ props.row.description }}
+            q-card-actions
+              q-btn.full-width.q-mb-md(icon='folder' color='orange' @click='openWorkspace(props)' label='Open')
+              q-btn.full-width.q-mb-md(color='blue' icon='data_object' @click='viewCode(props.row)')
+              q-btn.full-width.q-mb-md(icon='fork_right' @click='remix(props.row)' label='Remix')
+              q-btn.full-width.q-mb-md(color='negative' icon='delete' @click='deleteWorkspace(props)' label='Delete')
 </template>
 
 <script setup>

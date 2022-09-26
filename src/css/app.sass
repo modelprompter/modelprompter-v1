@@ -24,13 +24,13 @@ body.body--dark .q-header, body.body--dark .q-footer, body.body--dark .q-drawer
   width: 100% !important
   background: #1e1e3fdd
   transition: width 0.3s ease
-  z-index: 100
+  z-index: 3000
 
 .mp-has-maximized-drawer > div > .q-drawer-container > .q-drawer
   opacity: 0 !important
   z-index: 0 !important
 .mp-has-maximized-drawer > div.mp-drawer-is-maximized > .q-drawer-container > .q-drawer
-  z-index: 100 !important
+  z-index: 3000 !important
   opacity: 1 !important
 
 body
@@ -55,6 +55,8 @@ pre
   color: $primary-fg
 .q-btn.bg-primary.text-white
   color: $primary-fg !important
+.q-btn.bg-light
+  background: $light !important
 
 .q-btn.bg-orange
   color: $primary-fg !important
@@ -81,6 +83,9 @@ pre
 // Cards
 .q-card.q-card--dark.q-dark
   background: $dark
+
+  .q-card.q-card--dark.q-dark
+    background: lighten($dark, 16%)
 
   .q-tab-panel
     .q-card.q-card--dark.q-dark

@@ -1,5 +1,5 @@
 <template lang="pug">
-q-layout(view='hHh lpR fFf' :class='{"mp-has-maximized-drawer": hasExpandedDrawer}')
+q-layout(view='lHr lpR fFf' :class='{"mp-has-maximized-drawer": hasExpandedDrawer}')
   //- Toolbar
   q-header(elevated)
     q-toolbar
@@ -7,8 +7,11 @@ q-layout(view='hHh lpR fFf' :class='{"mp-has-maximized-drawer": hasExpandedDrawe
       q-toolbar-title
         span
           router-link.text-decoration-none.text-white(:to='{path: "/"}')
-            img.gt-sm.q-mr-sm(src='~/src/assets/logo-title.png' height=32 style='vertical-align: middle')
-            img.lt-md.q-mr-sm(src='~/src/assets/logo-title-favicon.png' height=32 style='vertical-align: middle')
+            span(v-if='settings.ui.sidebar.left.open || settings.ui.sidebar.right.open')
+              img.q-mr-sm(src='~/src/assets/logo-title-favicon.png' height=32 style='vertical-align: middle')
+            span(v-else)
+              img.gt-sm.q-mr-sm(src='~/src/assets/logo-title.png' height=32 style='vertical-align: middle')
+              img.lt-md.q-mr-sm(src='~/src/assets/logo-title-favicon.png' height=32 style='vertical-align: middle')
           a(href='https://github.com/modelprompter/modelprompter/releases' target='_blank')
             small.gt-xs.q-ml-sm(style='font-size: .65em; display: inline-block; transform: translate(0, -3px)') {{pkg.version}}
       q-space
