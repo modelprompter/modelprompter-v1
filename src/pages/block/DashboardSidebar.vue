@@ -4,17 +4,18 @@ q-card.q-mt-md
     div.text-h6 Worspace Settings
   q-space
   q-card-actions
-    div.full-width
-      q-btn.q-mb-md.full-width(color='green' icon='save' @click='save' label='Save')
-    div.full-width
-      q-btn.full-width(color='purple' icon='content_copy' @click='remix' label='Remix')
-    div.full-width.row.q-mt-md
-      q-btn.col-6.full-width(color='red' icon='restart_alt' @click='reload' label='Reload')
+    .col-4
+      q-btn.full-width(color='red' icon='restart_alt' @click='reload')
+    .col-8.q-pl-xs
+      q-btn.full-width(color='green' icon='save' @click='save')
 </template>
 
 <script setup>
+import {inject} from 'vue'
+const $bus = inject('$bus')
+
 function save () {
-  console.log('save')
+  $bus.emit('dashboard.sidebar.save')
 }
 
 function remix () {

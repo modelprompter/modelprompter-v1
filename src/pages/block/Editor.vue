@@ -11,9 +11,13 @@ import toolbox from 'assets/blockly/toolbox.js'
 import 'assets/blockly/blocks.js'
 import {LocalStorage} from 'quasar'
 import {defaultsDeep} from 'lodash-es'
-import {ref, onMounted} from 'vue'
-import defaultWorkspace from '../../stores/workspaces/index.js'
+import {ref, onMounted, inject} from 'vue'
+import defaultWorkspace from 'stores/workspaces/default'
+import {useLibraryStore} from 'stores/library'
+import {uid} from 'quasar'
 
+const $bus = inject('$bus')
+const library = useLibraryStore()
 const options = {
   media: "media/",
   grid: {
@@ -55,6 +59,14 @@ onMounted(() => {
 })
 
 
+/**
+ * Trigger save
+ */
+$bus.on('dashboard.sidebar.save', () => {
+  library.workspaces[library.workspaces.current.id] = library.workspaces.current
+})
+
+
 
 /**
  * Handles Workspace events
@@ -73,8 +85,13 @@ function workspaceEventHandler (ev, workspace) {
         viewTop = ev.viewTop
         scale = ev.scale
       }
+
       const data = {viewLeft, viewTop, scale}
-      data.workspace = workspaceRef.value.getWorkspaceString()
+      library.workspaces.current.workspace = data.workspace = workspaceRef.value.getWorkspaceString()
+      if (!library.workspaces.current.id) {
+        library.workspaces.current.id = uid()
+      }
+
       autosave(data)
   }
 }

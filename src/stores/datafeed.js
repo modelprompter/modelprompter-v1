@@ -1,6 +1,6 @@
 import {defineStore} from 'pinia'
 
-export const useDatafeedResponses = defineStore('datafeedResponses', () => {
+export const useDatafeedResponses = defineStore('datafeed', () => {
   const data = $ref([])
   const onEndMethods = $ref([])
   const isRunning = $ref(false)
