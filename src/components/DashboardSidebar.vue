@@ -9,11 +9,13 @@ div(:class='{"mp-drawer-is-maximized": settings.ui.sidebar.left.maximized}')
           span.q-mr-sm Expand Dashboard
       .q-px-md.q-pb-md
         .row
-          .q-pa-xs.q-mb-md(:class='[settings.ui.sidebar.left.maximized ? "col-md-3 col-lg-2 col-xl-1" : "col-12"]')
+          .q-pa-xs.q-mb-md(:class='[settings.ui.sidebar.left.maximized ? "col-md-3 col-lg-2 col-xl-1 col-xs-12" : "col-12 col-xs-12"]')
             EssentialLink(v-for='link in essentialLinks' :key='link.title' v-bind='link')
-          .q-pa-xs.col
-            slot(name='dashboard')
-              router-view(name='dashboard')
+            slot(name='dashboardSidebar')
+              router-view(name='dashboardSidebar')
+          .q-pa-xs(:class='[settings.ui.sidebar.left.maximized ? "col-md-9 col-lg-10 colx-11 col-xs-12" : "col-12 col-xs-12"]')
+            slot(name='dashboardMain')
+              router-view(name='dashboardMain')
 </template>
 
 <script setup>

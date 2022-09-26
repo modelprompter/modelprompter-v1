@@ -25,7 +25,8 @@ const routes = [
         path: '/block',
         components: {
           default: () => import('src/pages/block/Editor.vue'),
-          dashboard: () => import('src/pages/block/Dashboard.vue'),
+          dashboardMain: () => import('src/pages/block/DashboardMain.vue'),
+          dashboardSidebar: () => import('src/pages/block/DashboardSidebar.vue'),
           toolbar: () => import('src/pages/block/Toolbar.vue'),
         },
       }

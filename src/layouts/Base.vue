@@ -16,8 +16,9 @@ q-layout(view='hHh lpR fFf' :class='{"mp-has-maximized-drawer": hasExpandedDrawe
       q-btn.q-ml-md(flat dense round icon='menu' aria-label='Menu' @click='toggleRightSidebar')
 
   //- Sidebars
-  Dashboard
-    router-view(name='dashboard')
+  DashboardSidebar
+    router-view(name='dashboardSidebar')
+    router-view(name='dashboardMain')
   DataFeed(:data='dataFeed.data')
 
   //- Main Content
@@ -30,8 +31,8 @@ q-layout(view='hHh lpR fFf' :class='{"mp-has-maximized-drawer": hasExpandedDrawe
 
 <script setup>
 import PKG from '/package.json'
-import DataFeed from 'components/DataFeed.vue'
-import Dashboard from 'components/Dashboard.vue'
+import DataFeed from '../components/DataFeed.vue'
+import DashboardSidebar from '../components/DashboardSidebar.vue'
 import {useDatafeedResponses} from '../stores/datafeed'
 import { useSettingsStore } from '../stores/settings'
 import {watch, computed} from 'vue'
