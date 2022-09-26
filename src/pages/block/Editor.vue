@@ -9,10 +9,7 @@ import BlocklyWorkspace from 'src/components/BlocklyWorkspace.vue'
 import theme from 'assets/blockly/theme.js'
 import toolbox from 'assets/blockly/toolbox.js'
 import 'assets/blockly/blocks.js'
-import {LocalStorage} from 'quasar'
-import {defaultsDeep} from 'lodash-es'
 import {ref, onMounted, inject} from 'vue'
-import defaultWorkspace from 'stores/workspaces/default'
 import {useLibraryStore} from 'stores/library'
 import {uid} from 'quasar'
 
@@ -42,26 +39,18 @@ const options = {
   theme
 }
 
-let viewLeft = 0
-let viewTop = 0
-let scale = 0
-
-
 // Load initial data
 const workspaceRef = ref()
 onMounted(() => {
-  const data = defaultsDeep(LocalStorage.getItem('blockprompter.current'), defaultWorkspace["blockprompter.current"])
-  workspaceRef.value.load(data.workspace || defaultWorkspace["blockprompter.current"].workspace, {
-    viewLeft: data.viewLeft,
-    viewTop: data.viewTop,
-    scale: data.scale,
+  workspaceRef.value.load(library.workspaces.current.workspace, {
+    viewLeft: library.workspaces.current.viewLeft,
+    viewTop: library.workspaces.current.viewTop,
+    scale: library.workspaces.current.scale,
   })
 })
 
 
-/**
- * Trigger save
- */
+// Saves a copy of the current workspace
 $bus.on('dashboard.sidebar.save', () => {
   library.workspaces[library.workspaces.current.id] = library.workspaces.current
 })
@@ -71,8 +60,16 @@ $bus.on('dashboard.sidebar.save', () => {
 /**
  * Handles Workspace events
  */
+let viewLeft = 0
+let viewTop = 0
+let scale = 0
+let hasLoaded = false
+
 function workspaceEventHandler (ev, workspace) {
   switch (ev.type) {
+    case Blockly.Events.FINISHED_LOADING:
+      hasLoaded = true
+
     case Blockly.Events.VIEWPORT_CHANGE:
     case Blockly.Events.BLOCK_DELETE:
     case Blockly.Events.BLOCK_CHANGE:
@@ -80,27 +77,20 @@ function workspaceEventHandler (ev, workspace) {
     case Blockly.Events.VAR_CREATE:
     case Blockly.Events.VAR_DELETE:
     case Blockly.Events.VAR_RENAME:
-      if (ev.type === Blockly.Events.VIEWPORT_CHANGE) {
-        viewLeft = ev.viewLeft
-        viewTop = ev.viewTop
-        scale = ev.scale
-      }
+      if (hasLoaded) {
+        if (ev.type === Blockly.Events.VIEWPORT_CHANGE) {
+          viewLeft = ev.viewLeft
+          viewTop = ev.viewTop
+          scale = ev.scale
+        }
 
-      const data = {viewLeft, viewTop, scale}
-      library.workspaces.current.workspace = data.workspace = workspaceRef.value.getWorkspaceString()
-      if (!library.workspaces.current.id) {
-        library.workspaces.current.id = uid()
-      }
+        // Store the workspace and generate an ID
+        const data = {viewLeft, viewTop, scale}
+        data.workspace = workspaceRef.value.getWorkspaceString()
+        data.id = library.workspaces.current.id || uid()
 
-      autosave(data)
+        library.workspaces.current = Object.assign(library.workspaces.current, data)
+      }
   }
-}
-
-/**
- * Autosave the workspace
- */
-// @todo debounce
-function autosave (data) {
-  LocalStorage.set('blockprompter.current', data)
 }
 </script>

@@ -1,20 +1,5 @@
 export default {
-  "settings": {
-      "servers": [],
-      "ui": {
-          "sidebar": {
-              "left": {
-                  "open": false,
-                  "maximized": false
-              },
-              "right": {
-                  "open": false,
-                  "maximized": false
-              }
-          }
-      }
-  },
-  "blockprompter.current": {
+  "current": {
       "viewLeft": -1127.3119019733276,
       "viewTop": -1009.1414194502959,
       "scale": 0.7884639815600324,
