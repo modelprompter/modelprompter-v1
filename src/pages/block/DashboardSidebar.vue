@@ -10,12 +10,18 @@ q-card.q-mt-md
       q-btn.full-width(icon='save' @click='save' label='Save')
     q-input.col-12.q-mt-md(v-model='library.currentWorkspace.title' label='Title' dense)
     q-input.col-12.q-mt-md(type='textarea' autogrow v-model='library.currentWorkspace.description' label='Description' dense)
+
+  q-dialog
+    q-card.q-dialog-plugin
+      q-card-actions(align='right')
+        q-btn(icon='close' flat round dense @click='close')
 </template>
 
 <script setup>
 import {useLibraryStore} from 'stores/library'
 import {inject} from 'vue'
 import {uid, useQuasar} from 'quasar'
+import CodeIO from 'src/pages/block/CodeIO.vue'
 
 const $q = useQuasar()
 const $bus = inject('$bus')
@@ -27,6 +33,14 @@ function save () {
 }
 
 function viewCode () {
-
+  $q.dialog({
+    component: CodeIO,
+    componentProps: {
+      workspaces: JSON.stringify(library.workspaces),
+      currentWorkspace: JSON.stringify([library.currentWorkspace])
+    }
+  }).onOk(() => {
+    console.log('viewCode')
+  })
 }
 </script>

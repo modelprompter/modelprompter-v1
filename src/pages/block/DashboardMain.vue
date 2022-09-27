@@ -1,6 +1,7 @@
 <template lang="pug">
 q-card
   q-card-section
+    h6.q-my-md Block Workspaces
     q-table(v-if='settings.ui.sidebar.left.maximized' title='Workspaces' :rows='library.workspaces' :columns='columns' row-key='id' :grid="$q.screen.lt.lg")
       //- Add rows
       template(v-slot:top)
@@ -85,10 +86,18 @@ function openWorkspace (props) {
  * Add new workspace
  */
 function addWorkspace () {
-  library.workspaces.push({
-    title: 'Untitled',
-    id: uid(),
-  })
+  const id = uid()
+  const workspace = {
+    id,
+    title: 'New Workspace',
+    workspace: ''
+  }
+
+  library.workspaces.push(workspace)
+  library.$patch({currentWorkspace: {...workspace}})
+  $bus.emit('workspace.dashboard.main.reload', workspace)
+  $q.notify({message: 'New workspace added and loaded into'})
+  settings.ui.sidebar.left.maximized = false
 }
 
 /**
@@ -106,6 +115,7 @@ function remix (row) {
   // Find workspace with current id
   const workspace = {...library.find(row.id)}
   workspace.id = uid()
+  workspace.title += ' (remix)'
   library.workspaces.push(workspace)
   library.$patch({currentWorkspace: {...workspace}})
 
