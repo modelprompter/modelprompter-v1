@@ -15,10 +15,14 @@ export const useLibraryStore = defineStore('library', () => {
   watch(workspaces, autosave)
   watch(currentWorkspace, autosave)
 
+  // get workspace with id
   function find (id) {
-    // get workspace with id
     return workspaces.find(workspace => workspace.id === id)
   }
+  // Get the index of a workspace by id
+  function findIndex (id) {
+    return workspaces.findIndex(workspace => workspace.id === id)
+  }
 
-  return {workspaces, currentWorkspace, autosave, find}
+  return {workspaces, currentWorkspace, autosave, find, findIndex}
 })

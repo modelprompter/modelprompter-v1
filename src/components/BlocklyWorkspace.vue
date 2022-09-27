@@ -60,8 +60,8 @@ onMounted(() => {
 /**
  * Load initial data
  */
-const load = function (data, view) {
-  Blockly.mainWorkspace.clear()
+const load = function (data, view, shouldClear) {
+  shouldClear && Blockly.mainWorkspace.clear()
 
   if (data) {
     Blockly.Xml.domToWorkspace(

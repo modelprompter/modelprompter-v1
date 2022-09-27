@@ -77,7 +77,7 @@ function openWorkspace (props) {
   }).onOk(() => {
     settings.ui.sidebar.left.maximized = false
     library.$patch({currentWorkspace: {...library.find(props.row.id)}})
-    $bus.emit('workspace.dashboard.main.reload', props.row)
+    $bus.emit('workspace.dashboard.main.reload', props.row, true)
     $q.notify({message: 'Workspace opened'})
   })
 }
@@ -95,7 +95,7 @@ function addWorkspace () {
 
   library.workspaces.push(workspace)
   library.$patch({currentWorkspace: {...workspace}})
-  $bus.emit('workspace.dashboard.main.reload', workspace)
+  $bus.emit('workspace.dashboard.main.reload', workspace, true)
   $q.notify({message: 'New workspace added and loaded into'})
   settings.ui.sidebar.left.maximized = false
 }
@@ -121,7 +121,7 @@ function remix (row) {
 
   // Minimize sidebar
   settings.ui.sidebar.left.maximized = false
-  $bus.emit('workspace.dashboard.main.reload', workspace)
+  $bus.emit('workspace.dashboard.main.reload', workspace, true)
 
   $q.notify({message: 'Workspace remixed and opened into'})
 }

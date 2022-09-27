@@ -40,14 +40,14 @@ const options = {
 }
 
 // Load initial data
-function loadWorkspace (workspace) {
+function loadWorkspace (workspace, view, shouldClear) {
   workspace = workspace || '<xml xmlns="https://developers.google.com/blockly/xml"></xml>'
 
   workspaceRef.value.load(workspace.workspace, {
-    viewLeft: workspace.viewLeft,
-    viewTop: workspace.viewTop,
-    scale: workspace.scale,
-  })
+    viewLeft: view?.viewLeft || workspace.viewLeft,
+    viewTop: view?.viewTop || workspace.viewTop,
+    scale: view?.scale || workspace.scale,
+  }, shouldClear)
 }
 
 const workspaceRef = ref()
@@ -55,8 +55,8 @@ onMounted(() => {
   loadWorkspace(library.currentWorkspace)
 })
 
-$bus.on('workspace.dashboard.main.reload', workspace => {
-  loadWorkspace(workspace)
+$bus.on('workspace.dashboard.main.reload', (workspace, view = null, shouldClear = true) => {
+  loadWorkspace(workspace, view, shouldClear)
 })
 
 

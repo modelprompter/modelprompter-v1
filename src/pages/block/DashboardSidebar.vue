@@ -39,8 +39,6 @@ function viewCode () {
       workspaces: JSON.stringify(library.workspaces),
       currentWorkspace: JSON.stringify([library.currentWorkspace])
     }
-  }).onOk(() => {
-    console.log('viewCode')
   })
 }
 </script>
