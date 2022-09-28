@@ -1,7 +1,14 @@
 <template lang="pug">
 q-card
   q-card-section
-    h6.q-my-md Block Workspaces
+    h6.q-my-md.flex
+      | Block Workspaces
+      q-space
+
+      .text-right
+        router-link.text-red.align-right(:to='{path: "/reset"}' style="text-decoration: none")
+          q-icon.q-mr-sm(name='delete')
+          | Reset
     q-table(v-if='settings.ui.sidebar.left.maximized' title='Workspaces' :rows='library.workspaces' :columns='columns' row-key='id' :grid="$q.screen.lt.lg" :rows-per-page-options='[10, 25, 50, 0]')
       //- Add rows
       template(v-slot:top)

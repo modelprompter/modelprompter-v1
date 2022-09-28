@@ -5,6 +5,7 @@ const routes = [
     component: () => import('layouts/Base.vue'),
     children: [
       { path: '', component: () => import('pages/IndexPage.vue') },
+      { path: '/reset', component: () => import('pages/ResetPage.vue') },
     ]
   },
 
