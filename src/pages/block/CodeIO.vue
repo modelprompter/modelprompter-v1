@@ -2,7 +2,7 @@
 q-dialog(ref='dialogRef')
   q-card.q-dialog-plugin
     q-card-section
-      p.text-h6 Import/Export Workspaces
+      p.text-h6 {{props.title}}
       p
         strong What would you like to do?
       q-radio(v-model='mode' val='Export' label='Export')
@@ -10,12 +10,12 @@ q-dialog(ref='dialogRef')
 
     //- Exports
     q-card-section(v-if='mode === "Export"')
-      p Copy the code below to paste this workspace into another. You can also download the .json file for sharing or backup.
-      q-input(v-model='exportCode' type='textarea' label='Code to export')
+      p {{props.exportMessage}}
+      q-input(v-model='props.currentWorkspace' filled type='textarea' label='Code to export')
     //- Imports
     q-card-section(v-else)
-      p Paste the code below or import it into another library, or download a timestamped file for backup.
-      q-input(v-model='importCode' type='textarea' label='Paste your code to import here')
+      p {{props.importMessage}}
+      q-input(v-model='importCode' filled type='textarea' label='Paste your code to import here')
 
     //- Footer actions
     q-card-actions(align='right')
@@ -23,7 +23,7 @@ q-dialog(ref='dialogRef')
       template(v-if='mode === "Export"')
         q-btn(@click='downloadJSON' label='Download .json')
       template(v-if='mode === "Import"')
-        q-btn(color='light' @click='importCodeString' label='Import code from text' :disabled='!importCode')
+        q-btn(color='light' @click='importCodeString' label='Import code from textarea' :disabled='!importCode')
         q-space
         q-btn(@click='importJSON' label='Import .json File')
 </template>
@@ -36,14 +36,13 @@ import { useSettingsStore } from 'src/stores/settings'
 import {ref, nextTick, inject} from 'vue'
 
 const {dialogRef, onDialogOK, onDialogCancel} = useDialogPluginComponent()
-const props = defineProps(['workspaces', 'currentWorkspace'])
+const props = defineProps(['workspaces', 'currentWorkspace', 'title', 'importMessage', 'exportMessage'])
 const $bus = inject('$bus')
 
 const library = useLibraryStore()
 const settings = useSettingsStore()
 
 const mode = $ref('Export')
-const scope = $ref('workspace')
 const step = $ref(0)
 const importCode = $ref('')
 const $jsonFile = ref()
@@ -54,28 +53,15 @@ const $q = useQuasar()
  * Downloads a json file
  */
 function downloadJSON () {
-  const title = scope === 'workspace' ? library.currentWorkspace.title : 'library'
+  const title = library.currentWorkspace.title
   const date = new Date()
     .getFullYear()
       + '-' + ('0' + (new Date().getMonth() + 1)).slice(-2)
       + '-' + ('0' + new Date().getDate()).slice(-2)
 
-  fileDownload(exportCode, `${date}-${title}-modelprompter.json`)
+  fileDownload(props.currentWorkspace, `${date}-${title}-modelprompter.json`)
   onDialogOK()
 }
-
-/**
- * Displays the export code
- */
-const exportCode = $computed(() => {
-  if (mode === 'Export') {
-    if (scope === 'workspace') {
-      return props.currentWorkspace
-    } else {
-      return props.workspaces
-    }
-  }
-})
 
 /**
  * Imports a json file

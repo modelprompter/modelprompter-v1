@@ -36,6 +36,9 @@ function viewCode () {
   $q.dialog({
     component: CodeIO,
     componentProps: {
+      title: 'Import blocks into current workspace or export them',
+      exportMessage: 'Copy the code below to paste this workspace into another. You can also download the .json file for sharing or backup.',
+      importMessage: 'Paste the code below or import a JSON file to import those blocks into this workspace.',
       workspaces: JSON.stringify(library.workspaces),
       currentWorkspace: JSON.stringify([library.currentWorkspace])
     }

@@ -5,7 +5,12 @@ q-card
     q-table(v-if='settings.ui.sidebar.left.maximized' title='Workspaces' :rows='library.workspaces' :columns='columns' row-key='id' :grid="$q.screen.lt.lg")
       //- Add rows
       template(v-slot:top)
-        q-btn(icon='library_add' label='Start a new Workspace' @click='addWorkspace')
+        q-btn.gt-sm(icon='library_add' label='Start a new Workspace' @click='addWorkspace')
+        q-space.gt-sm
+        q-btn.gt-sm(icon='data_object' color='blue' label='Import/Export Library' @click='viewCode')
+
+        q-btn.lt-md.q-mb-md.full-width(icon='library_add' label='Start a new Workspace' @click='addWorkspace')
+        q-btn.lt-md.full-width(icon='data_object' color='blue' label='Import/Export Library' @click='viewCode')
       //- Rows with inline-edit
       template(v-slot:body='props')
         q-tr(:props='props')
@@ -27,7 +32,7 @@ q-card
               div.text-body2 {{ props.row.description }}
             q-card-actions
               q-btn.full-width.q-mb-md(icon='folder' color='orange' @click='openWorkspace(props)' label='Open')
-              q-btn.full-width.q-mb-md(color='blue' icon='data_object' @click='viewCode(props.row)')
+              q-btn.full-width.q-mb-md(color='blue' icon='data_object' @click='viewCode(props.row)' label='Code')
               q-btn.full-width.q-mb-md(icon='fork_right' @click='remix(props.row)' label='Remix')
               q-btn.full-width.q-mb-md(color='negative' icon='delete' @click='deleteWorkspace(props)' label='Delete')
 </template>
@@ -37,6 +42,7 @@ import {useLibraryStore} from 'stores/library'
 import {useQuasar, uid} from 'quasar'
 import {useSettingsStore} from 'stores/settings'
 import {inject} from 'vue'
+import CodeIO from 'src/pages/block/CodeIO.vue'
 
 const $bus = inject('$bus')
 const $q = useQuasar()
@@ -103,8 +109,17 @@ function addWorkspace () {
 /**
  * View code
  */
-function viewCode () {
-
+function viewCode (row) {
+  $q.dialog({
+    component: CodeIO,
+    componentProps: {
+      workspaces: JSON.stringify(library.workspaces),
+      currentWorkspace: JSON.stringify([row]),
+      title: 'Replace workspace or export it',
+      exportMessage: 'Copy the code below to paste this workspace into another. You can also download the .json file for sharing or backup.',
+      importMessage: 'Paste the code below or import a JSON file to completely replace and update the workspace.',
+    }
+  })
 }
 
 /**

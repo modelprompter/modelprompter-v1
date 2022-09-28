@@ -1,3 +1,9 @@
+// Core
+a
+  color: $primary
+pre
+  overflow-x: auto
+
 // Helpers
 .flex
   display: flex
@@ -9,6 +15,13 @@
 
   > *
     flex: 1
+
+
+// Header
+.q-header
+  background: $dark
+  a
+    color: $primary
 
 // Sidebars
 body.body--dark .q-header, body.body--dark .q-footer, body.body--dark .q-drawer
@@ -36,18 +49,6 @@ body.body--dark .q-header, body.body--dark .q-footer, body.body--dark .q-drawer
 body
   .q-dark.q-popup-edit
     background: lighten($dark, 10%) !important
-
-// Core
-a
-  color: $primary
-pre
-  overflow-x: auto
-
-// Header
-.q-header
-  background: $dark
-  a
-    color: $primary
 
 // Buttons
 .q-btn:not(.q-btn--flat)
@@ -108,3 +109,14 @@ pre
 // Steppers
 .q-stepper__dot
   flex: none
+
+// Modals
+.q-dialog
+  .q-card.q-dark
+    background: lighten($dark, 8%)
+
+    .q-card
+      background: lighten($dark, 16%)
+
+      .q-card
+        background: lighten($dark, 24%)
