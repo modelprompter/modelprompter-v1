@@ -3,10 +3,11 @@ q-dialog(ref='dialogRef')
   q-card.q-dialog-plugin
     q-card-section
       p.text-h6 {{props.title}}
-      p
-        strong What would you like to do?
-      q-radio(v-model='mode' val='Export' label='Export')
-      q-radio(v-model='mode' val='Import' label='Import')
+      div(v-if='!props.excludeImport')
+        p
+          strong What would you like to do?
+        q-radio(v-model='mode' val='Export' label='Export')
+        q-radio(v-if='!props.excludeImport' v-model='mode' val='Import' label='Import')
 
     //- Exports
     q-card-section(v-if='mode === "Export"')
@@ -30,13 +31,13 @@ q-dialog(ref='dialogRef')
 
 <script setup>
 import fileDownload from 'js-file-download'
-import { useDialogPluginComponent, useQuasar } from 'quasar'
+import { useDialogPluginComponent, useQuasar, uid } from 'quasar'
 import { useLibraryStore } from 'stores/library'
 import { useSettingsStore } from 'src/stores/settings'
 import {ref, nextTick, inject} from 'vue'
 
 const {dialogRef, onDialogOK, onDialogCancel} = useDialogPluginComponent()
-const props = defineProps(['workspaces', 'currentWorkspace', 'title', 'importMessage', 'exportMessage'])
+const props = defineProps(['workspaces', 'currentWorkspace', 'title', 'importMessage', 'exportMessage', 'excludeImport', 'isLibrary'])
 const $bus = inject('$bus')
 
 const library = useLibraryStore()
@@ -127,24 +128,25 @@ function updatedFile (file) {
  */
 function importCodeString () {
   const $importCode = JSON.parse(importCode)
-  // if (importMethod === 'replace') {
-  //   library.$patch({workspaces: $importCode})
-  // } else {
-  //   $importCode.forEach((workspace, n) => {
-  //     const id = library.findIndex(workspace.id)
-  //     if (id > -1) {
-  //       library.workspaces[id] = workspace
-  //     } else {
-  //       library.workspaces.push(workspace)
-  //     }
-  //   })
-  // }
+  if (props.isLibrary) {
+    $importCode.forEach((workspace, n) => {
+      // If IDs match, create a new ID (do not merge)
+      const id = library.findIndex(workspace.id)
+      if (id > -1) {
+        workspace.id = uid()
+      }
+      library.workspaces.push(workspace)
+    })
+  }
 
   // Load into the workspace
-  settings.ui.sidebar.left.maximized = false
-  $importCode.forEach(workspace => {
-    $bus.emit('workspace.dashboard.main.reload', workspace, {}, false)
-  })
+  console.log('props', props.isLibrary)
+  if (!props.isLibrary) {
+    settings.ui.sidebar.left.maximized = false
+    $importCode.forEach(workspace => {
+      $bus.emit('workspace.dashboard.main.reload', workspace, {}, false)
+    })
+  }
 
   $q.notify({
     message: 'Imported successfully',

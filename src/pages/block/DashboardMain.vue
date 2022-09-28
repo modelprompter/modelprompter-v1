@@ -2,12 +2,12 @@
 q-card
   q-card-section
     h6.q-my-md Block Workspaces
-    q-table(v-if='settings.ui.sidebar.left.maximized' title='Workspaces' :rows='library.workspaces' :columns='columns' row-key='id' :grid="$q.screen.lt.lg")
+    q-table(v-if='settings.ui.sidebar.left.maximized' title='Workspaces' :rows='library.workspaces' :columns='columns' row-key='id' :grid="$q.screen.lt.lg" :rows-per-page-options='[10, 25, 50, 0]')
       //- Add rows
       template(v-slot:top)
         q-btn.gt-sm(icon='library_add' label='Start a new Workspace' @click='addWorkspace')
         q-space.gt-sm
-        q-btn.gt-sm(icon='data_object' color='blue' label='Import/Export Library' @click='viewCode')
+        q-btn.gt-sm(icon='data_object' color='blue' label='Import/Export Library' @click='viewLibraryCode')
 
         q-btn.lt-md.q-mb-md.full-width(icon='library_add' label='Start a new Workspace' @click='addWorkspace')
         q-btn.lt-md.full-width(icon='data_object' color='blue' label='Import/Export Library' @click='viewCode')
@@ -115,9 +115,9 @@ function viewCode (row) {
     componentProps: {
       workspaces: JSON.stringify(library.workspaces),
       currentWorkspace: JSON.stringify([row]),
-      title: 'Replace workspace or export it',
+      title: 'Export workspace',
       exportMessage: 'Copy the code below to paste this workspace into another. You can also download the .json file for sharing or backup.',
-      importMessage: 'Paste the code below or import a JSON file to completely replace and update the workspace.',
+      excludeImport: true,
     }
   })
 }
@@ -141,4 +141,18 @@ function remix (row) {
   $q.notify({message: 'Workspace remixed and opened into'})
 }
 
+/**
+ * Work with entire library
+ */
+function viewLibraryCode () {
+  $q.dialog({
+    component: CodeIO,
+    componentProps: {
+      isLibrary: true,
+      currentWorkspace: JSON.stringify(library.workspaces),
+      title: 'Import or Export an entire library',
+      exportMessage: 'Copy the code below or download the JSON and import it into another Library. You can also use this to later import all blocks across this entire Library into a single Workspace.',
+    }
+  })
+}
 </script>
