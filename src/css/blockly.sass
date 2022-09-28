@@ -108,3 +108,13 @@ body .blocklyMainBackground
 .blockly-block-text, .blockly-block-text_multiline
   image
     filter: invert(1)
+
+// Responsive Sidebar
+@media (max-width: $breakpoint-md-max)
+  .blocklyTreeIcon + .blocklyTreeLabel
+    position: absolute
+  .blocklyToolboxDiv
+    width: 70px !important
+    overflow-x: hidden
+  .blocklyFlyout
+    transform: translate(70px, 0)

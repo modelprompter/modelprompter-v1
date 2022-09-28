@@ -23,9 +23,11 @@ Blockly.common.defineBlocksWithJsonArray([{
 }])
 Blockly.JavaScript['on_start'] = function (block) {
   const code = Blockly.JavaScript.statementToCode(block, 'POST_DATA')
-  return `setTimeout(() => {
+  return `
+// On Start
+setTimeout(() => {
   ${code}
-}, 0)`
+}, 0);`
 }
 
 
@@ -51,9 +53,11 @@ Blockly.common.defineBlocksWithJsonArray([{
 }])
 Blockly.JavaScript['on_end'] = function (block) {
   const code = Blockly.JavaScript.statementToCode(block, 'POST_DATA')
-  return `dataFeed.onEndMethods.push(() => {
+  return `
+// On End
+dataFeed.onEndMethods.push(() => {
   setTimeout(() => {${code}}, 0)
-})`
+});`
 }
 
 
@@ -110,17 +114,22 @@ Blockly.JavaScript['server_message_post'] = function (block) {
   const onError = Blockly.JavaScript.statementToCode(block, 'ERROR_STATEMENTS') || 'null'
   const onFinally = Blockly.JavaScript.statementToCode(block, 'FINALLY_STATEMENTS') || 'null'
 
-  let code = `serverMessagePost(
+  let code = `
+// API call...
+serverMessagePost(
   ${url},
   ${data},
+  //...on success
   function () {
     ${onThen};
     return arguments;
   },
+  //...on error
   function () {
-    ${onError};serverMessagePost
+    ${onError};
     return arguments;
   },
+  //...on finally
   function () {
     ${onFinally};
     return arguments;
@@ -165,11 +174,12 @@ Blockly.JavaScript['feed_send_data'] = function (block) {
   const image = Blockly.JavaScript.valueToCode(block, 'IMAGE', Blockly.JavaScript.ORDER_NONE) || 'null'
 
   return `
-  feedSendData({
-    title: ${title},
-    data: ${data},
-    image: ${image}
-  });`
+// Send data to feed
+feedSendData({
+  title: ${title},
+  data: ${data},
+  image: ${image}
+});`
 }
 
 
@@ -305,7 +315,7 @@ Blockly.JavaScript['json_object_merge'] = function (block) {
   const DATA = Blockly.JavaScript.valueToCode(block, 'DATA', Blockly.JavaScript.ORDER_NONE) || []
   const DEFAULTS = Blockly.JavaScript.valueToCode(block, 'DEFAULTS', Blockly.JavaScript.ORDER_NONE) || []
 
-  return [`merge(${DEFAULTS}, ${DATA})`, Blockly.JavaScript.ORDER_ATOMIC]
+  return [`console.log(merge({}, ${DEFAULTS}, ${DATA}), ${DEFAULTS}, ${DATA}) && merge({}, ${DEFAULTS}, ${DATA})`, Blockly.JavaScript.ORDER_ATOMIC]
 }
 
 

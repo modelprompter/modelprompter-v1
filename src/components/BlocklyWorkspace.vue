@@ -162,6 +162,9 @@ window.serverMessagePost = function (url, data, onThen, onError, onFinally) {
 watch(() => dataFeed.isRunning, () => {
   if (dataFeed.isRunning) {
     code = Blockly.JavaScript.workspaceToCode(workspace)
+    code = `;(function () {
+      ${code}
+    })();`
 
     console.log(`
 
