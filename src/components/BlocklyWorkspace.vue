@@ -12,7 +12,7 @@ import {onMounted, shallowRef, inject, watch} from 'vue'
 import axios from 'axios'
 import {LocalStorage, uid} from 'quasar'
 import {useDatafeedResponses} from '../stores/datafeed'
-import {get, assign} from 'lodash-es'
+import {get, merge} from 'lodash-es'
 
 const dataFeed = useDatafeedResponses()
 const $bus = inject('$bus')
@@ -26,7 +26,7 @@ const emit = defineEmits(['change'])
 
 // Globals for Blockly
 window.get = get
-window.assign = assign
+window.merge = merge
 
 /**
  * Mount
