@@ -315,7 +315,7 @@ Blockly.JavaScript['json_object_merge'] = function (block) {
   const DATA = Blockly.JavaScript.valueToCode(block, 'DATA', Blockly.JavaScript.ORDER_NONE) || []
   const DEFAULTS = Blockly.JavaScript.valueToCode(block, 'DEFAULTS', Blockly.JavaScript.ORDER_NONE) || []
 
-  return [`console.log(merge({}, ${DEFAULTS}, ${DATA}), ${DEFAULTS}, ${DATA}) && merge({}, ${DEFAULTS}, ${DATA})`, Blockly.JavaScript.ORDER_ATOMIC]
+  return [`merge({}, ${DEFAULTS}, ${DATA})`, Blockly.JavaScript.ORDER_ATOMIC]
 }
 
 
