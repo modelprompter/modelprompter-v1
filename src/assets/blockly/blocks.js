@@ -72,9 +72,31 @@ dataFeed.onEndMethods.push(() => {
  */
 Blockly.common.defineBlocksWithJsonArray([{
   "type": "server_message_post",
-  "message0": "POST message to %1 with %2 on success: %3 on error: %4 finally, always: %5",
+  "message0": "%1 message to %2 with %3 on success: %4 on error: %5 finally, always: %6",
   'style': 'api_blocks',
   "args0": [
+    {
+      "type": "field_dropdown",
+      "name": "METHOD",
+      "options": [
+        [
+          "GET",
+          "GET"
+        ],
+        [
+          "POST",
+          "POST"
+        ],
+        [
+          "PUT",
+          "PUT"
+        ],
+        [
+          "DELETE",
+          "DELETE"
+        ]
+      ]
+    },
     {
       "type": "input_value",
       "name": "URL",
@@ -108,17 +130,20 @@ Blockly.common.defineBlocksWithJsonArray([{
 }])
 
 Blockly.JavaScript['server_message_post'] = function (block) {
+  const method = Blockly.JavaScript.valueToCode(block, 'METHOD', Blockly.JavaScript.ORDER_NONE) || 'POST'
   const url = Blockly.JavaScript.valueToCode(block, 'URL', Blockly.JavaScript.ORDER_NONE) || []
-  const data = Blockly.JavaScript.valueToCode(block, 'DATA', Blockly.JavaScript.ORDER_NONE) || []
+  const data = Blockly.JavaScript.valueToCode(block, 'DATA', Blockly.JavaScript.ORDER_NONE) || null
   const onThen = Blockly.JavaScript.statementToCode(block, 'THEN_STATEMENTS') || 'null'
   const onError = Blockly.JavaScript.statementToCode(block, 'ERROR_STATEMENTS') || 'null'
   const onFinally = Blockly.JavaScript.statementToCode(block, 'FINALLY_STATEMENTS') || 'null'
 
+  console.log(data)
   let code = `
 // API call...
-serverMessagePost(
+dispatchREST(
+  '${method}',
   ${url},
-  ${data},
+  ${data || null},
   //...on success
   function () {
     ${onThen};

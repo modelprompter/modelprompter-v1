@@ -6,8 +6,22 @@ import {throttle} from 'lodash-es'
 
 export const useLibraryStore = defineStore('library', () => {
   const library = LocalStorage.getItem('library') || {}
-  const workspaces = $ref(library.workspaces || [])
-  const currentWorkspace = $ref(library.currentWorkspace || defaultWorkspace.library.currentWorkspace)
+
+  // Load default workspace if it doesn't exist
+  let _currentWorkspace
+  let _workspaces
+
+  console.log(defaultWorkspace)
+  if (!library.currentWorkspace) {
+    _currentWorkspace = defaultWorkspace.library?.currentWorkspace || defaultWorkspace.library?.workspaces[0]
+    _workspaces = defaultWorkspace.library?.workspaces || []
+  } else {
+    _currentWorkspace = library.currentWorkspace
+    _workspaces = defaultWorkspace.library?.workspaces || []
+  }
+
+  const currentWorkspace = $ref(_currentWorkspace)
+  const workspaces = $ref(_workspaces)
 
   const autosave = throttle(() => {
     LocalStorage.set('library', {workspaces, currentWorkspace})

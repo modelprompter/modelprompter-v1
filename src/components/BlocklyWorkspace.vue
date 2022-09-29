@@ -136,13 +136,13 @@ window.LocalStorage = LocalStorage
  * POST to a server
  * Callbacks will get halted
  */
-window.serverMessagePost = function (url, data, onThen, onError, onFinally) {
+window.dispatchREST = function (method, url, data, onThen, onError, onFinally) {
   setTimeout(() => {
-    $bus.emit('blockly.runBlocks.serverMessagePost', url, data)
-    console.log('Sending POST:', url, data)
+    $bus.emit('blockly.runBlocks.dispatchREST', url, data)
+    console.log(`Sending ${method}:`, url, data)
 
     const api = axios({
-      method: 'post',
+      method,
       url,
       data
     }).then((res) => {

@@ -2,7 +2,7 @@
 q-card
   q-card-section
     h6.q-my-md.flex
-      | Block Workspaces
+      | Library
       q-space
 
       .text-right
@@ -17,7 +17,7 @@ q-card
         q-btn.gt-sm(icon='data_object' color='blue' label='Import/Export Library' @click='viewLibraryCode')
 
         q-btn.lt-md.q-mb-md.full-width(icon='library_add' label='Start a new Workspace' @click='addWorkspace')
-        q-btn.lt-md.full-width(icon='data_object' color='blue' label='Import/Export Library' @click='viewCode')
+        q-btn.lt-md.full-width(icon='data_object' color='blue' label='Import/Export Library' @click='viewLibraryCode')
       //- Rows with inline-edit
       template(v-slot:body='props')
         q-tr(:props='props')
@@ -103,6 +103,7 @@ function addWorkspace () {
   const workspace = {
     id,
     title: 'New Workspace',
+    description: '',
     workspace: ''
   }
 
