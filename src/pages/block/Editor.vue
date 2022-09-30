@@ -57,7 +57,6 @@ function loadWorkspace (workspace, view, shouldClear) {
 // Loads the current workspace or the one with ID
 const workspaceRef = ref()
 onMounted(() => {
-  console.log($route.params.id)
   if ($route.params.id) {
     const workspace = library.find($route.params.id)
 
@@ -69,8 +68,9 @@ onMounted(() => {
         color: 'negative',
         position: 'top',
       })
-      library.currentWorkspace = {}
-      $router.push('/block')
+      library.currentWorkspace = {
+        id: $route.params.id
+      }
     }
   } else {
     loadWorkspace(library.currentWorkspace)
