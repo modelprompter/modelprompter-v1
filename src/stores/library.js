@@ -11,7 +11,6 @@ export const useLibraryStore = defineStore('library', () => {
   let _currentWorkspace
   let _workspaces
 
-  console.log(defaultWorkspace)
   if (!library.currentWorkspace) {
     _currentWorkspace = defaultWorkspace.library?.currentWorkspace || defaultWorkspace.library?.workspaces[0]
     _workspaces = defaultWorkspace.library?.workspaces || []

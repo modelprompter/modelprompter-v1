@@ -30,6 +30,17 @@ const routes = [
           dashboardSidebar: () => import('src/pages/block/DashboardSidebar.vue'),
           toolbar: () => import('src/pages/block/Toolbar.vue'),
         },
+        children: [
+          {
+            path: '/block/:id',
+            components: {
+              default: () => import('src/pages/block/Editor.vue'),
+              dashboardMain: () => import('src/pages/block/DashboardMain.vue'),
+              dashboardSidebar: () => import('src/pages/block/DashboardSidebar.vue'),
+              toolbar: () => import('src/pages/block/Toolbar.vue'),
+            }
+          }
+        ]
       }
     ]
   },

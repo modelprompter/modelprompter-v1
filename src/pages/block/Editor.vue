@@ -11,8 +11,12 @@ import toolbox from 'assets/blockly/toolbox.js'
 import 'assets/blockly/blocks.js'
 import {ref, onMounted, inject} from 'vue'
 import {useLibraryStore} from 'stores/library'
-import {uid} from 'quasar'
+import {uid, useQuasar} from 'quasar'
+import {useRoute, useRouter} from 'vue-router'
 
+const $q = useQuasar()
+const $route = useRoute()
+const $router = useRouter()
 const $bus = inject('$bus')
 const library = useLibraryStore()
 const options = {
@@ -50,9 +54,27 @@ function loadWorkspace (workspace, view, shouldClear) {
   }, shouldClear)
 }
 
+// Loads the current workspace or the one with ID
 const workspaceRef = ref()
 onMounted(() => {
-  loadWorkspace(library.currentWorkspace)
+  console.log($route.params.id)
+  if ($route.params.id) {
+    const workspace = library.find($route.params.id)
+
+    if (workspace) {
+      loadWorkspace(workspace)
+    } else {
+      $q.notify({
+        message: 'Workspace not found',
+        color: 'negative',
+        position: 'top',
+      })
+      library.currentWorkspace = {}
+      $router.push('/block')
+    }
+  } else {
+    loadWorkspace(library.currentWorkspace)
+  }
 })
 
 $bus.on('workspace.dashboard.main.reload', (workspace, view = null, shouldClear = true) => {
