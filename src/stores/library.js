@@ -16,7 +16,7 @@ export const useLibraryStore = defineStore('library', () => {
     _workspaces = defaultWorkspace.library?.workspaces || []
   } else {
     _currentWorkspace = library.currentWorkspace
-    _workspaces = defaultWorkspace.library?.workspaces || []
+    _workspaces = library.workspaces || []
   }
 
   const currentWorkspace = $ref(_currentWorkspace)

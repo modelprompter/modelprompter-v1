@@ -68,12 +68,17 @@ onMounted(() => {
         color: 'negative',
         position: 'top',
       })
-      library.currentWorkspace = {
-        id: $route.params.id
-      }
+      library.currentWorkspace = {id: $route.params.id}
     }
+
+  // Always redirect to a URL with ID (even if we have to create it)
   } else {
-    loadWorkspace(library.currentWorkspace)
+    if (library.currentWorkspace.id) {
+      $router.push({name: 'active-block', params: {id: library.currentWorkspace.id}})
+    } else {
+      library.currentWorkspace.id = uid()
+      $router.push({name: 'active-block', params: {id: library.currentWorkspace.id}})
+    }
   }
 })
 

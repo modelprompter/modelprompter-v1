@@ -23,6 +23,7 @@ const routes = [
     component: () => import('layouts/Base.vue'),
     children: [
       {
+        name: 'new-block',
         path: '/block',
         components: {
           default: () => import('src/pages/block/Editor.vue'),
@@ -32,6 +33,7 @@ const routes = [
         },
         children: [
           {
+            name: 'active-block',
             path: '/block/:id',
             components: {
               default: () => import('src/pages/block/Editor.vue'),

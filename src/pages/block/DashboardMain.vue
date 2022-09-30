@@ -48,9 +48,11 @@ q-card
 import {useLibraryStore} from 'stores/library'
 import {useQuasar, uid} from 'quasar'
 import {useSettingsStore} from 'stores/settings'
+import {useRouter} from 'vue-router'
 import {inject} from 'vue'
 import CodeIO from 'src/pages/block/CodeIO.vue'
 
+const $router = useRouter()
 const $bus = inject('$bus')
 const $q = useQuasar()
 const settings = useSettingsStore()
@@ -74,7 +76,15 @@ function deleteWorkspace (props) {
     // Get index of workspace with id
     const index = library.workspaces.findIndex(workspace => workspace.id === props.row.id)
     library.workspaces.splice(index, 1)
-    $q.notify({message: 'Workspace deleted'})
+
+    if (library.currentWorkspace.id === props.row.id) {
+      library.$patch({currentWorkspace: {}})
+      $bus.emit('workspace.dashboard.main.reload', {id: props.row.id}, true)
+      settings.ui.sidebar.left.maximized = false
+      $q.notify({message: 'Active workspace deleted'})
+    } else {
+      $q.notify({message: 'Workspace deleted'})
+    }
   })
 }
 
@@ -90,6 +100,7 @@ function openWorkspace (props) {
   }).onOk(() => {
     settings.ui.sidebar.left.maximized = false
     library.$patch({currentWorkspace: {...library.find(props.row.id)}})
+    $router.push({name: 'active-block', params: {id: props.row.id}})
     $bus.emit('workspace.dashboard.main.reload', props.row, true)
     $q.notify({message: 'Workspace opened'})
   })
@@ -109,6 +120,8 @@ function addWorkspace () {
 
   library.workspaces.push(workspace)
   library.$patch({currentWorkspace: {...workspace}})
+
+  $router.push({name: 'active-block', params: {id}})
   $bus.emit('workspace.dashboard.main.reload', workspace, true)
   $q.notify({message: 'New workspace added and loaded into'})
   settings.ui.sidebar.left.maximized = false
@@ -144,6 +157,7 @@ function remix (row) {
 
   // Minimize sidebar
   settings.ui.sidebar.left.maximized = false
+  $router.push({name: 'active-block', params: {id: row.id}})
   $bus.emit('workspace.dashboard.main.reload', workspace, true)
 
   $q.notify({message: 'Workspace remixed and opened into'})
