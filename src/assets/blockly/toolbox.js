@@ -18,7 +18,7 @@ export default {
           type: 'server_message_post',
           inputs: {
             URL: {
-              shadow: {
+              block: {
                 type: 'text',
                 fields: {
                   TEXT: 'https://abc.gradio.app/api/predict'
@@ -223,6 +223,10 @@ export default {
         {
           kind: 'block',
           type: 'json_object_get'
+        },
+        {
+          kind: 'block',
+          type: 'list_get_random',
         },
         {
           kind: 'block',

@@ -231,7 +231,7 @@ Blockly.JavaScript['server_message_post_response'] = function (block) {
  */
 Blockly.common.defineBlocksWithJsonArray([{
   "type": "json_object",
-  "message0": "Objects {key: value} %1 %2",
+  "message0": "Create dictionary {key: value} %1 %2",
   'style': 'list_blocks',
   "output": null,
   "args0": [
@@ -311,6 +311,46 @@ Blockly.JavaScript['json_object_get'] = function (block) {
   const obj = Blockly.JavaScript.valueToCode(block, 'OBJECT', Blockly.JavaScript.ORDER_NONE) || []
 
   return [`get(${obj}, ${path})`, Blockly.JavaScript.ORDER_ATOMIC]
+}
+
+
+/**
+ * Pick random (from array or object)
+ */
+Blockly.common.defineBlocksWithJsonArray([{
+  "type": "list_get_random",
+  "message0": "Pick random %1",
+  'style': 'math_blocks',
+  "args0": [
+    {
+      "type": "input_value",
+      "name": "LIST"
+    },
+  ],
+  "output": null,
+  "tooltip": "",
+  "helpUrl": ""
+}])
+
+Blockly.JavaScript['list_get_random'] = function (block) {
+  const list = Blockly.JavaScript.valueToCode(block, 'LIST', Blockly.JavaScript.ORDER_NONE) || []
+
+  return [`pickRandom(${list})`, Blockly.JavaScript.ORDER_ATOMIC]
+}
+
+/**
+ * Picks a random element from an array or object
+ * @param {*} list
+ * @returns element from list
+ */
+window.pickRandom = function (list) {
+  if (Array.isArray(list)) {
+    return list[Math.floor(Math.random() * list.length)]
+  } else if (typeof list === 'object') {
+    const keys = Object.keys(list)
+    return list[keys[Math.floor(Math.random() * keys.length)]]
+  }
+  return null
 }
 
 
