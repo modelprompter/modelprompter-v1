@@ -1,3 +1,0 @@
-[submodule "servers/AUTOMATIC1111/stable-diffusion-webui"]
-	path = servers/AUTOMATIC1111/stable-diffusion-webui
-	url = https://github.com/AUTOMATIC1111/stable-diffusion-webui
