@@ -7,7 +7,7 @@ q-layout(view='lHr lpR fFf' :class='{"mp-has-maximized-drawer": hasExpandedDrawe
       q-toolbar-title
         span
           router-link.text-decoration-none.text-white(:to='{path: "/"}')
-            span(v-if='settings.ui.sidebar.left.open || settings.ui.sidebar.right.open')
+            span(v-if='settings.ui.sidebar.left.open && settings.ui.sidebar.right.open')
               img.q-mr-sm(src='~/src/assets/logo-title-favicon.png' height=32 style='vertical-align: middle')
             span(v-else)
               img.gt-sm.q-mr-sm(src='~/src/assets/logo-title.png' height=32 style='vertical-align: middle')
