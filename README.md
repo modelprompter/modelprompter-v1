@@ -1,30 +1,26 @@
-# Model Prompter (modelprompter)
+![Model Prompter](https://user-images.githubusercontent.com/110780894/193438704-61face5c-08a9-4a3e-8951-993b62293856.jpeg)
 
-Automate prompts to Stable Diffusion using multiple (free) cloud GPUs
+Model Prompter is a prompt engineering and API automation tool. It uses blocks to help you design dynamic prompts that can be batched to multiple cloud GPUs.
 
-# Install
+# Setup
+
+- **Install prerequisites:**
+  - Git (preinstalled on Linux/macOS): https://git-scm.com/downloads
+  - Node: https://nodejs.org/en/download/
+- **Install dependencies:** `npm install`
+
+### Commands
+
 ```bash
-yarn
-# or
-npm install
-```
-
-### Start the app in development mode (hot-code reloading, error reporting, etc.)
-```bash
+# Start the app in development mode (hot-code reloading, error reporting, etc.)
 npm start
-```
 
+# Build the app for production
+npm run build
 
-### Build the app for production
-```bash
-quasar build
-```
-
-### Install Stable Diffusion locally (optional)
-```bash
-git submodule update --init --recursive
-
+# Install Stable Diffusion locally (optional)
 # See further instructions for your platform: https://github.com/AUTOMATIC1111/stable-diffusion-webui
+git submodule update --init --recursive
 ```
 
 
