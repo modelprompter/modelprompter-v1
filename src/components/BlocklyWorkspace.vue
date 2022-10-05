@@ -138,7 +138,6 @@ window.LocalStorage = LocalStorage
  */
 window.dispatchREST = function (method, url, data, onThen, onError, onFinally) {
   setTimeout(() => {
-    $bus.emit('blockly.runBlocks.dispatchREST', url, data)
     console.log(`Sending ${method}:`, url, data)
 
     const api = axios({

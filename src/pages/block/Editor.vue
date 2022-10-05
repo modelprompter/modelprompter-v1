@@ -9,7 +9,7 @@ import BlocklyWorkspace from 'src/components/BlocklyWorkspace.vue'
 import theme from 'assets/blockly/theme.js'
 import toolbox from 'assets/blockly/toolbox.js'
 import 'assets/blockly/blocks.js'
-import {ref, onMounted, inject} from 'vue'
+import {ref, onMounted, onUnmounted, inject, nextTick} from 'vue'
 import {useLibraryStore} from 'stores/library'
 import {uid, useQuasar} from 'quasar'
 import {useRoute, useRouter} from 'vue-router'
@@ -75,21 +75,39 @@ onMounted(() => {
   } else {
     if (library.currentWorkspace.id) {
       $router.push({name: 'active-block', params: {id: library.currentWorkspace.id}})
+      nextTick(() => {
+        $bus.emit('workspace.dashboard.main.reload', library.currentWorkspace, {
+          viewLeft: library.currentWorkspace.viewLeft,
+          viewTop: library.currentWorkspace.viewTop,
+          scale: library.currentWorkspace.scale,
+        }, true)
+      })
     } else {
       library.currentWorkspace.id = uid()
       $router.push({name: 'active-block', params: {id: library.currentWorkspace.id}})
     }
   }
+
+  $bus.on('workspace.dashboard.main.reload', onWorkspaceDashboardMainReload)
+  $bus.on('dashboard.sidebar.save', onDashboardSidebarSave)
 })
 
-$bus.on('workspace.dashboard.main.reload', (workspace, view = null, shouldClear = true) => {
+onUnmounted(() => {
+  $bus.off('workspace.dashboard.main.reload', onWorkspaceDashboardMainReload)
+  $bus.off('dashboard.sidebar.save', onDashboardSidebarSave)
+})
+
+/**
+ * Reload workspace
+ */
+const onWorkspaceDashboardMainReload = function (workspace, view = null, shouldClear = true) {
   loadWorkspace(workspace, view, shouldClear)
-})
+}
 
-
-
-// Saves a copy of the current workspace
-$bus.on('dashboard.sidebar.save', () => {
+/**
+ * Saves a copy of the current workspace
+ */
+const onDashboardSidebarSave = function () {
   // See if a workspace exists with id, if it does merge it otherwise push it
   const index = library.workspaces.findIndex(workspace => workspace.id === library.currentWorkspace.id)
   if (index > -1) {
@@ -97,7 +115,7 @@ $bus.on('dashboard.sidebar.save', () => {
   } else {
     library.workspaces.push({...library.currentWorkspace})
   }
-})
+}
 
 
 
