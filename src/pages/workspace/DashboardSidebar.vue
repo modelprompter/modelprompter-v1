@@ -21,7 +21,7 @@ q-card.q-mt-md
 import {useLibraryStore} from 'stores/library'
 import {inject} from 'vue'
 import {uid, useQuasar} from 'quasar'
-import CodeIO from 'src/pages/block/CodeIO.vue'
+import CodeIO from 'src/pages/workspace/CodeIO.vue'
 
 const $q = useQuasar()
 const $bus = inject('$bus')

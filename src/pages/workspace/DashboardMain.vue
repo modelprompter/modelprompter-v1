@@ -2,14 +2,14 @@
 q-card
   q-card-section
     h6.q-my-md.flex
-      | Library
+      | Session Library
       q-space
 
       .text-right
         router-link.text-red.align-right(:to='{path: "/reset"}' style="text-decoration: none")
           q-icon.q-mr-sm(name='delete')
           | Reset
-    q-table(v-if='settings.ui.sidebar.left.maximized' title='Workspaces' :rows='library.workspaces' :columns='columns' row-key='id' :grid="$q.screen.lt.lg" :rows-per-page-options='[10, 25, 50, 0]')
+    q-table(title='Workspaces' :rows='library.workspaces' :columns='columns' row-key='id' :grid="$q.screen.lt.lg" :rows-per-page-options='[10, 25, 50, 0]')
       //- Add rows
       template(v-slot:top)
         q-btn.gt-sm(icon='library_add' label='Start a new Workspace' @click='addWorkspace')
@@ -49,8 +49,8 @@ import {useLibraryStore} from 'stores/library'
 import {useQuasar, uid} from 'quasar'
 import {useSettingsStore} from 'stores/settings'
 import {useRouter} from 'vue-router'
-import {inject} from 'vue'
-import CodeIO from 'src/pages/block/CodeIO.vue'
+import {inject, onMounted} from 'vue'
+import CodeIO from 'src/pages/workspace/CodeIO.vue'
 
 const $router = useRouter()
 const $bus = inject('$bus')
@@ -87,6 +87,10 @@ function deleteWorkspace (props) {
     }
   })
 }
+
+onMounted(() => {
+  console.log(library.workspaces)
+})
 
 /**
  * Opens the workspace

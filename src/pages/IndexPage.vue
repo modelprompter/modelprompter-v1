@@ -17,7 +17,7 @@ q-page
           .text-center
             img(alt='Model Prompter' src='~assets/favicon.png' style='width: 300px; height: 300px')
             div.text-h5
-              strong Dynamic prompt engineering with blocks
+              strong.text-white Dynamic prompt engineering with blocks
           q-card-section
             p Use programmable blocks to automate prompts to Stable Diffusion, Colab Notebooks, bots, webhooks, and any other API on the web. <strong>Then use more blocks to configure how the data is displayed!</strong>
             p.q-mt-sm.text-center
@@ -29,10 +29,10 @@ q-page
         q-card
           .text-center
             div(style='height: 290px; position: relative')
-              BlocklyWorkspace(:hideToolbox='true' workspaceID='1b8c46a7-145a-4d23-b076-4d8538afe220' :options='{trashcan: false, zoom: {controls: false}}')
+              BlocklyWorkspace(:hideToolbox='true' workspaceID='1b8c46a7-145a-4d23-b076-4d8538afe220' :options='{trashcan: false, }')
             div.q-mt-md
               strong.q-mr-sm Workspace:
-              router-link(:to='{path: `/block/1b8c46a7-145a-4d23-b076-4d8538afe220`}') Lexica quick search
+              router-link(:to='{path: `/workspace/1b8c46a7-145a-4d23-b076-4d8538afe220`}') Lexica quick search
           q-card-section
             p The blocks above will load 50 images and prompts from <a href="https://lexica.art">Lexica.art</a> and display them in a grid. <strong>Use the mouse wheel or pinch to zoom out, then click and drag on the grid around to reveal more!</strong>
             div.q-mb-sm
@@ -40,7 +40,7 @@ q-page
 
     q-card.q-mt-lg.bg-blue
       q-card-section
-        div <strong>More coming soon!</strong> For now, use the left menu to work with blocks and the right menu to explore the results.
+        div 📅 <strong>More coming soon!</strong> If you'd like to explore, use the left menu to work with blocks and the right menu to work with the results.
     //- .row.flex.q-gutter-md.q-mt-sm
     //-   q-card
     //-     q-card-section

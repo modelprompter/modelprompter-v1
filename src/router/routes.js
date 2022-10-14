@@ -19,30 +19,43 @@ const routes = [
   // },
 
   {
-    path: '/block',
+    path: '/workspace',
     component: () => import('layouts/Base.vue'),
     children: [
       {
-        name: 'new-block',
-        path: '/block',
+        path: '/workspace',
         components: {
-          default: () => import('src/pages/block/Editor.vue'),
-          dashboardMain: () => import('src/pages/block/DashboardMain.vue'),
-          dashboardSidebar: () => import('src/pages/block/DashboardSidebar.vue'),
+          default: () => import('src/pages/workspace/Editor.vue'),
+          dashboardMain: () => import('src/pages/workspace/DashboardMain.vue'),
+          dashboardSidebar: () => import('src/pages/workspace/DashboardSidebar.vue'),
           toolbar: () => import('src/components/BlocklyToggle.vue'),
         },
         children: [
           {
             name: 'active-block',
-            path: '/block/:id',
+            path: '/workspace/:id',
             components: {
-              default: () => import('src/pages/block/Editor.vue'),
-              dashboardMain: () => import('src/pages/block/DashboardMain.vue'),
-              dashboardSidebar: () => import('src/pages/block/DashboardSidebar.vue'),
+              default: () => import('src/pages/workspace/Editor.vue'),
+              dashboardMain: () => import('src/pages/workspace/DashboardMain.vue'),
+              dashboardSidebar: () => import('src/pages/workspace/DashboardSidebar.vue'),
               toolbar: () => import('src/components/BlocklyToggle.vue'),
             }
           }
         ]
+      }
+    ]
+  },
+
+  {
+    path: '/library',
+    component: () => import('layouts/Base.vue'),
+    children: [
+      {
+        name: 'library',
+        path: '/library',
+        components: {
+          default: () => import('src/pages/workspace/DashboardMain.vue')
+        },
       }
     ]
   },
