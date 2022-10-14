@@ -21,7 +21,7 @@ import toolbox from 'assets/blockly/toolbox.js'
 const library = useLibraryStore()
 const dataFeed = useDatafeedResponses()
 const $bus = inject('$bus')
-const props = defineProps(['isMain', 'options', 'loadData', 'workspaceID'])
+const props = defineProps(['isMain', 'hideToolbox', 'options', 'loadData', 'workspaceID'])
 const blocklyToolbox = $ref()
 const blockly = $ref()
 let workspace = shallowRef()
@@ -51,6 +51,10 @@ onMounted(() => {
       colour: "#4f4b94",
       snap: true,
     },
+    move: {
+      scrollbars: true,
+      drag: true,
+    },
     trashcan: true,
     // @todo make this optional
     // horizontalLayout: true,
@@ -68,6 +72,10 @@ onMounted(() => {
   if (!options.toolbox) {
     options.toolbox = toolbox
   }
+  if (props.hideToolbox) {
+    options.toolbox = null
+  }
+
   if (!options.theme) {
     options.theme = theme
   }

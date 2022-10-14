@@ -28,20 +28,22 @@ q-page
       .col.col-md-6
         q-card
           .text-center
-            img(style='height: 300px')
-            div
+            div(style='height: 290px; position: relative')
+              BlocklyWorkspace(:hideToolbox='true' workspaceID='1b8c46a7-145a-4d23-b076-4d8538afe220' :options='{trashcan: false, zoom: {controls: false}}')
+            div.q-mt-md
               strong.q-mr-sm 🧩 Try it:
               | Lexica quick search 🧩
           q-card-section
             p The blocks above will load 50 images and prompts from <a href="https://lexica.art">Lexica.art</a> and display them in a grid for further exploration.
             div.q-mb-sm
-              q-btn.full-width Run blocks above
+              BlocklyToggle.full-width
 </template>
 
-<script>
-import { defineComponent } from 'vue'
+<script setup>
+import BlocklyWorkspace from 'src/components/BlocklyWorkspace.vue'
+import BlocklyToggle from 'src/components/BlocklyToggle.vue'
 
-export default defineComponent({
-  name: 'IndexPage'
-})
+function runDemo () {
+  console.log('test')
+}
 </script>

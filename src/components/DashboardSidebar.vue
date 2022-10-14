@@ -34,7 +34,7 @@ const essentialLinks = $ref([
     title: 'Blocks',
     caption: 'Automate APIs with blocks',
     icon: 'extension',
-    link: '/block',
+    link: '/block/1b8c46a7-145a-4d23-b076-4d8538afe220',
   }
 ])
 

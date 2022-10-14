@@ -29,7 +29,7 @@ const routes = [
           default: () => import('src/pages/block/Editor.vue'),
           dashboardMain: () => import('src/pages/block/DashboardMain.vue'),
           dashboardSidebar: () => import('src/pages/block/DashboardSidebar.vue'),
-          toolbar: () => import('src/pages/block/Toolbar.vue'),
+          toolbar: () => import('src/components/BlocklyToggle.vue'),
         },
         children: [
           {
@@ -39,7 +39,7 @@ const routes = [
               default: () => import('src/pages/block/Editor.vue'),
               dashboardMain: () => import('src/pages/block/DashboardMain.vue'),
               dashboardSidebar: () => import('src/pages/block/DashboardSidebar.vue'),
-              toolbar: () => import('src/pages/block/Toolbar.vue'),
+              toolbar: () => import('src/components/BlocklyToggle.vue'),
             }
           }
         ]
