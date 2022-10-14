@@ -5,7 +5,7 @@ q-page
       .col
         q-card.q-mb-lg.bg-blue
           q-card-section
-            div 📅 Hi, thanks for visiting! This project is still an early prototype; lots of examples and documentation coming soon!
+            div 📅 <strong>22-10-13</strong> - Hi, thanks for visiting! This project is still a <strong>super early prototype</strong>; lots of examples and documentation coming soon!
             //- div
             //-   strong.q-mr-md Links:
             //-   a(href='https://github.com/ModelPrompter/modelprompter') GitHub
@@ -16,10 +16,10 @@ q-page
         q-card
           .text-center
             img(alt='Model Prompter' src='~assets/favicon.png' style='width: 300px; height: 300px')
-            div
-              strong 🔔 This is still a prototype 🔔
+            div.text-h5
+              strong Dynamic prompt engineering with blocks
           q-card-section
-            p Use programmable blocks to automate prompts to Stable Diffusion, Colab Notebooks, bots, webhooks, and any other API on the web.
+            p Use programmable blocks to automate prompts to Stable Diffusion, Colab Notebooks, bots, webhooks, and any other API on the web. <strong>Then use more blocks to configure how the data is displayed!</strong>
             p.q-mt-sm.text-center
               a(href='https://github.com/ModelPrompter/modelprompter') GitHub
               span.q-mx-sm ·
@@ -31,19 +31,27 @@ q-page
             div(style='height: 290px; position: relative')
               BlocklyWorkspace(:hideToolbox='true' workspaceID='1b8c46a7-145a-4d23-b076-4d8538afe220' :options='{trashcan: false, zoom: {controls: false}}')
             div.q-mt-md
-              strong.q-mr-sm 🧩 Try it:
-              | Lexica quick search 🧩
+              strong.q-mr-sm Workspace:
+              router-link(:to='{path: `/block/1b8c46a7-145a-4d23-b076-4d8538afe220`}') Lexica quick search
           q-card-section
-            p The blocks above will load 50 images and prompts from <a href="https://lexica.art">Lexica.art</a> and display them in a grid for further exploration.
+            p The blocks above will load 50 images and prompts from <a href="https://lexica.art">Lexica.art</a> and display them in a grid. <strong>Use the mouse wheel or pinch to zoom out, then click and drag on the grid around to reveal more!</strong>
             div.q-mb-sm
               BlocklyToggle.full-width
+
+    q-card.q-mt-lg.bg-blue
+      q-card-section
+        div <strong>More coming soon!</strong> For now, use the left menu to work with blocks and the right menu to explore the results.
+    //- .row.flex.q-gutter-md.q-mt-sm
+    //-   q-card
+    //-     q-card-section
+    //-       .row
+            //- .col.col-md-4
+            //-   h1 Why
+            //- .col.col-md-8
+            //-   p I am
 </template>
 
 <script setup>
 import BlocklyWorkspace from 'src/components/BlocklyWorkspace.vue'
 import BlocklyToggle from 'src/components/BlocklyToggle.vue'
-
-function runDemo () {
-  console.log('test')
-}
 </script>
