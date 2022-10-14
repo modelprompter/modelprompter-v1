@@ -1,5 +1,11 @@
 <template lang="pug">
-.blockly-container
+.blockly-container(:class='{"fullscreen": isFullscreen}')
+  BlocklyWorkspaceToolbar(
+    :title='workspaceData?.title'
+    :hideFullscreenToggle='hideFullscreenToggle'
+    :isFullscreen='isFullscreen'
+    @fullscreenToggled='isFullscreen = $event'
+  )
   .blockly(ref='blockly')
     q-resize-observer(@resize='resize')
   .hidden(ref='blocklyToolbox')
@@ -7,21 +13,33 @@
 </template>
 
 <script setup>
+import BlocklyWorkspaceToolbar from 'components/BlocklyWorkspaceToolbar.vue'
+
 import Blockly from 'blockly'
 import 'assets/blockly/blocks.js'
-import {onMounted, onUnmounted, shallowRef, inject, watch} from 'vue'
+import {onMounted, onUnmounted, shallowRef, inject, ref, watch} from 'vue'
 import axios from 'axios'
 import {LocalStorage, uid, useQuasar} from 'quasar'
 import {useDatafeedResponses} from '../stores/datafeed'
 import {useLibraryStore} from 'stores/library'
-import {get, merge} from 'lodash-es'
+import {merge} from 'lodash-es'
 import theme from 'assets/blockly/theme.js'
 import toolbox from 'assets/blockly/toolbox.js'
+
+const props = defineProps([
+  'title',
+  'isMain',
+  'isFullscreen',
+  'hideFullscreenToggle',
+  'hideToolbox',
+  'options',
+  'loadData',
+  'workspaceID'
+])
 
 const library = useLibraryStore()
 const dataFeed = useDatafeedResponses()
 const $bus = inject('$bus')
-const props = defineProps(['isMain', 'hideToolbox', 'options', 'loadData', 'workspaceID'])
 const blocklyToolbox = $ref()
 const blockly = $ref()
 let workspace = shallowRef()
@@ -29,10 +47,8 @@ let code = $ref('')
 
 const emit = defineEmits(['change'])
 const $q = useQuasar()
-
-// Globals for Blockly
-window.get = get
-window.merge = merge
+let isFullscreen = $ref(props.isFullscreen)
+let workspaceData = $ref()
 
 /**
  * Mount
@@ -100,7 +116,7 @@ onMounted(() => {
   })
 
   // Load workspace by ID
-  const workspaceData = library.find(props.workspaceID)
+  workspaceData = library.find(props.workspaceID)
   if (workspaceData) {
     load(workspaceData, workspaceData, true)
   } else {

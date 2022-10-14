@@ -1,11 +1,11 @@
 <template lang="pug">
 q-page
-  BlocklyWorkspace(:workspaceID='$route.params.id' :isMain='true')
+  BlocklyWorkspace(:workspaceID='$route.params.id' :isMain='true' :hideFullscreenToggle='true')
 </template>
 
 <script setup>
 import BlocklyWorkspace from 'src/components/BlocklyWorkspace.vue'
-import {onMounted, ref, inject, nextTick} from 'vue'
+import {onMounted, watch, ref, inject, nextTick} from 'vue'
 import {uid} from 'quasar'
 import {useRouter, useRoute} from 'vue-router'
 import {useLibraryStore} from 'stores/library'

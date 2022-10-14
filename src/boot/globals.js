@@ -1,4 +1,5 @@
 import pkg from '../../package.json'
+import {get, merge} from 'lodash-es'
 
 export default ({ app }) => {
   // @stuck The assumption is that this is safe to do so long
@@ -14,6 +15,12 @@ export default ({ app }) => {
       warn(...arguments)
     }
   }
+
+
+  // Globals for Blockly
+  window.get = get
+  window.merge = merge
+
 
   /**
    * Console Message

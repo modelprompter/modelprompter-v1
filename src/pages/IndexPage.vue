@@ -31,8 +31,8 @@ q-page
             div(style='height: 290px; position: relative')
               BlocklyWorkspace(:hideToolbox='true' workspaceID='1b8c46a7-145a-4d23-b076-4d8538afe220' :options='{trashcan: false, }')
             div.q-mt-md
-              strong.q-mr-sm Workspace:
-              router-link(:to='{path: `/workspace/1b8c46a7-145a-4d23-b076-4d8538afe220`}') Lexica quick search
+              div.text-h5
+                strong.text-white Try it!
           q-card-section
             p The blocks above will load 50 images and prompts from <a href="https://lexica.art">Lexica.art</a> and display them in a grid. <strong>Try editing the prompt and pressing "Run Blocks" below to view the data feed.</strong>
             div.q-mb-sm
