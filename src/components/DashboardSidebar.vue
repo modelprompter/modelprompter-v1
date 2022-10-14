@@ -40,7 +40,7 @@ const essentialLinks = $ref([
     title: 'Blog',
     caption: 'Tutorials, news, and devlog',
     icon: 'rss_feed',
-    link: '/library',
+    link: '/blog',
   }
 ])
 

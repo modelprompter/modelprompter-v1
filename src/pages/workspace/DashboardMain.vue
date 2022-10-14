@@ -88,10 +88,6 @@ function deleteWorkspace (props) {
   })
 }
 
-onMounted(() => {
-  console.log(library.workspaces)
-})
-
 /**
  * Opens the workspace
  */

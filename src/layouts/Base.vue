@@ -1,5 +1,5 @@
 <template lang="pug">
-q-layout(view='lHr lpR fFf' :class='{"mp-has-maximized-drawer": hasExpandedDrawer}')
+q-layout(view='hHh lpR fFf' :class='{"mp-has-maximized-drawer": hasExpandedDrawer}')
   //- Toolbar
   q-header(elevated)
     q-toolbar
