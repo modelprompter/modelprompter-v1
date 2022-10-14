@@ -19,7 +19,7 @@ q-page
             div
               strong 🔔 This is still a prototype 🔔
           q-card-section
-            p Use programmable blocks to chain prompts to Stable Diffusion, Colab Notebooks, custom servers, or any other API on the web.
+            p Use programmable blocks to automate prompts to Stable Diffusion, Colab Notebooks, bots, webhooks, and any other API on the web.
             p.q-mt-sm.text-center
               a(href='https://github.com/ModelPrompter/modelprompter') GitHub
               span.q-mx-sm ·
@@ -31,7 +31,7 @@ q-page
             img(style='height: 300px')
             div
               strong.q-mr-sm 🧩 Try it:
-              | Simple Lexica.art Loader 🧩
+              | Lexica quick search 🧩
           q-card-section
             p The blocks above will load 50 images and prompts from <a href="https://lexica.art">Lexica.art</a> and display them in a grid for further exploration.
             div.q-mb-sm

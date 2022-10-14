@@ -8,21 +8,27 @@
 
 <script setup>
 import Blockly from 'blockly'
-import {onMounted, shallowRef, inject, watch} from 'vue'
+import 'assets/blockly/blocks.js'
+import {onMounted, onUnmounted, shallowRef, inject, watch} from 'vue'
 import axios from 'axios'
-import {LocalStorage, uid} from 'quasar'
+import {LocalStorage, uid, useQuasar} from 'quasar'
 import {useDatafeedResponses} from '../stores/datafeed'
+import {useLibraryStore} from 'stores/library'
 import {get, merge} from 'lodash-es'
+import theme from 'assets/blockly/theme.js'
+import toolbox from 'assets/blockly/toolbox.js'
 
+const library = useLibraryStore()
 const dataFeed = useDatafeedResponses()
 const $bus = inject('$bus')
-const props = defineProps(['options', 'loadData'])
+const props = defineProps(['isMain', 'options', 'loadData', 'workspaceID'])
 const blocklyToolbox = $ref()
 const blockly = $ref()
 let workspace = shallowRef()
 let code = $ref('')
 
 const emit = defineEmits(['change'])
+const $q = useQuasar()
 
 // Globals for Blockly
 window.get = get
@@ -32,10 +38,40 @@ window.merge = merge
  * Mount
  */
 onMounted(() => {
-  const options = props.options || {}
+  // Listeners
+  $bus.on('workspace.dashboard.main.reload', onWorkspaceDashboardMainReload)
+  $bus.on('dashboard.sidebar.save', onDashboardSidebarSave)
+
+  // Create workspace
+  const options = merge({}, {
+    media: "media/",
+    grid: {
+      spacing: 20,
+      length: 20,
+      colour: "#4f4b94",
+      snap: true,
+    },
+    trashcan: true,
+    // @todo make this optional
+    // horizontalLayout: true,
+    zoom: {
+      controls: true,
+      wheel: true,
+      startScale: 1,
+      maxScale: 3,
+      minScale: .3,
+      scaleSpeed: 1.2,
+      pinch: true
+    }
+  }, props.options)
+
   if (!options.toolbox) {
-    options.toolbox = blocklyToolbox
+    options.toolbox = toolbox
   }
+  if (!options.theme) {
+    options.theme = theme
+  }
+
   workspace = Blockly.inject(blockly, options)
   workspace.addChangeListener(onChange)
 
@@ -54,28 +90,71 @@ onMounted(() => {
       }
     }
   })
+
+  // Load workspace by ID
+  const workspaceData = library.find(props.workspaceID)
+  if (workspaceData) {
+    load(workspaceData, workspaceData, true)
+  } else {
+    $q.notify({
+      message: 'Workspace not found',
+      color: 'negative',
+      position: 'top',
+    })
+  }
 })
 
+/**
+ * Unmount
+ */
+onUnmounted(() => {
+  $bus.off('workspace.dashboard.main.reload', onWorkspaceDashboardMainReload)
+  $bus.off('dashboard.sidebar.save', onDashboardSidebarSave)
+})
+
+/**
+ * Reload workspace
+ */
+const onWorkspaceDashboardMainReload = function (workspace, view = null, shouldClear = true) {
+  if (props.isMain) {
+    load(workspace, view, shouldClear)
+  }
+}
+
+/**
+ * Saves a copy of the current workspace
+ */
+const onDashboardSidebarSave = function () {
+  // See if a workspace exists with id, if it does merge it otherwise push it
+  const index = library.workspaces.findIndex(workspace => workspace.id === library.currentWorkspace.id)
+  if (index > -1) {
+    library.workspaces[index] = {...library.currentWorkspace}
+  } else {
+    library.workspaces.push({...library.currentWorkspace})
+  }
+}
 
 /**
  * Load initial data
  */
-const load = function (data, view, shouldClear) {
+const load = function (data = {}, view = {}, shouldClear) {
+  // Defaults
+  data.workspace = data.workspace || '<xml xmlns="https://developers.google.com/blockly/xml"></xml>'
+  view  = {
+    viewLeft: view.viewLeft || data.viewLeft,
+    viewTop: view.viewTop || data.viewTop,
+    scale: view.scale || data.scale,
+  }
   shouldClear && Blockly.mainWorkspace.clear()
 
-  if (data) {
-    Blockly.Xml.domToWorkspace(
-      Blockly.Xml.textToDom(data),
-      workspace
-    )
-    workspace.setScale(view.scale)
-  } else {
-    Blockly.Xml.domToWorkspace(
-      Blockly.Xml.textToDom('<xml xmlns="https://developers.google.com/blockly/xml"></xml>'),
-      workspace
-    )
-  }
+  // Load data
+  Blockly.Xml.domToWorkspace(
+    Blockly.Xml.textToDom(data.workspace),
+    workspace
+  )
 
+  // Update view
+  workspace.setScale(view.scale)
   if (!view.viewLeft && !view.viewTop && !view.scale) {
     workspace.scrollCenter()
   } else {
@@ -181,6 +260,47 @@ watch(() => dataFeed.isRunning, () => {
     dataFeed.hasRanLastMethods = true
   }
 })
+
+
+/**
+ * Handles Workspace events
+ * - Save data
+ */
+let viewLeft = 0
+let viewTop = 0
+let scale = 0
+let hasLoaded = false
+
+function workspaceEventHandler (ev, workspace) {
+  switch (ev.type) {
+    case Blockly.Events.FINISHED_LOADING:
+      hasLoaded = true
+
+    case Blockly.Events.VIEWPORT_CHANGE:
+    case Blockly.Events.BLOCK_DELETE:
+    case Blockly.Events.BLOCK_CHANGE:
+    case Blockly.Events.BLOCK_MOVE:
+    case Blockly.Events.VAR_CREATE:
+    case Blockly.Events.VAR_DELETE:
+    case Blockly.Events.VAR_RENAME:
+      if (hasLoaded) {
+        if (ev.type === Blockly.Events.VIEWPORT_CHANGE) {
+          viewLeft = ev.viewLeft
+          viewTop = ev.viewTop
+          scale = ev.scale
+        }
+
+        // Store the workspace and generate an ID
+        const data = {viewLeft, viewTop, scale}
+        data.workspace = workspace.getWorkspaceString()
+        data.id = library.currentWorkspace.id || uid()
+        data.title = library.currentWorkspace.title || 'Untitled'
+        data.description = library.currentWorkspace.description || ''
+
+        library.$patch({currentWorkspace: Object.assign(library.currentWorkspace, data)})
+      }
+  }
+}
 
 
 /**
