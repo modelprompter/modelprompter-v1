@@ -21,8 +21,9 @@ q-page
           .text-center
             div(style='height: 290px; position: relative')
               BlocklyWorkspace(
+                ref='$workspace'
                 :workspaceID='$route.params.id'
-                :isMain='true'
+                :isMain='isFullscreen'
                 :isFullscreen='isFullscreen'
                 :title='library.currentWorkspace.title'
                 @onFullscreenToggle='toggleFullscreen'
@@ -44,6 +45,7 @@ const $route = useRoute()
 const $bus = inject('$bus')
 const $q = useQuasar()
 let isFullscreen = ref($route.name === 'workspace')
+const $workspace = ref(null)
 
 /**
  * Switch between fullscreen and detail
@@ -55,14 +57,14 @@ function toggleFullscreen ($event) {
   } else {
     $router.push({name: 'workspace-detail', params: {id: $route.params.id}})
   }
+
+  $bus.emit('workspace.reload', library.currentWorkspace, {}, true)
 }
 
 /**
  * Loads the current workspace or the one with ID
  */
 onMounted(() => {
-  console.log('mounted')
-
   if (!$route.params.id && library.currentWorkspace.id) {
     $router.push({name: 'workspace', params: {id: library.currentWorkspace.id}})
   } else if (!$route.params.id) {
@@ -71,7 +73,7 @@ onMounted(() => {
     $router.push({name: 'workspace', params: {id: library.currentWorkspace.id}})
   }
   nextTick(() => {
-    $bus.emit('workspace.dashboard.main.reload', library.currentWorkspace, {
+    $bus.emit('workspace.reload', library.currentWorkspace, {
       viewLeft: library.currentWorkspace.viewLeft,
       viewTop: library.currentWorkspace.viewTop,
       scale: library.currentWorkspace.scale,
@@ -114,7 +116,7 @@ function remix () {
 
   // Navigate to new workspace
   $router.push({name: 'workspace', params: {id: workspace.id}})
-  $bus.emit('workspace.dashboard.main.reload', workspace, true)
+  $bus.emit('workspace.reload', workspace, true)
   $q.notify({message: 'Workspace remixed and opened into'})
 }
 
@@ -135,7 +137,7 @@ function deleteWorkspace () {
 
     if (library.currentWorkspace.id === library.currentWorkspace.id) {
       library.$patch({currentWorkspace: {}})
-      $bus.emit('workspace.dashboard.main.reload', {id: library.currentWorkspace.id}, true)
+      $bus.emit('workspace.reload', {id: library.currentWorkspace.id}, true)
       $q.notify({message: 'Active workspace deleted'})
     } else {
       $q.notify({message: 'Workspace deleted'})

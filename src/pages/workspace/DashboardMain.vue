@@ -81,7 +81,7 @@ function deleteWorkspace (props) {
 
     if (library.currentWorkspace.id === props.row.id) {
       library.$patch({currentWorkspace: {}})
-      $bus.emit('workspace.dashboard.main.reload', {id: props.row.id}, true)
+      $bus.emit('workspace.reload', {id: props.row.id}, true)
       $q.notify({message: 'Active workspace deleted'})
     } else {
       $q.notify({message: 'Workspace deleted'})
@@ -101,7 +101,7 @@ function openWorkspace (props) {
   }).onOk(() => {
     library.$patch({currentWorkspace: {...library.find(props.row.id)}})
     $router.push({name: 'workspace', params: {id: props.row.id}})
-    $bus.emit('workspace.dashboard.main.reload', props.row, true)
+    $bus.emit('workspace.reload', props.row, true)
     $q.notify({message: 'Workspace opened'})
   })
 }
@@ -125,7 +125,7 @@ function addWorkspace () {
   library.$patch({currentWorkspace: {...workspace}})
 
   $router.push({name: 'workspace', params: {id}})
-  $bus.emit('workspace.dashboard.main.reload', workspace, true)
+  $bus.emit('workspace.reload', workspace, true)
   $q.notify({message: 'New workspace added and loaded into'})
 }
 
@@ -159,7 +159,7 @@ function remix (row) {
 
   // Navigate to new workspace
   $router.push({name: 'workspace', params: {id: row.id}})
-  $bus.emit('workspace.dashboard.main.reload', workspace, true)
+  $bus.emit('workspace.reload', workspace, true)
   $q.notify({message: 'Workspace remixed and opened into'})
 }
 

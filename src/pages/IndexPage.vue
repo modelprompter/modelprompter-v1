@@ -29,7 +29,7 @@ q-page
         q-card
           .text-center
             div(style='height: 290px; position: relative')
-              BlocklyWorkspace(:hideToolbox='true' workspaceID='1b8c46a7-145a-4d23-b076-4d8538afe220' :options='{trashcan: false, }')
+              BlocklyWorkspace(workspaceID='1b8c46a7-145a-4d23-b076-4d8538afe220' :options='{trashcan: false}')
             div.q-mt-md
               div.text-h5
                 strong.text-white Try it!

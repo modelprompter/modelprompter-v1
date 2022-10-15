@@ -97,7 +97,7 @@ function updatedFile (file) {
           // Load the workspace
           settings.ui.sidebar.left.maximized = false
           workspaces.forEach(workspace => {
-            $bus.emit('workspace.dashboard.main.reload', workspace, {}, false)
+            $bus.emit('workspace.reload', workspace, {}, false)
           })
 
           $q.notify({
@@ -144,7 +144,7 @@ function importCodeString () {
   if (!props.isLibrary) {
     settings.ui.sidebar.left.maximized = false
     $importCode.forEach(workspace => {
-      $bus.emit('workspace.dashboard.main.reload', workspace, {}, false)
+      $bus.emit('workspace.reload', workspace, {}, false)
     })
   }
 

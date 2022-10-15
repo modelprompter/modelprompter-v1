@@ -55,7 +55,7 @@ let title = ref('')
  */
 onMounted(() => {
   // Listeners
-  $bus.on('workspace.dashboard.main.reload', onWorkspaceDashboardMainReload)
+  $bus.on('workspace.reload', onWorkspaceReload)
   $bus.on('workspace.save', onWorkspaceSave)
 
   // Create workspace
@@ -71,11 +71,11 @@ onMounted(() => {
       scrollbars: true,
       drag: true,
     },
-    trashcan: true,
+    trashcan: false,
     // @todo make this optional
     // horizontalLayout: true,
     zoom: {
-      controls: true,
+      controls: false,
       wheel: true,
       startScale: 1,
       maxScale: 3,
@@ -87,9 +87,6 @@ onMounted(() => {
 
   if (!options.toolbox) {
     options.toolbox = toolbox
-  }
-  if (props.hideToolbox) {
-    options.toolbox = null
   }
 
   if (!options.theme) {
@@ -128,24 +125,36 @@ onMounted(() => {
   }
 
   title.value = data?.title
+  maybeToggleToolbox()
 })
 
 /**
  * Unmount
  */
 onUnmounted(() => {
-  $bus.off('workspace.dashboard.main.reload', onWorkspaceDashboardMainReload)
+  $bus.off('workspace.reload', onWorkspaceReload)
   $bus.off('workspace.save', onWorkspaceSave)
 })
 
 /**
  * Reload workspace
  */
-const onWorkspaceDashboardMainReload = function (workspace, view = null, shouldClear = true) {
-  if (props.isMain) {
-    load(workspace, view, shouldClear)
+const onWorkspaceReload = function (workspace, view = null, shouldClear = true) {
+  maybeToggleToolbox()
+  load(workspace, view, shouldClear)
+}
+
+/**
+ * Toggle the toolbox based on isFullscreen
+ */
+const maybeToggleToolbox = function () {
+  if (props.isFullscreen) {
+    workspace.getToolbox().setVisible(true)
+  } else {
+    workspace.getToolbox().setVisible(false)
   }
 }
+watch(props, maybeToggleToolbox)
 
 /**
  * Saves a copy of the current workspace
