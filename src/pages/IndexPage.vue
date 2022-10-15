@@ -6,16 +6,15 @@ q-page
         q-card.q-mb-lg.bg-blue
           q-card-section
             div 📅 <strong>22-10-14</strong> - Hi, thanks for visiting! This project is still a <strong>super early prototype</strong>; it's buggy but in <a href="https://github.com/modelprompter/modelprompter">active development</a>!
-            //- div
-            //-   strong.q-mr-md Links:
-            //-   a(href='https://github.com/ModelPrompter/modelprompter') GitHub
-            //-   span.q-mx-sm ·
-            //-   a(href='https://twitter.com/ModelPrompter') Twitter
     .row.q-col-gutter-md
       .q-mb-md.col-xs-12.col-md-6
         q-card
           .text-center
-            img(alt='Model Prompter' src='~assets/favicon.png' style='width: 300px; height: auto; max-width: 100%')
+            div.gt-md(style='padding: 123px 50px; padding-bottom: 140px')
+              img(src='~/src/assets/logo-title.png' style='width: 100%; vertical-align: middle;')
+            div.lt-md(style='padding: 20px; padding-bottom: 20px')
+              img(src='~/src/assets/logo-title.png' style='width: 100%; vertical-align: middle;')
+
             div.text-h5
               strong.text-white Prompt engineering with blocks
           q-card-section
