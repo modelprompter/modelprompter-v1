@@ -44,7 +44,7 @@ const $router = useRouter()
 const $route = useRoute()
 const $bus = inject('$bus')
 const $q = useQuasar()
-let isFullscreen = ref($route.name === 'workspace')
+let isFullscreen = ref($route.name === 'workspace' || $route.name === 'workspace-new')
 const $workspace = ref(null)
 
 /**

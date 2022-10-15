@@ -23,7 +23,7 @@ const routes = [
     component: () => import('layouts/Base.vue'),
     children: [
       {
-        name: 'new-workspace',
+        name: 'workspace-new',
         path: '/workspace',
         components: {
           default: () => import('src/pages/workspace/Editor.vue'),
