@@ -4,7 +4,7 @@
     :title='title'
     :hideFullscreenToggle='hideFullscreenToggle'
     :isFullscreen='isFullscreen'
-    @fullscreenToggled='isFullscreen = $event')
+    @fullscreenToggled='onFullscreenToggle')
   .blockly(ref='blockly')
     q-resize-observer(@resize='resize')
   .hidden(ref='blocklyToolbox')
@@ -25,6 +25,7 @@ import {merge} from 'lodash-es'
 import theme from 'assets/blockly/theme.js'
 import toolbox from 'assets/blockly/toolbox.js'
 
+const emit = defineEmits(['onFullscreenToggle'])
 const props = defineProps([
   'title',
   'isMain',
@@ -329,6 +330,15 @@ function workspaceEventHandler (ev) {
         library.$patch({currentWorkspace: Object.assign({}, library.currentWorkspace, data)})
       }
   }
+}
+
+
+/**
+ * Fullscreen toggle
+ */
+function onFullscreenToggle ($event) {
+  isFullscreen = $event
+  emit('onFullscreenToggle', $event)
 }
 
 

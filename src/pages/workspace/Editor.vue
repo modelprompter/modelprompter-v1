@@ -20,7 +20,13 @@ q-page
         q-card
           .text-center
             div(style='height: 290px; position: relative')
-              BlocklyWorkspace(:workspaceID='$route.params.id' :isMain='true' :isFullscreen='true' :title='library.currentWorkspace.title')
+              BlocklyWorkspace(
+                :workspaceID='$route.params.id'
+                :isMain='true'
+                :isFullscreen='isFullscreen'
+                :title='library.currentWorkspace.title'
+                @onFullscreenToggle='toggleFullscreen'
+              )
 </template>
 
 <script setup>
@@ -37,17 +43,32 @@ const $router = useRouter()
 const $route = useRoute()
 const $bus = inject('$bus')
 const $q = useQuasar()
+let isFullscreen = ref($route.name === 'workspace')
+
+/**
+ * Switch between fullscreen and detail
+ */
+function toggleFullscreen ($event) {
+  isFullscreen.value = $event
+  if (isFullscreen.value) {
+    $router.push({name: 'workspace', params: {id: $route.params.id}})
+  } else {
+    $router.push({name: 'workspace-detail', params: {id: $route.params.id}})
+  }
+}
 
 /**
  * Loads the current workspace or the one with ID
  */
 onMounted(() => {
+  console.log('mounted')
+
   if (!$route.params.id && library.currentWorkspace.id) {
-    $router.push({name: 'workspace-active', params: {id: library.currentWorkspace.id}})
+    $router.push({name: 'workspace', params: {id: library.currentWorkspace.id}})
   } else if (!$route.params.id) {
     library.$patch({currentWorkspace: {}})
     library.currentWorkspace.id = uid()
-    $router.push({name: 'workspace-active', params: {id: library.currentWorkspace.id}})
+    $router.push({name: 'workspace', params: {id: library.currentWorkspace.id}})
   }
   nextTick(() => {
     $bus.emit('workspace.dashboard.main.reload', library.currentWorkspace, {
@@ -92,7 +113,7 @@ function remix () {
   library.$patch({currentWorkspace: {...workspace}})
 
   // Navigate to new workspace
-  $router.push({name: 'workspace-active', params: {id: workspace.id}})
+  $router.push({name: 'workspace', params: {id: workspace.id}})
   $bus.emit('workspace.dashboard.main.reload', workspace, true)
   $q.notify({message: 'Workspace remixed and opened into'})
 }

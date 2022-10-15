@@ -100,7 +100,7 @@ function openWorkspace (props) {
     persistent: true
   }).onOk(() => {
     library.$patch({currentWorkspace: {...library.find(props.row.id)}})
-    $router.push({name: 'workspace-active', params: {id: props.row.id}})
+    $router.push({name: 'workspace', params: {id: props.row.id}})
     $bus.emit('workspace.dashboard.main.reload', props.row, true)
     $q.notify({message: 'Workspace opened'})
   })
@@ -124,7 +124,7 @@ function addWorkspace () {
   library.workspaces.push(workspace)
   library.$patch({currentWorkspace: {...workspace}})
 
-  $router.push({name: 'workspace-active', params: {id}})
+  $router.push({name: 'workspace', params: {id}})
   $bus.emit('workspace.dashboard.main.reload', workspace, true)
   $q.notify({message: 'New workspace added and loaded into'})
 }
@@ -158,7 +158,7 @@ function remix (row) {
   library.$patch({currentWorkspace: {...workspace}})
 
   // Navigate to new workspace
-  $router.push({name: 'workspace-active', params: {id: row.id}})
+  $router.push({name: 'workspace', params: {id: row.id}})
   $bus.emit('workspace.dashboard.main.reload', workspace, true)
   $q.notify({message: 'Workspace remixed and opened into'})
 }

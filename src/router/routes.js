@@ -32,8 +32,17 @@ const routes = [
         },
         children: [
           {
-            name: 'workspace-active',
+            name: 'workspace',
             path: '/workspace/:id',
+            components: {
+              default: () => import('src/pages/workspace/Editor.vue'),
+              dashboardMain: () => import('src/pages/workspace/DashboardMain.vue'),
+              toolbar: () => import('src/components/BlocklyToggle.vue'),
+            }
+          },
+          {
+            name: 'workspace-detail',
+            path: '/workspace/:id/detail',
             components: {
               default: () => import('src/pages/workspace/Editor.vue'),
               dashboardMain: () => import('src/pages/workspace/DashboardMain.vue'),
