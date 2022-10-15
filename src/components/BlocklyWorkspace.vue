@@ -164,7 +164,7 @@ const onWorkspaceSave = function () {
  */
 const load = function (data = {}, view = {}, shouldClear) {
   // Defaults
-  data.workspace = data.workspace || '<xml xmlns="https://developers.google.com/blockly/xml"></xml>'
+  data.workspace = data.workspace || ''
   view  = {
     viewLeft: view.viewLeft || data.viewLeft,
     viewTop: view.viewTop || data.viewTop,
@@ -173,10 +173,17 @@ const load = function (data = {}, view = {}, shouldClear) {
   shouldClear && Blockly.mainWorkspace.clear()
 
   // Load data
-  Blockly.Xml.domToWorkspace(
-    Blockly.Xml.textToDom(data.workspace),
-    workspace
-  )
+  if (data.workspace) {
+    Blockly.Xml.domToWorkspace(
+      Blockly.Xml.textToDom(data.workspace),
+      workspace
+    )
+  } else {
+    Blockly.Xml.domToWorkspace(
+      Blockly.Xml.textToDom('<xml xmlns="https://developers.google.com/blockly/xml"></xml>'),
+      workspace
+    )
+  }
 
   // Update view
   workspace.setScale(view.scale)

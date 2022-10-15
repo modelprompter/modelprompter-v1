@@ -3,9 +3,23 @@ import {watch} from 'vue'
 import {LocalStorage} from 'quasar'
 import defaultWorkspace from 'stores/workspaces/default'
 import {throttle} from 'lodash-es'
+import {Notify} from 'quasar'
+import pkg from '/package.json'
 
 export const useLibraryStore = defineStore('library', () => {
-  const library = LocalStorage.getItem('library') || {}
+  let library = LocalStorage.getItem('library') || {}
+
+  // Make sure blocks will work
+  // 0.0.1
+  if (!library.version && library.currentWorkspace) {
+    library = {}
+    localStorage.clear()
+    Notify.create({
+      message: 'Model Prompter has had a major update to the API and has reset all settings (sorry about that).',
+      color: 'negative',
+      timeout: 6000
+    })
+  }
 
   // Load default workspace if it doesn't exist
   let _currentWorkspace
@@ -23,7 +37,7 @@ export const useLibraryStore = defineStore('library', () => {
   const workspaces = $ref(_workspaces)
 
   const autosave = throttle(() => {
-    LocalStorage.set('library', {workspaces, currentWorkspace})
+    LocalStorage.set('library', {workspaces, currentWorkspace, version: pkg.version})
   }, 250, {trailing: true})
   watch(workspaces, autosave)
   watch(currentWorkspace, autosave)

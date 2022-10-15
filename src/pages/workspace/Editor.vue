@@ -12,9 +12,9 @@ q-page
           q-card-actions
             q-btn-group.flex.full-width
               q-btn(icon='save' @click='save' label='Save')
-              q-btn(icon='data_object' color='blue' @click='viewCode(props.row)' label='Code')
-              q-btn(icon='fork_right' color='orange' @click='remix(props.row)' label='Remix')
-              q-btn(color='negative' icon='delete' @click='deleteWorkspace(props)' label='Delete')
+              q-btn(icon='data_object' color='blue' @click='viewCode()' label='Code')
+              q-btn(icon='fork_right' color='orange' @click='remix()' label='Remix')
+              q-btn(color='negative' icon='delete' @click='deleteWorkspace()' label='Delete')
 
       .col-12.col-md-6
         q-card
@@ -75,4 +75,50 @@ function viewCode () {
     }
   })
 }
+
+/**
+ * Creates a clone of this workspace
+ * - No need to "open it" as we can just change the current workspace id
+ * @todo Refactor with ./DashboardMain.vue
+ */
+function remix () {
+  // Find workspace with current id
+  const workspace = {...library.currentWorkspace}
+  workspace.id = uid()
+  workspace.title += ' (remix)'
+
+  library.workspaces.push(workspace)
+  library.$patch({currentWorkspace: {...workspace}})
+
+  // Navigate to new workspace
+  $router.push({name: 'active-block', params: {id: workspace.id}})
+  $bus.emit('workspace.dashboard.main.reload', workspace, true)
+  $q.notify({message: 'Workspace remixed and opened into'})
+}
+
+/**
+ * Delete workspace
+ */
+function deleteWorkspace () {
+  $q.dialog({
+    title: 'Delete Workspace',
+    message: 'Are you sure you want to delete this workspace?',
+    cancel: true,
+    persistent: true
+  }).onOk(() => {
+    // Get index of workspace with id
+    const index = library.workspaces.findIndex(workspace => workspace.id === library.currentWorkspace.id)
+    library.workspaces.splice(index, 1)
+    $router.push({name: 'library'})
+
+    if (library.currentWorkspace.id === library.currentWorkspace.id) {
+      library.$patch({currentWorkspace: {}})
+      $bus.emit('workspace.dashboard.main.reload', {id: library.currentWorkspace.id}, true)
+      $q.notify({message: 'Active workspace deleted'})
+    } else {
+      $q.notify({message: 'Workspace deleted'})
+    }
+  })
+}
+
 </script>

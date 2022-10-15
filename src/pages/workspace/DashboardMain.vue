@@ -82,7 +82,6 @@ function deleteWorkspace (props) {
     if (library.currentWorkspace.id === props.row.id) {
       library.$patch({currentWorkspace: {}})
       $bus.emit('workspace.dashboard.main.reload', {id: props.row.id}, true)
-      settings.ui.sidebar.left.maximized = false
       $q.notify({message: 'Active workspace deleted'})
     } else {
       $q.notify({message: 'Workspace deleted'})
@@ -100,7 +99,6 @@ function openWorkspace (props) {
     cancel: true,
     persistent: true
   }).onOk(() => {
-    settings.ui.sidebar.left.maximized = false
     library.$patch({currentWorkspace: {...library.find(props.row.id)}})
     $router.push({name: 'active-block', params: {id: props.row.id}})
     $bus.emit('workspace.dashboard.main.reload', props.row, true)
@@ -117,7 +115,10 @@ function addWorkspace () {
     id,
     title: 'New Workspace',
     description: '',
-    workspace: ''
+    workspace: '',
+    viewLeft: 0,
+    viewTop: 0,
+    scale: 1
   }
 
   library.workspaces.push(workspace)
@@ -126,7 +127,6 @@ function addWorkspace () {
   $router.push({name: 'active-block', params: {id}})
   $bus.emit('workspace.dashboard.main.reload', workspace, true)
   $q.notify({message: 'New workspace added and loaded into'})
-  settings.ui.sidebar.left.maximized = false
 }
 
 /**
@@ -157,11 +157,9 @@ function remix (row) {
   library.workspaces.push(workspace)
   library.$patch({currentWorkspace: {...workspace}})
 
-  // Minimize sidebar
-  settings.ui.sidebar.left.maximized = false
+  // Navigate to new workspace
   $router.push({name: 'active-block', params: {id: row.id}})
   $bus.emit('workspace.dashboard.main.reload', workspace, true)
-
   $q.notify({message: 'Workspace remixed and opened into'})
 }
 
