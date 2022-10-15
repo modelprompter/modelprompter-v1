@@ -43,18 +43,19 @@ const $q = useQuasar()
  */
 onMounted(() => {
   if (!$route.params.id && library.currentWorkspace.id) {
-    $router.push({name: 'active-block', params: {id: library.currentWorkspace.id}})
-    nextTick(() => {
-      $bus.emit('workspace.dashboard.main.reload', library.currentWorkspace, {
-        viewLeft: library.currentWorkspace.viewLeft,
-        viewTop: library.currentWorkspace.viewTop,
-        scale: library.currentWorkspace.scale,
-      }, true)
-    })
+    $router.push({name: 'workspace-active', params: {id: library.currentWorkspace.id}})
   } else if (!$route.params.id) {
+    library.$patch({currentWorkspace: {}})
     library.currentWorkspace.id = uid()
-    $router.push({name: 'active-block', params: {id: library.currentWorkspace.id}})
+    $router.push({name: 'workspace-active', params: {id: library.currentWorkspace.id}})
   }
+  nextTick(() => {
+    $bus.emit('workspace.dashboard.main.reload', library.currentWorkspace, {
+      viewLeft: library.currentWorkspace.viewLeft,
+      viewTop: library.currentWorkspace.viewTop,
+      scale: library.currentWorkspace.scale,
+    }, true)
+  })
 })
 
 function save () {
@@ -91,7 +92,7 @@ function remix () {
   library.$patch({currentWorkspace: {...workspace}})
 
   // Navigate to new workspace
-  $router.push({name: 'active-block', params: {id: workspace.id}})
+  $router.push({name: 'workspace-active', params: {id: workspace.id}})
   $bus.emit('workspace.dashboard.main.reload', workspace, true)
   $q.notify({message: 'Workspace remixed and opened into'})
 }

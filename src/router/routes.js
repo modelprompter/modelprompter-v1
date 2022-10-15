@@ -32,7 +32,7 @@ const routes = [
         },
         children: [
           {
-            name: 'active-block',
+            name: 'workspace-active',
             path: '/workspace/:id',
             components: {
               default: () => import('src/pages/workspace/Editor.vue'),

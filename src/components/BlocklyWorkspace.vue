@@ -313,6 +313,10 @@ function workspaceEventHandler (ev) {
           viewLeft = ev.viewLeft
           viewTop = ev.viewTop
           scale = ev.scale
+        } else {
+          viewLeft = library.currentWorkspace.viewLeft
+          viewTop = library.currentWorkspace.viewTop
+          scale = library.currentWorkspace.scale
         }
 
         // Store the workspace and generate an ID
