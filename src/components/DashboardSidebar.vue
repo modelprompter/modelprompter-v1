@@ -28,7 +28,7 @@ const essentialLinks = $ref([
     title: 'Workspace',
     caption: 'Use, remix, and edit blocks',
     icon: 'grid_4x4',
-    link: '/workspace/1b8c46a7-145a-4d23-b076-4d8538afe220',
+    link: '/workspace/',
   },
   {
     title: 'Library',

@@ -1,7 +1,7 @@
 <template lang="pug">
 .blockly-container(:class='{"fullscreen": isFullscreen}')
   BlocklyWorkspaceToolbar(
-    :title='workspaceData?.title'
+    :title='title'
     :hideFullscreenToggle='hideFullscreenToggle'
     :isFullscreen='isFullscreen'
     @fullscreenToggled='isFullscreen = $event'
@@ -48,7 +48,8 @@ let code = $ref('')
 const emit = defineEmits(['change'])
 const $q = useQuasar()
 let isFullscreen = $ref(props.isFullscreen)
-let workspaceData = $ref()
+
+let title = ref('')
 
 /**
  * Mount
@@ -116,16 +117,18 @@ onMounted(() => {
   })
 
   // Load workspace by ID
-  workspaceData = library.find(props.workspaceID)
-  if (workspaceData) {
-    load(workspaceData, workspaceData, true)
-  } else {
+  const data = library.find(props.workspaceID)
+  if (data) {
+    load(data, data, true)
+  } else if (props.workspaceID) {
     $q.notify({
       message: 'Workspace not found',
       color: 'negative',
       position: 'top',
     })
   }
+
+  title.value = data?.title
 })
 
 /**
@@ -184,6 +187,8 @@ const load = function (data = {}, view = {}, shouldClear) {
   } else {
     workspace.scroll(view.viewLeft*-1, view.viewTop*-1)
   }
+
+  title.value = data?.title
 }
 
 

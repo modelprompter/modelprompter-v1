@@ -1,6 +1,6 @@
 <template lang="pug">
 q-page
-  BlocklyWorkspace(:workspaceID='$route.params.id' :isMain='true' :hideFullscreenToggle='true')
+  BlocklyWorkspace(:workspaceID='$route.params.id' :isMain='true')
 </template>
 
 <script setup>
