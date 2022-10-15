@@ -3,7 +3,7 @@ q-page
   .content
     .row.q-col-gutter-md
       .q-mb-md.col-xs-12.col-md-6
-        q-card
+        q-card(v-if='$route.name === "workspace-detail"')
           q-card-section
             h1.text-h6.q-mt-none Manage Workspace
             q-input(label='Workspace title' v-model='library.currentWorkspace.title')

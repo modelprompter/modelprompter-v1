@@ -3,7 +3,7 @@ q-layout(view='hHh lpR fFf' :class='{"mp-has-maximized-drawer": hasExpandedDrawe
   //- Toolbar
   q-header(elevated)
     q-toolbar
-      q-btn.text-yellow(flat dense round icon='menu' aria-label='Menu' @click='toggleLeftSidebar')
+      q-btn.text-yellow(flat dense round :icon='settings.ui.sidebar.left.open ? "close" : "menu"' aria-label='Menu' @click='toggleLeftSidebar')
       q-toolbar-title
         span
           router-link.text-decoration-none.text-white(:to='{path: "/"}')
@@ -16,7 +16,7 @@ q-layout(view='hHh lpR fFf' :class='{"mp-has-maximized-drawer": hasExpandedDrawe
             small.gt-xs.q-ml-sm(style='font-size: .65em; display: inline-block; transform: translate(0, -3px)') {{pkg.version}}
       q-space
       router-view(name='toolbar')
-      q-btn.text-yellow.q-ml-md(flat dense round icon='menu' aria-label='Menu' @click='toggleRightSidebar')
+      q-btn.text-yellow.q-ml-md(flat dense round :icon='settings.ui.sidebar.right.open ? "close" : "menu"' aria-label='Menu' @click='toggleRightSidebar')
 
   //- Sidebars
   DashboardSidebar
