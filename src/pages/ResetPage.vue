@@ -4,7 +4,7 @@
     .text-h1 Reset Data?
     .text-h4.q-mt-xl This will reset <b>everything</b> and cannot be undone
 
-    q-btn.q-mt-xl.q-mr-xl(color='light' label='Cancel, take me back home' :to='{path: "/"}')
+    q-btn.q-mt-xl.q-mr-xl(color='light' label='I made a terrible mistake take me back' :to='{path: "/"}')
     q-btn.q-mt-xl(color='red' label='Reset data' @click='resetData' :to='{path: "/"}')
 </template>
 

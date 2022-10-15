@@ -27,7 +27,6 @@ const routes = [
         components: {
           default: () => import('src/pages/workspace/Editor.vue'),
           dashboardMain: () => import('src/pages/workspace/DashboardMain.vue'),
-          dashboardSidebar: () => import('src/pages/workspace/DashboardSidebar.vue'),
           toolbar: () => import('src/components/BlocklyToggle.vue'),
         },
         children: [
@@ -37,7 +36,6 @@ const routes = [
             components: {
               default: () => import('src/pages/workspace/Editor.vue'),
               dashboardMain: () => import('src/pages/workspace/DashboardMain.vue'),
-              dashboardSidebar: () => import('src/pages/workspace/DashboardSidebar.vue'),
               toolbar: () => import('src/components/BlocklyToggle.vue'),
             }
           }

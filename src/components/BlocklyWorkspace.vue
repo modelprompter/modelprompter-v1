@@ -4,8 +4,7 @@
     :title='title'
     :hideFullscreenToggle='hideFullscreenToggle'
     :isFullscreen='isFullscreen'
-    @fullscreenToggled='isFullscreen = $event'
-  )
+    @fullscreenToggled='isFullscreen = $event')
   .blockly(ref='blockly')
     q-resize-observer(@resize='resize')
   .hidden(ref='blocklyToolbox')
@@ -45,7 +44,6 @@ const blockly = $ref()
 let workspace = shallowRef()
 let code = $ref('')
 
-const emit = defineEmits(['change'])
 const $q = useQuasar()
 let isFullscreen = $ref(props.isFullscreen)
 
@@ -57,7 +55,7 @@ let title = ref('')
 onMounted(() => {
   // Listeners
   $bus.on('workspace.dashboard.main.reload', onWorkspaceDashboardMainReload)
-  $bus.on('dashboard.sidebar.save', onDashboardSidebarSave)
+  $bus.on('workspace.save', onWorkspaceSave)
 
   // Create workspace
   const options = merge({}, {
@@ -98,7 +96,7 @@ onMounted(() => {
   }
 
   workspace = Blockly.inject(blockly, options)
-  workspace.addChangeListener(onChange)
+  workspace.addChangeListener(workspaceEventHandler)
 
   // Add class names to blocks
   // @see https://groups.google.com/g/blockly/c/SwGzTvSo1H8/m/LjIRnlXbDAAJ
@@ -136,7 +134,7 @@ onMounted(() => {
  */
 onUnmounted(() => {
   $bus.off('workspace.dashboard.main.reload', onWorkspaceDashboardMainReload)
-  $bus.off('dashboard.sidebar.save', onDashboardSidebarSave)
+  $bus.off('workspace.save', onWorkspaceSave)
 })
 
 /**
@@ -151,7 +149,7 @@ const onWorkspaceDashboardMainReload = function (workspace, view = null, shouldC
 /**
  * Saves a copy of the current workspace
  */
-const onDashboardSidebarSave = function () {
+const onWorkspaceSave = function () {
   // See if a workspace exists with id, if it does merge it otherwise push it
   const index = library.workspaces.findIndex(workspace => workspace.id === library.currentWorkspace.id)
   if (index > -1) {
@@ -201,15 +199,6 @@ const getWorkspaceString = function (data) {
   return Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(workspace))
 }
 
-
-
-
-/**
- * Emits the workspace and triggers an autosave in the component above
- */
-function onChange (ev) {
-  emit('change', ev, workspace)
-}
 
 
 
@@ -300,7 +289,7 @@ let viewTop = 0
 let scale = 0
 let hasLoaded = false
 
-function workspaceEventHandler (ev, workspace) {
+function workspaceEventHandler (ev) {
   switch (ev.type) {
     case Blockly.Events.FINISHED_LOADING:
       hasLoaded = true
@@ -321,12 +310,12 @@ function workspaceEventHandler (ev, workspace) {
 
         // Store the workspace and generate an ID
         const data = {viewLeft, viewTop, scale}
-        data.workspace = workspace.getWorkspaceString()
+        data.workspace = getWorkspaceString()
         data.id = library.currentWorkspace.id || uid()
         data.title = library.currentWorkspace.title || 'Untitled'
         data.description = library.currentWorkspace.description || ''
 
-        library.$patch({currentWorkspace: Object.assign(library.currentWorkspace, data)})
+        library.$patch({currentWorkspace: Object.assign({}, library.currentWorkspace, data)})
       }
   }
 }

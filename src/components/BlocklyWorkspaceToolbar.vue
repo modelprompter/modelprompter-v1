@@ -31,7 +31,7 @@ q-bar(style='position: relative; z-index: 100')
   //- q-space
   //- BlocklyToggle
   q-space
-  q-btn(v-if='!props.hideFullscreenToggle' dense flat icon='open_in_full' @click='$emit("fullscreenToggled", !props.isFullscreen)')
+  q-btn.text-yellow(v-if='!props.hideFullscreenToggle' dense flat icon='open_in_full' @click='$emit("fullscreenToggled", !props.isFullscreen)')
 </template>
 
 <script setup>

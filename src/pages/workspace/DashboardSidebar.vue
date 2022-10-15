@@ -28,7 +28,7 @@ const $bus = inject('$bus')
 const library = useLibraryStore()
 
 function save () {
-  $bus.emit('dashboard.sidebar.save')
+  $bus.emit('workspace.save')
   $q.notify({message: 'Workspace saved'})
 }
 
