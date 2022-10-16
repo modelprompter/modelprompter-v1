@@ -21,7 +21,7 @@ export default {
               block: {
                 type: 'text',
                 fields: {
-                  TEXT: 'https://abc.gradio.app/api/predict'
+                  TEXT: 'https://lexica.art/api/v1/search?q='
                 }
               }
             },

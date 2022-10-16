@@ -5,12 +5,12 @@ q-page
       .col
         q-card.q-mb-lg.bg-blue
           q-card-section
-            div 📅 <strong>22-10-14</strong> - Hi, thanks for visiting! This project is still a <strong>super early prototype</strong>; it's buggy but in <a href="https://github.com/modelprompter/modelprompter">active development</a>!
+            div 📅 <strong>22-10-15</strong> - Hi, thanks for visiting! This project is still a <strong>super early prototype</strong>; it's buggy but in <a href="https://github.com/modelprompter/modelprompter">active development</a>!
     .row.q-col-gutter-md
       .q-mb-md.col-xs-12.col-md-6
         q-card
           .text-center
-            div.gt-md(style='padding: 123px 50px; padding-bottom: 140px')
+            div.gt-md(style='padding: 110px 50px; padding-bottom: 140px')
               img(src='~/src/assets/logo-title.png' style='width: 100%; vertical-align: middle;')
             div.lt-md(style='padding: 20px; padding-bottom: 20px')
               img(src='~/src/assets/logo-title.png' style='width: 100%; vertical-align: middle;')
@@ -28,7 +28,7 @@ q-page
         q-card
           .text-center
             div(style='height: 290px; position: relative')
-              BlocklyWorkspace(workspaceID='1b8c46a7-145a-4d23-b076-4d8538afe220' :options='{trashcan: false}')
+              BlocklyWorkspace(workspaceID='a0352aba-3515-4e98-871c-fcf48b853a8f' :options='{trashcan: false}')
             div.q-mt-md
               div.text-h5
                 strong.text-white Try it!

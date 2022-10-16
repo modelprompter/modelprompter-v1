@@ -10,15 +10,17 @@ export const useLibraryStore = defineStore('library', () => {
   let library = LocalStorage.getItem('library') || {}
 
   // Make sure blocks will work
-  // 0.0.1
-  if (!library.version && library.currentWorkspace) {
+  if ((typeof library.version === 'string' || library.version < pkg.version) && library.blocks) {
     library = {}
     localStorage.clear()
-    Notify.create({
-      message: 'Model Prompter has had a major update to the API and has reset all settings (sorry about that).',
-      color: 'negative',
-      timeout: 6000
-    })
+
+    if ('version' in library) {
+      Notify.create({
+        message: 'Model Prompter has had a major update to the API and has reset all settings (sorry about that).',
+        color: 'negative',
+        timeout: 6000
+      })
+    }
   }
 
   // Load default workspace if it doesn't exist

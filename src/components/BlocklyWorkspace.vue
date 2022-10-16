@@ -183,17 +183,7 @@ const load = function (data = {}, view = {}, shouldClear) {
   shouldClear && Blockly.mainWorkspace.clear()
 
   // Load data
-  if (data.workspace) {
-    Blockly.Xml.domToWorkspace(
-      Blockly.Xml.textToDom(data.workspace),
-      workspace
-    )
-  } else {
-    Blockly.Xml.domToWorkspace(
-      Blockly.Xml.textToDom('<xml xmlns="https://developers.google.com/blockly/xml"></xml>'),
-      workspace
-    )
-  }
+  Blockly.serialization.workspaces.load(data.workspace || {}, workspace)
 
   // Update view
   workspace.setScale(view.scale)
@@ -208,13 +198,6 @@ const load = function (data = {}, view = {}, shouldClear) {
 
 
 
-/**
- * Gets the Blockly workspace as a string for saving
- * @return the current workspace string
- */
-const getWorkspaceString = function (data) {
-  return Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(workspace))
-}
 
 
 
@@ -330,13 +313,26 @@ function workspaceEventHandler (ev) {
         }
 
         // Store the workspace and generate an ID
-        const data = {viewLeft, viewTop, scale}
-        data.workspace = getWorkspaceString()
-        data.id = library.currentWorkspace.id || uid()
-        data.title = library.currentWorkspace.title || 'Untitled'
-        data.description = library.currentWorkspace.description || ''
-
-        library.$patch({currentWorkspace: Object.assign({}, library.currentWorkspace, data)})
+        // @todo this looks kind of crazy
+        library.$patch({currentWorkspace: merge({}, {
+          id: library.currentWorkspace.id || uid(),
+          meta: {
+            title: library.currentWorkspace.title || 'Untitled',
+            descrition: library.currentWorkspace.description || ''
+          },
+          view: {
+            scale: scale,
+            left: viewLeft,
+            top: viewTop
+          },
+          frame: {
+            custom: false || library.currentWorkspace?.frame?.custom,
+            scale: scale,
+            left: viewLeft,
+            top: viewTop
+          },
+          workspace: Blockly.serialization.workspaces.save(workspace)
+        })})
       }
   }
 }
@@ -354,7 +350,7 @@ function onFullscreenToggle ($event) {
 /**
  * Final stuff
  */
-defineExpose({workspace, getWorkspaceString, load, code})
+defineExpose({workspace, load, code})
 </script>
 
 <style scoped>

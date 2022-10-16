@@ -95,7 +95,7 @@ function viewCode () {
       exportMessage: 'Copy the code below to paste this workspace into another. You can also download the .json file for sharing or backup.',
       importMessage: 'Paste the code below or import a JSON file to import those blocks into this workspace.',
       workspaces: JSON.stringify(library.workspaces),
-      currentWorkspace: JSON.stringify([library.currentWorkspace])
+      currentWorkspace: JSON.stringify(library.currentWorkspace)
     }
   })
 }

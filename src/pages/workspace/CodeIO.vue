@@ -127,7 +127,9 @@ function updatedFile (file) {
  * Import from the code textbox
  */
 function importCodeString () {
-  const $importCode = JSON.parse(importCode)
+  let $importCode = JSON.parse(importCode)
+  $importCode = typeof $importCode === 'object' ? [$importCode] : $importCode
+
   if (props.isLibrary) {
     $importCode.forEach((workspace, n) => {
       // If IDs match, create a new ID (do not merge)

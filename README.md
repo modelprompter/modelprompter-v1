@@ -48,3 +48,38 @@ npm run dream-server-16xx
 # 4GB VRAM (slow but will work with enough RAM)
 npm run dream-server-low
 ```
+
+# Dev Notes
+
+## Workspace
+```js
+{
+  library: {
+    // Major changes are not compatible with each other but minor versions are
+    version: 1.0,
+    currentWorkspace: {/* see workspaces */},
+    workspaces: [
+      {
+        id: '',
+        meta: {
+          title: '',
+          description: '',
+        },
+        view: {
+          scale: 0,
+          left: 0,
+          top: 0
+        },
+        frame: {
+          scale: 0,
+          left: 0,
+          top: 0
+        },
+        toolbox: [],
+        workspace: {},
+        autosave: {}
+      },
+    ]
+  }
+}
+```
