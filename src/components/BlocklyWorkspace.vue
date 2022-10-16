@@ -139,9 +139,9 @@ onUnmounted(() => {
 /**
  * Reload workspace
  */
-const onWorkspaceReload = function (workspace, view = null, shouldClear = true) {
+const onWorkspaceReload = function (workspace, shouldClear = true) {
   maybeToggleToolbox()
-  load(workspace, view, shouldClear)
+  load(workspace, shouldClear)
 }
 
 /**
@@ -172,26 +172,23 @@ const onWorkspaceSave = function () {
 /**
  * Load initial data
  */
-const load = function (data = {}, view = {}, shouldClear) {
+const load = function (data = {}, shouldClear) {
   // Defaults
-  data.workspace = data.workspace || ''
-  view  = {
-    viewLeft: view.viewLeft || data.viewLeft,
-    viewTop: view.viewTop || data.viewTop,
-    scale: view.scale || data.scale,
+  data.workspace = data.workspace || {}
+  data.view  = {
+    left: data.view?.left || 0,
+    top: data.view?.top || 0,
+    scale: data.view?.scale || 1,
   }
   shouldClear && Blockly.mainWorkspace.clear()
 
   // Load data
+  console.log(data.workspace)
   Blockly.serialization.workspaces.load(data.workspace || {}, workspace)
 
   // Update view
-  workspace.setScale(view.scale)
-  if (!view.viewLeft && !view.viewTop && !view.scale) {
-    workspace.scrollCenter()
-  } else {
-    workspace.scroll(view.viewLeft*-1, view.viewTop*-1)
-  }
+  workspace.setScale(data.view.scale)
+  workspace.scroll(data.view.left*-1, data.view.top*-1)
 
   title.value = data?.title
 }
@@ -284,9 +281,6 @@ watch(() => dataFeed.isRunning, () => {
  * Handles Workspace events
  * - Save data
  */
-let viewLeft = 0
-let viewTop = 0
-let scale = 0
 let hasLoaded = false
 
 function workspaceEventHandler (ev) {
@@ -302,14 +296,15 @@ function workspaceEventHandler (ev) {
     case Blockly.Events.VAR_DELETE:
     case Blockly.Events.VAR_RENAME:
       if (hasLoaded) {
+        const view = {
+          left: library.currentWorkspace?.view?.left || 0,
+          top: library.currentWorkspace?.view?.top || 0,
+          scale: library.currentWorkspace?.view?.scale || 1,
+        }
         if (ev.type === Blockly.Events.VIEWPORT_CHANGE) {
-          viewLeft = ev.viewLeft
-          viewTop = ev.viewTop
-          scale = ev.scale
-        } else {
-          viewLeft = library.currentWorkspace?.view?.left
-          viewTop = library.currentWorkspace?.view?.left
-          scale = library.currentWorkspace?.view?.left
+          view.left = ev.viewLeft
+          view.top = ev.viewTop
+          view.scale = ev.scale
         }
 
         // Store the workspace and generate an ID
@@ -320,16 +315,8 @@ function workspaceEventHandler (ev) {
             title: library.currentWorkspace.title || 'Untitled',
             descrition: library.currentWorkspace.description || ''
           },
-          view: {
-            scale: scale,
-            left: viewLeft,
-            top: viewTop
-          },
-          embed: {
-            scale: scale,
-            left: viewLeft,
-            top: viewTop
-          },
+          view,
+          embed: view,
           workspace: Blockly.serialization.workspaces.save(workspace)
         })})
       }

@@ -58,7 +58,7 @@ function toggleFullscreen ($event) {
     $router.push({name: 'workspace-detail', params: {id: $route.params.id}})
   }
 
-  $bus.emit('workspace.reload', library.currentWorkspace, {}, true)
+  $bus.emit('workspace.reload', library.currentWorkspace, true)
 }
 
 /**
@@ -73,11 +73,7 @@ onMounted(() => {
     $router.push({name: 'workspace', params: {id: library.currentWorkspace.id}})
   }
   nextTick(() => {
-    $bus.emit('workspace.reload', library.currentWorkspace, {
-      viewLeft: library.currentWorkspace?.view?.left,
-      viewTop: library.currentWorkspace?.view?.top,
-      scale: library.currentWorkspace?.view?.scale,
-    }, true)
+    $bus.emit('workspace.reload', library.currentWorkspace, true)
   })
 })
 
