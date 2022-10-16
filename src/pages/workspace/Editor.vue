@@ -74,9 +74,9 @@ onMounted(() => {
   }
   nextTick(() => {
     $bus.emit('workspace.reload', library.currentWorkspace, {
-      viewLeft: library.currentWorkspace.viewLeft,
-      viewTop: library.currentWorkspace.viewTop,
-      scale: library.currentWorkspace.scale,
+      viewLeft: library.currentWorkspace?.view?.left,
+      viewTop: library.currentWorkspace?.view?.top,
+      scale: library.currentWorkspace?.view?.scale,
     }, true)
   })
 })

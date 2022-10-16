@@ -307,9 +307,9 @@ function workspaceEventHandler (ev) {
           viewTop = ev.viewTop
           scale = ev.scale
         } else {
-          viewLeft = library.currentWorkspace.viewLeft
-          viewTop = library.currentWorkspace.viewTop
-          scale = library.currentWorkspace.scale
+          viewLeft = library.currentWorkspace?.view?.left
+          viewTop = library.currentWorkspace?.view?.left
+          scale = library.currentWorkspace?.view?.left
         }
 
         // Store the workspace and generate an ID
@@ -325,8 +325,7 @@ function workspaceEventHandler (ev) {
             left: viewLeft,
             top: viewTop
           },
-          frame: {
-            custom: false || library.currentWorkspace?.frame?.custom,
+          embed: {
             scale: scale,
             left: viewLeft,
             top: viewTop
