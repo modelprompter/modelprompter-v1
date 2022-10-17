@@ -183,7 +183,6 @@ const load = function (data = {}, shouldClear) {
   shouldClear && Blockly.mainWorkspace.clear()
 
   // Load data
-  console.log(data.workspace)
   Blockly.serialization.workspaces.load(data.workspace || {}, workspace)
 
   // Update view
