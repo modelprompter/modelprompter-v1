@@ -34,7 +34,8 @@ const props = defineProps([
   'hideToolbox',
   'options',
   'loadData',
-  'workspaceID'
+  'workspaceID',
+  'static'
 ])
 
 const library = useLibraryStore()
@@ -160,6 +161,8 @@ watch(props, maybeToggleToolbox)
  * Saves a copy of the current workspace
  */
 const onWorkspaceSave = function () {
+  if (props.static) return
+
   // See if a workspace exists with id, if it does merge it otherwise push it
   const index = library.workspaces.findIndex(workspace => workspace.id === library.currentWorkspace.id)
   if (index > -1) {
@@ -287,6 +290,7 @@ function workspaceEventHandler (ev) {
     case Blockly.Events.FINISHED_LOADING:
       hasLoaded = true
 
+    // Autosave
     case Blockly.Events.VIEWPORT_CHANGE:
     case Blockly.Events.BLOCK_DELETE:
     case Blockly.Events.BLOCK_CHANGE:
@@ -294,7 +298,7 @@ function workspaceEventHandler (ev) {
     case Blockly.Events.VAR_CREATE:
     case Blockly.Events.VAR_DELETE:
     case Blockly.Events.VAR_RENAME:
-      if (hasLoaded) {
+      if (hasLoaded && (!props.static && props.static !== '')) {
         const view = {
           left: library.currentWorkspace?.view?.left || 0,
           top: library.currentWorkspace?.view?.top || 0,
@@ -307,7 +311,6 @@ function workspaceEventHandler (ev) {
         }
 
         // Store the workspace and generate an ID
-        // @todo this looks kind of crazy
         library.$patch({currentWorkspace: merge({}, {
           id: library.currentWorkspace.id || uid(),
           meta: {
