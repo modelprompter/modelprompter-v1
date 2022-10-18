@@ -10,7 +10,7 @@ export const useLibraryStore = defineStore('library', () => {
   let library = LocalStorage.getItem('library') || {}
 
   // Make sure blocks will work
-  if ((typeof library.version === 'string' || library.version < pkg.version) && library.blocks) {
+  if ((typeof library.version === 'string' || library.version < pkg.version || library.version === '1.0') && library.blocks) {
     library = {}
     localStorage.clear()
 
