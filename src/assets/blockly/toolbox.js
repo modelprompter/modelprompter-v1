@@ -15,6 +15,10 @@ export default {
         },
         {
           kind: 'block',
+          type: 'stop_all',
+        },
+        {
+          kind: 'block',
           type: 'server_message_post',
           inputs: {
             URL: {
@@ -25,7 +29,7 @@ export default {
                 }
               }
             },
-            FINALLY_STATEMENTS: {
+            ERROR_STATEMENTS: {
               block: {
                 type: 'feed_send_data',
                 inputs: {

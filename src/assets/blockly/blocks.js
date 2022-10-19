@@ -62,6 +62,24 @@ dataFeed.onEndMethods.push(() => {
 
 
 
+/**
+ * Equivalent to pressing the Stop button
+ */
+Blockly.common.defineBlocksWithJsonArray([{
+  "type": "stop_all",
+  "message0": "Stop everything",
+  "previousStatement": null,
+  "nextStatement": null,
+  "tooltip": "",
+  "helpUrl": "",
+  'style': 'text_blocks',
+}])
+Blockly.JavaScript['stop_all'] = function (block) {
+  return `stopAll();`
+}
+
+
+
 
 
 

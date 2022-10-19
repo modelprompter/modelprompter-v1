@@ -213,7 +213,7 @@ function resize () {
 /**
  * Send data to feed
  */
-window.feedSendData = function (feedData) {
+globalThis.feedSendData = function (feedData) {
   const data = {
     title: feedData.title,
     data: feedData.data,
@@ -225,14 +225,14 @@ window.feedSendData = function (feedData) {
   dataFeed.data.unshift(data)
 }
 
-window.LocalStorage = LocalStorage
+globalThis.LocalStorage = LocalStorage
 
 
 /**
  * POST to a server
  * Callbacks will get halted
  */
-window.dispatchREST = function (method, url, data, onThen, onError, onFinally) {
+globalThis.dispatchREST = function (method, url, data, onThen, onError, onFinally) {
   setTimeout(() => {
     console.log(`Sending ${method}:`, url, data)
 
@@ -250,6 +250,14 @@ window.dispatchREST = function (method, url, data, onThen, onError, onFinally) {
     })
   }, 0)
 }
+
+/**
+ * Stop running blocks
+ */
+globalThis.stopAll = function () {
+  dataFeed.isRunning = false
+}
+
 
 /**
  * Run start/close blocks
