@@ -314,7 +314,7 @@ let hasLoaded = false
 
 function workspaceEventHandler (ev) {
   let comments = library.currentWorkspace.comments || {}
-  console.log('Event', ev)
+  // console.log('Event', ev)
 
   switch (ev.type) {
     case Blockly.Events.FINISHED_LOADING:
