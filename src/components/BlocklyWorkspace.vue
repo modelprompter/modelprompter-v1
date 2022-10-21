@@ -197,8 +197,8 @@ const load = function (data = {}, shouldClear) {
     Object.keys(data.comments).forEach(key => {
       const comment = data.comments[key]
       const block = workspace.getBlockById(key)
-      if (block?.comment) {
-        block.comment.setVisible(comment.isOpen)
+      if (block?.comment && comment.isOpen) {
+        block.comment.setVisible(true)
         block.comment.bubble_.autoLayout = false
         block.comment.bubble_.moveDuringDrag(block.workspace.getBlockDragSurface(), {x: comment.x || 0, y: comment.y || 0})
         block.comment.bubble_.moveTo(comment.x || 0, comment.y || 0)
@@ -309,7 +309,7 @@ watch(() => dataFeed.isRunning, () => {
 let hasLoaded = false
 
 function workspaceEventHandler (ev) {
-  let comments = {}
+  let comments = library.currentWorkspace.comments || {}
   console.log('Event', ev)
 
   switch (ev.type) {
@@ -324,22 +324,38 @@ function workspaceEventHandler (ev) {
 
     case Blockly.Events.BUBBLE_OPEN:
       comments[ev.blockId] = comments[ev.blockId] || {}
-      comments[ev.blockId].isOpen = ev.isOpen
+
+      if (ev.type === Blockly.Events.BUBBLE_OPEN) {
+        comments[ev.blockId].isOpen = ev.isOpen
+      }
 
       // Listen to bubble events
       if (comments[ev.blockId].isOpen) {
         const block = workspace.getBlockById(ev.blockId)
         if (block?.comment) {
+          const x = block.comment.bubble_.getRelativeToSurfaceXY().x
+          const y = block.comment.bubble_.getRelativeToSurfaceXY().y
+
           block.comment.bubble_.moveCallback_ = function () {
             workspaceEventHandler({
               type: 'BUBBLE_MOVE',
               blockId: ev.blockId,
-              x: block.comment.bubble_.getRelativeToSurfaceXY().x,
-              y: block.comment.bubble_.getRelativeToSurfaceXY().y,
+              x, y,
             })
           }
+          comments[ev.blockId].x = x
+          comments[ev.blockId].y = y
         }
       }
+
+    // Update comment position
+    case Blockly.Events.BLOCK_MOVE:
+      comments[ev.blockId] = comments[ev.blockId] || {}
+      if (comments[ev.blockId].isOpen && ev.type === Blockly.Events.BLOCK_MOVE) {
+        comments[ev.blockId].x += ev.newCoordinate.x - ev.oldCoordinate.x
+        comments[ev.blockId].y += ev.newCoordinate.y - ev.oldCoordinate.y
+      }
+
 
     // Autosave
     case Blockly.Events.VIEWPORT_CHANGE:
