@@ -199,9 +199,7 @@ const load = function (data = {}, shouldClear) {
       const block = workspace.getBlockById(key)
       if (block?.comment && comment.isOpen) {
         block.comment.setVisible(true)
-        block.comment.bubble_.autoLayout = false
-        block.comment.bubble_.moveDuringDrag(block.workspace.getBlockDragSurface(), {x: comment.x || 0, y: comment.y || 0})
-        block.comment.bubble_.moveTo(comment.x || 0, comment.y || 0)
+        moveComment(block, comment.x, comment.y)
       }
       window.b = block
     })
@@ -212,8 +210,14 @@ const load = function (data = {}, shouldClear) {
 
 
 
-
-
+/**
+ * Moves a comment on the workspace
+ */
+const moveComment = function (block, x = 0, y = 0) {
+  block.comment.bubble_.autoLayout = false
+  block.comment.bubble_.moveDuringDrag(block.workspace.getBlockDragSurface(), {x, y})
+  block.comment.bubble_.moveTo(x, y)
+}
 
 
 
@@ -343,8 +347,13 @@ function workspaceEventHandler (ev) {
               x, y,
             })
           }
-          comments[ev.blockId].x = x
-          comments[ev.blockId].y = y
+
+          if (ev.type === Blockly.Events.BUBBLE_OPEN) {
+            moveComment(block, comments[ev.blockId].x, comments[ev.blockId].y)
+          } else {
+            comments[ev.blockId].x = x
+            comments[ev.blockId].y = y
+          }
         }
       }
 
