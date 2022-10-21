@@ -192,6 +192,21 @@ const load = function (data = {}, shouldClear) {
   workspace.setScale(data.view.scale)
   workspace.scroll(data.view.left*-1, data.view.top*-1)
 
+  // Update comments
+  if (data.comments) {
+    Object.keys(data.comments).forEach(key => {
+      const comment = data.comments[key]
+      const block = workspace.getBlockById(key)
+      if (block?.comment) {
+        block.comment.setVisible(comment.isOpen)
+        block.comment.bubble_.autoLayout = false
+        block.comment.bubble_.moveDuringDrag(block.workspace.getBlockDragSurface(), {x: comment.x || 0, y: comment.y || 0})
+        block.comment.bubble_.moveTo(comment.x || 0, comment.y || 0)
+      }
+      window.b = block
+    })
+  }
+
   title.value = data?.title
 }
 
@@ -294,15 +309,42 @@ watch(() => dataFeed.isRunning, () => {
 let hasLoaded = false
 
 function workspaceEventHandler (ev) {
+  let comments = {}
+  console.log('Event', ev)
+
   switch (ev.type) {
     case Blockly.Events.FINISHED_LOADING:
       hasLoaded = true
+
+    // Comments
+    case 'BUBBLE_MOVE':
+      comments[ev.blockId] = comments[ev.blockId] || {}
+      comments[ev.blockId].x = ev.x
+      comments[ev.blockId].y = ev.y
+
+    case Blockly.Events.BUBBLE_OPEN:
+      comments[ev.blockId] = comments[ev.blockId] || {}
+      comments[ev.blockId].isOpen = ev.isOpen
+
+      // Listen to bubble events
+      if (comments[ev.blockId].isOpen) {
+        const block = workspace.getBlockById(ev.blockId)
+        if (block?.comment) {
+          block.comment.bubble_.moveCallback_ = function () {
+            workspaceEventHandler({
+              type: 'BUBBLE_MOVE',
+              blockId: ev.blockId,
+              x: block.comment.bubble_.getRelativeToSurfaceXY().x,
+              y: block.comment.bubble_.getRelativeToSurfaceXY().y,
+            })
+          }
+        }
+      }
 
     // Autosave
     case Blockly.Events.VIEWPORT_CHANGE:
     case Blockly.Events.BLOCK_DELETE:
     case Blockly.Events.BLOCK_CHANGE:
-    case Blockly.Events.BLOCK_MOVE:
     case Blockly.Events.VAR_CREATE:
     case Blockly.Events.VAR_DELETE:
     case Blockly.Events.VAR_RENAME:
@@ -326,6 +368,7 @@ function workspaceEventHandler (ev) {
             descrition: library.currentWorkspace.description || ''
           },
           view,
+          comments: merge({}, library.currentWorkspace.comments || {}, comments),
           embed: view,
           workspace: Blockly.serialization.workspaces.save(workspace)
         })})
