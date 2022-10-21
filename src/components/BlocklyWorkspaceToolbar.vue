@@ -1,6 +1,7 @@
 <template lang="pug">
 q-bar(style='position: relative; z-index: 100')
-  strong {{props.title}}
+  div.text-ellipse
+    strong {{props.title}}
   //- .cursor-pointer.non-selectable
   //-   | File
   //-   q-menu

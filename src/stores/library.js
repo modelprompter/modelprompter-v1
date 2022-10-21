@@ -4,16 +4,17 @@ import {LocalStorage} from 'quasar'
 import defaultWorkspace from 'stores/workspaces/default'
 import {throttle} from 'lodash-es'
 import {Notify} from 'quasar'
-import pkg from '/package.json'
+
+// Library version
+const version = '0.0.6'
 
 export const useLibraryStore = defineStore('library', () => {
   let library = LocalStorage.getItem('library') || {}
 
   // Make sure blocks will work
-  if ((typeof library.version === 'string' || library.version < pkg.version || library.version === '1.0') && library.blocks) {
-    library = {}
+  if ((!library?.version || library?.version < version || library?.version === '1.0') && library.workspace) {
     localStorage.clear()
-
+    library = {}
     if ('version' in library) {
       Notify.create({
         message: 'Model Prompter has had a major update to the API and has reset all settings (sorry about that).',
@@ -39,7 +40,7 @@ export const useLibraryStore = defineStore('library', () => {
   const workspaces = $ref(_workspaces)
 
   const autosave = throttle(() => {
-    LocalStorage.set('library', {workspaces, currentWorkspace, version: pkg.version})
+    LocalStorage.set('library', {workspaces, currentWorkspace, version})
   }, 250, {trailing: true})
   watch(workspaces, autosave)
   watch(currentWorkspace, autosave)

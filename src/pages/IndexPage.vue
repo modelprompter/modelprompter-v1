@@ -5,12 +5,12 @@ q-page
       .col
         q-card.q-mb-lg.bg-blue
           q-card-section
-            div 📅 <strong>22-10-18</strong> - Hi, thanks for visiting! This project is still a <strong>super early prototype</strong>; it's buggy but in <a href="https://github.com/modelprompter/modelprompter">active development</a>!
-    .row.q-col-gutter-md
+            div 📅 <strong>22-10-21</strong> - Hi, thanks for visiting! This project is still a <strong>super early prototype</strong>; it's buggy but in <a href="https://github.com/modelprompter/modelprompter">active development</a>!
+    .row.q-col-gutter-md.q-pb-lg
       .q-mb-md.col-xs-12.col-md-6
         q-card
           .text-center
-            div.gt-md(style='padding: 110px 50px; padding-bottom: 140px')
+            div.gt-md(style='padding: 120px 20px; padding-bottom: 140px')
               img(src='~/src/assets/logo-title.png' style='width: 100%; vertical-align: middle;')
             div.lt-md(style='padding: 20px; padding-bottom: 20px')
               img(src='~/src/assets/logo-title.png' style='width: 100%; vertical-align: middle;')
@@ -18,7 +18,7 @@ q-page
             div.text-h5
               strong.text-white Prompt engineering with blocks
           q-card-section
-            p Use programmable blocks to automate prompts to Stable Diffusion, Colab Notebooks, bots, webhooks, and any API. <strong>Then use more blocks to configure how the data is displayed!</strong>
+            p Use programmable blocks to automate prompts to Stable Diffusion, Colab Notebooks, bots, webhooks, and any API. <strong>Then use more blocks to configure how the data is organized and displayed!</strong>
             p.q-mt-sm.text-center
               a(href='https://github.com/ModelPrompter/modelprompter') GitHub
               span.q-mx-sm ·
@@ -37,17 +37,21 @@ q-page
             div.q-mb-sm
               BlocklyToggle.full-width
 
-    q-card.q-mt-lg
+    q-card.q-my-xl.bg-blue
       q-card-section
         div 📅 <strong>More coming soon!</strong> If you'd like to explore, use the left menu to work with blocks and the right menu to work with the results.
-    //- .row.flex.q-gutter-md.q-mt-sm
-    //-   q-card
-    //-     q-card-section
-    //-       .row
-            //- .col.col-md-4
-            //-   h1 Why
-            //- .col.col-md-8
-            //-   p I am
+
+    q-card
+      q-card-section
+        .row.q-col-gutter-md
+          .col-12.col-md-4
+            h2.q-mt-none Dynamic Prompts
+            p Explore lots of ideas at once by generating dynamic prompts that change with each run or adapt to events.
+            div.q-mt-xl
+              BlocklyToggle.full-width
+          .col-12.col-md-8
+            .relative(style='height: 350px;')
+              BlocklyWorkspace(workspaceID='e0ebb972-48ef-4e3e-92cc-89efa1d2deda' :options='{trashcan: false}' static)
 </template>
 
 <script setup>

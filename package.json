@@ -1,6 +1,6 @@
 {
   "name": "modelprompter",
-  "version": "0.0.3",
+  "version": "0.0.5",
   "description": "Automate prompts to Stable Diffusion using multiple (free) cloud GPUs",
   "productName": "Model Prompter",
   "author": "modelprompter@gmail.com",

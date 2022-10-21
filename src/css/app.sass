@@ -12,6 +12,8 @@ b, strong
   color: $teal
 
 // Helpers
+.relative
+  position: relative
 .flex
   display: flex
   flex-direction: row
@@ -22,6 +24,11 @@ b, strong
 
   > *
     flex: 1
+
+.text-ellipse
+  overflow: hidden
+  text-overflow: ellipsis
+  white-space: nowrap
 
 .content
   width: 1600px
