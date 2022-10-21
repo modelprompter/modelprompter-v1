@@ -6,22 +6,25 @@ import {throttle} from 'lodash-es'
 import {Notify} from 'quasar'
 
 // Library version
-const version = '0.0.6'
+const version = '0.0.10'
 
 export const useLibraryStore = defineStore('library', () => {
   let library = LocalStorage.getItem('library') || {}
 
   // Make sure blocks will work
-  if ((!library?.version || library?.version < version || library?.version === '1.0') && library.workspace) {
-    localStorage.clear()
-    library = {}
-    if ('version' in library) {
+  if ((!library?.version || library?.version < version || library?.version === '1.0') && library.workspaces) {
+    console.log('CLEAR', library)
+    if (library.version) {
+      console.log('UPDATE')
       Notify.create({
         message: 'Model Prompter has had a major update to the API and has reset all settings (sorry about that).',
         color: 'negative',
         timeout: 6000
       })
     }
+
+    localStorage.clear()
+    library = {}
   }
 
   // Load default workspace if it doesn't exist
