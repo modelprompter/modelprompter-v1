@@ -1,5 +1,5 @@
 <template lang="pug">
-div(:class='{"mp-drawer-is-maximized": settings.ui.sidebar.right.maximized}')
+div#datafeed(:class='{"mp-drawer-is-maximized": settings.ui.sidebar.right.maximized}')
   q-drawer(v-model='settings.ui.sidebar.right.open' bordered overlay side='right')
     q-list
       q-item-label(header)
@@ -9,7 +9,8 @@ div(:class='{"mp-drawer-is-maximized": settings.ui.sidebar.right.maximized}')
           span.q-ml-sm Open Data Feed
     .q-px-md.q-pb-md
       .row.q-col-gutter-none
-        div.q-pa-xs(v-for='(item, i) in dataFeed.data' :data='item' :class='[settings.ui.sidebar.right.maximized ? "col-xs-6 col-sm-4 col-md-3 col-lg-2 col-xl-1" : "col-6"]')
+        //- div.q-pa-xs(v-for='(item, i) in dataFeed.data' :data='item' :class='[settings.ui.sidebar.right.maximized ? "col-xs-6 col-sm-4 col-md-3 col-lg-2 col-xl-1" : "col-6"]')
+        div.q-pa-xs(v-for='(item, i) in dataFeed.data' :data='item' :class='[settings.ui.sidebar.right.maximized ? "col-xs-12 col-sm-6 col-md-4 col-lg-3 col-xl-2" : "col-12"]')
           q-card
             q-img.clickable(v-if='item.image' :src='item.image' @click='expandImage(item)')
             q-card-section(v-else)
@@ -39,3 +40,8 @@ function expandImage (data) {
   imageModalActiveImage = data
 }
 </script>
+
+<style lang="sass" scoped>
+#datafeed
+  width: 512px
+</style>

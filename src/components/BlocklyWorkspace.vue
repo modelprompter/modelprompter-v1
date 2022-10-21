@@ -349,7 +349,7 @@ function workspaceEventHandler (ev) {
           }
 
           if (ev.type === Blockly.Events.BUBBLE_OPEN) {
-            moveComment(block, comments[ev.blockId].x, comments[ev.blockId].y)
+            typeof comments[ev.blockId].x !== 'undefined' && moveComment(block, comments[ev.blockId].x, comments[ev.blockId].y)
           } else {
             comments[ev.blockId].x = x
             comments[ev.blockId].y = y
