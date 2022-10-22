@@ -5,14 +5,17 @@ import defaultWorkspace from 'stores/workspaces/default'
 import {throttle} from 'lodash-es'
 import {Notify} from 'quasar'
 
-// Library version
-const version = '0.0.10'
-
 export const useLibraryStore = defineStore('library', () => {
   let library = LocalStorage.getItem('library') || {}
 
+  // Versioning
+  const version = '0.0.10'
+  if (!library.workspaces || library.version) {library = {
+    workspaces: {}
+  }}
+
   // Make sure blocks will work
-  if ((!library?.version || library?.version < version || library?.version === '1.0') && library.workspaces) {
+  if ((!library?.version || library?.version < version || library?.version == '1.0') && library.workspaces) {
     console.log('CLEAR', library)
     if (library.version) {
       console.log('UPDATE')
