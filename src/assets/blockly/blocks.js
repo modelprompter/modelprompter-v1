@@ -148,14 +148,13 @@ Blockly.common.defineBlocksWithJsonArray([{
 }])
 
 Blockly.JavaScript['server_message_post'] = function (block) {
-  const method = Blockly.JavaScript.valueToCode(block, 'METHOD', Blockly.JavaScript.ORDER_NONE) || 'POST'
+  const method = block.getFieldValue('METHOD') || 'POST'
   const url = Blockly.JavaScript.valueToCode(block, 'URL', Blockly.JavaScript.ORDER_NONE) || []
   const data = Blockly.JavaScript.valueToCode(block, 'DATA', Blockly.JavaScript.ORDER_NONE) || null
   const onThen = Blockly.JavaScript.statementToCode(block, 'THEN_STATEMENTS') || 'null'
   const onError = Blockly.JavaScript.statementToCode(block, 'ERROR_STATEMENTS') || 'null'
   const onFinally = Blockly.JavaScript.statementToCode(block, 'FINALLY_STATEMENTS') || 'null'
 
-  console.log(data)
   let code = `
 // API call...
 dispatchREST(

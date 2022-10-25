@@ -194,15 +194,23 @@ const load = function (data = {}, shouldClear) {
 
   // Update comments
   if (data.comments) {
+    // Prevent focus
+    const $focus = HTMLTextAreaElement.prototype.focus
+
+    // Open comments
     Object.keys(data.comments).forEach(key => {
       const comment = data.comments[key]
       const block = workspace.getBlockById(key)
       if (block?.comment && comment.isOpen) {
+        HTMLTextAreaElement.prototype.focus = function () {}
         block.comment.setVisible(true)
         moveComment(block, comment.x, comment.y)
       }
       window.b = block
     })
+
+    // Allow focus
+    HTMLTextAreaElement.prototype.focus = $focus
   }
 
   title.value = data?.title

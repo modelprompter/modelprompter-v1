@@ -6,12 +6,12 @@ q-page
         .col
           q-card.q-mb-lg.bg-blue
             q-card-section
-              div 📅 <strong>22-10-21</strong> - Hi, thanks for visiting! This project is still a <strong>super early prototype</strong>; it's buggy but in <a href="https://github.com/modelprompter/modelprompter">active development</a>!
+              div 📅 <strong>22-10-25</strong> - Hi, thanks for visiting! This project is still a <strong>super early prototype</strong>; it's buggy but in <a href="https://github.com/modelprompter/modelprompter">active development</a>!
       .row.q-col-gutter-md
         .q-mb-md.col-xs-12.col-md-6
           q-card
             .text-center
-              div.gt-md(style='padding: 120px 20px; padding-bottom: 140px')
+              div.gt-md(style='padding: 120px 20px; padding-bottom: 120px')
                 img(src='~/src/assets/logo-title.png' style='width: 100%; vertical-align: middle;')
               div.lt-md(style='padding: 20px; padding-bottom: 20px')
                 img(src='~/src/assets/logo-title.png' style='width: 100%; vertical-align: middle;')
@@ -24,6 +24,8 @@ q-page
                 a(href='https://github.com/ModelPrompter/modelprompter') GitHub
                 span.q-mx-sm ·
                 a(href='https://twitter.com/ModelPrompter') Twitter
+                span.q-mx-sm ·
+                a(href='https://discord.gg/GFJ2ftEQWF') Discord
 
         .col-12.col-md-6
           q-card
@@ -39,12 +41,11 @@ q-page
                 BlocklyToggle.full-width
 
     section
-      //- Dynamic Prompts section
       q-card.q-mb-xl
         q-card-section
           .row.q-col-gutter-md
             .col-12.col-md-4
-              h2.q-mt-none Dynamic Prompts
+              h2.q-mt-none Imagine words as blocks
               p Explore lots of ideas at once by generating dynamic prompts that change with each run or adapt to events.
               div.q-mt-xl
                 BlocklyToggle.full-width
@@ -52,7 +53,21 @@ q-page
               .relative(style='height: 350px;')
                 BlocklyWorkspace(workspaceID='e0ebb972-48ef-4e3e-92cc-89efa1d2deda' :options='{trashcan: false}' static)
 
-    //- How it works
+    section
+      q-card.q-mb-xl
+        q-card-section
+          .row.q-col-gutter-md
+            .col-12.col-md-6
+              h2.q-mt-none Interact with APIs and URLs
+              p Use data from any source you have access to, like Google Sheets, Notion Databases, Wikipedia, Twitter, or any other API on the web. <strong>With the Model Prompter client (coming soon), you'll even be able to use cURL to scrape any URL whether it has an API or not!</strong>
+              p Here we load a random topic title from Wikipedia and use it to prompt for 50 images from Lexica.
+              div.q-mt-xl
+                BlocklyToggle.full-width
+            .col-12.col-md-6
+              .relative(style='height: 400px;')
+                BlocklyWorkspace(workspaceID='c2129a2b-1c90-4442-90ba-7c8e3fe9fc10' :options='{trashcan: false}' static)
+
+
     section
       h2 How it works
 
@@ -80,9 +95,8 @@ q-page
         .q-mb-md.col-xs-12.col-md-4
           q-card
             q-card-section
-              h6 Integrate Model Prompter with anything
+              h6 Curate and organize galleries
 
-    //- Project + Roadmap
     section
       .row.flex
         .col
@@ -93,7 +107,7 @@ q-page
                 h2 More coming soon
                 q-card.q-mb-lg.bg-blue
                   q-card-section
-                    div 📅 <strong>22-10-21</strong> - Hi, thanks for visiting! This project is still a <strong>super early prototype</strong>; it's buggy but in <a href="https://github.com/modelprompter/modelprompter">active development</a>!
+                    div 📅 <strong>22-10-25</strong> - Hi, thanks for visiting! This project is still a <strong>super early prototype</strong>; it's buggy but in <a href="https://github.com/modelprompter/modelprompter">active development</a>!
         .q-mb-md.col-xs-12.col-md-6
           q-card
             .text-center
