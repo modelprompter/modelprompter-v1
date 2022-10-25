@@ -21,11 +21,12 @@ import axios from 'axios'
 import {LocalStorage, uid, useQuasar} from 'quasar'
 import {useDatafeedResponses} from '../stores/datafeed'
 import {useLibraryStore} from 'stores/library'
+import {useSettingsStore} from 'stores/settings'
 import {merge} from 'lodash-es'
 import theme from 'assets/blockly/theme.js'
 import toolbox from 'assets/blockly/toolbox.js'
 
-const emit = defineEmits(['onFullscreenToggle'])
+const emit = defineEmits(['onFullscreenToggle', 'onIsRunning'])
 const props = defineProps([
   'title',
   'isMain',
@@ -39,6 +40,7 @@ const props = defineProps([
 ])
 
 const library = useLibraryStore()
+const settings = useSettingsStore()
 const dataFeed = useDatafeedResponses()
 const $bus = inject('$bus')
 const blocklyToolbox = $ref()
@@ -48,6 +50,7 @@ let code = $ref('')
 
 const $q = useQuasar()
 let isFullscreen = $ref(props.isFullscreen)
+let isRunning = $ref(false)
 
 let title = ref('')
 
@@ -240,7 +243,7 @@ function resize () {
 /**
  * Send data to feed
  */
-globalThis.feedSendData = function (feedData) {
+const feedSendData = function (feedData) {
   const data = {
     title: feedData.title,
     data: feedData.data,
@@ -252,14 +255,12 @@ globalThis.feedSendData = function (feedData) {
   dataFeed.data.unshift(data)
 }
 
-globalThis.LocalStorage = LocalStorage
-
 
 /**
  * POST to a server
  * Callbacks will get halted
  */
-globalThis.dispatchREST = function (method, url, data, onThen, onError, onFinally) {
+const dispatchREST = function (method, url, data, onThen, onError, onFinally) {
   setTimeout(() => {
     console.log(`Sending ${method}:`, url, data)
 
@@ -268,29 +269,35 @@ globalThis.dispatchREST = function (method, url, data, onThen, onError, onFinall
       url,
       data
     }).then((res) => {
-      dataFeed.isRunning && onThen(res.data)
+      isRunning && onThen(res.data)
       return res
     }).catch((err) => {
       onError(err)
     }).then((data) => {
-      dataFeed.isRunning && onFinally(data?.data)
+      isRunning && onFinally(data?.data)
     })
   }, 0)
 }
 
 /**
- * Stop running blocks
+ * Set workspace running state
  */
-globalThis.stopAll = function () {
-  dataFeed.isRunning = false
+const stopWorkspace = function () {
+  isRunning = false
+}
+function setState (state) {
+  isRunning = state
 }
 
 
 /**
  * Run start/close blocks
  */
-watch(() => dataFeed.isRunning, () => {
-  if (dataFeed.isRunning) {
+watch(() => isRunning, () => {
+  settings.ui.sidebar.right.open = true
+  emit('onIsRunning', isRunning)
+
+  if (isRunning) {
     code = Blockly.JavaScript.workspaceToCode(workspace)
     code = `;(function () {
       ${code}
@@ -422,7 +429,7 @@ function onFullscreenToggle ($event) {
 /**
  * Final stuff
  */
-defineExpose({workspace, load, code})
+defineExpose({workspace, load, code, setState})
 </script>
 
 <style scoped>
