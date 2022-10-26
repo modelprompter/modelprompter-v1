@@ -34,12 +34,14 @@ q-page
 import BlocklyWorkspace from 'src/components/BlocklyWorkspace.vue'
 import CodeIO from 'src/pages/workspace/CodeIO.vue'
 
-import {onMounted, watch, ref, inject, nextTick} from 'vue'
+import {onMounted, onUnmounted, watch, ref, inject, nextTick} from 'vue'
 import {uid, useQuasar} from 'quasar'
 import {useRouter, useRoute} from 'vue-router'
 import {useLibraryStore} from 'stores/library'
+import {useSettingsStore} from 'stores/settings'
 
 const library = useLibraryStore()
+const settings = useSettingsStore()
 const $router = useRouter()
 const $route = useRoute()
 const $bus = inject('$bus')
@@ -75,6 +77,13 @@ onMounted(() => {
   nextTick(() => {
     $bus.emit('workspace.reload', library.currentWorkspace, true)
   })
+
+  // Set toolbar button target
+  settings.ui.toolbar.toggleBlocksWorkspaceRef = $workspace
+})
+
+onUnmounted(() => {
+  settings.ui.toolbar.toggleBlocksWorkspaceRef = null
 })
 
 function save () {
