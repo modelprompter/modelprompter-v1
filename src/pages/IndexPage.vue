@@ -18,7 +18,7 @@ q-page
                 img(src='~/src/assets/logo-title.png' style='width: 100%; vertical-align: middle;')
 
               div.text-h5
-                strong.text-white Prompt engineering with blocks
+                strong.text-white Automate AI's and API's
             q-card-section
               p Use programmable blocks to automate prompts to Stable Diffusion, Colab Notebooks, bots, webhooks, and any API. <strong>Then use more blocks to configure how the data is organized and displayed!</strong>
               p.q-mt-sm.text-center
@@ -70,33 +70,31 @@ q-page
 
 
     section
-      h2 How it works
+      h2 View and share as forms
+      h5 Once blocks are assembled, you can view and share them as simplified forms. For example, the following forms were generated from the blocks above:
 
       .row.q-col-gutter-md.q-mt-xl
         .q-mb-md.col-xs-12.col-md-4
           q-card
             q-card-section
-              h6 Imagine groups of words as blocks
+              .relative(style='height: 300px;')
+                BlocklyWorkspace(ref='form1' @onIsRunning='updateButton("formBtn1", $event)' workspaceID='a0352aba-3515-4e98-871c-fcf48b853a8f' :options='{trashcan: false}' static showForm)
+            q-card-actions
+              BlocklyToggle.full-width(ref='formBtn1' target='form1' @toggled='toggleWorkspace')
         .q-mb-md.col-xs-12.col-md-4
           q-card
             q-card-section
-              h6 Combine blocks to generate prompts
+              .relative(style='height: 300px;')
+                BlocklyWorkspace(ref='form2' @onIsRunning='updateButton("formBtn2", $event)' workspaceID='e0ebb972-48ef-4e3e-92cc-89efa1d2deda' :options='{trashcan: false}' static showForm)
+            q-card-actions
+              BlocklyToggle.full-width(ref='formBtn2' target='form2' @toggled='toggleWorkspace')
         .q-mb-md.col-xs-12.col-md-4
           q-card
             q-card-section
-              h6 View blocks as forms for easier editing
-        .q-mb-md.col-xs-12.col-md-4
-          q-card
-            q-card-section
-              h6 Connect forms with nodes
-        .q-mb-md.col-xs-12.col-md-4
-          q-card
-            q-card-section
-              h6 Customize how image/data is displayed
-        .q-mb-md.col-xs-12.col-md-4
-          q-card
-            q-card-section
-              h6 Curate and organize galleries
+              .relative(style='height: 300px;')
+                BlocklyWorkspace(ref='form3' @onIsRunning='updateButton("formBtn3", $event)' workspaceID='c2129a2b-1c90-4442-90ba-7c8e3fe9fc10' :options='{trashcan: false}' static showForm)
+            q-card-actions
+              BlocklyToggle.full-width(ref='formBtn3' target='form3' @toggled='toggleWorkspace')
 
     section
       .row.flex

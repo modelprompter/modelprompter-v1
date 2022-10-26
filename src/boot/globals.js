@@ -29,7 +29,8 @@ export default ({ app }) => {
   console.log(`
 (∩｀-\´)⊃━🌟☆ﾟ.*･｡ﾟ☆ﾟ. * ･ ｡ﾟ (  MODEL PROMPTER ${pkg.version} ______ _ .  ･  *･｡ﾟ☆ﾟ✨
 
-Join the project: https://github.com/ModelPrompter/modelprompter
-Join the Discord: https://discord.gg/SVfTVxT57h
+Follow the project on Twitter: https:/twitter.com/ModelPrompter
+Get the source code on GitHub: https://github.com/ModelPrompter/ModelPrompter
+Join the Discord: https://discord.gg/GFJ2ftEQWF
 `)
 }
