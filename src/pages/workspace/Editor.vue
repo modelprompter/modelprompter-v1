@@ -152,7 +152,7 @@ function deleteWorkspace () {
     library.workspaces.splice(index, 1)
     $router.push({name: 'library'})
 
-    if (library.currentWorkspace.id === library.currentWorkspace.id) {
+    if (library.workspaces[index]?.id === library.currentWorkspace.id) {
       library.$patch({currentWorkspace: {}})
       $bus.emit('workspace.reload', {id: library.currentWorkspace.id}, true)
       $q.notify({message: 'Active workspace deleted'})

@@ -426,5 +426,4 @@ Blockly.JavaScript['json_object_extract_values'] = function (block) {
 }
 
 
-
 export default {}

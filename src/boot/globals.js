@@ -1,5 +1,6 @@
 import pkg from '../../package.json'
 import {get, merge} from 'lodash-es'
+import {LocalStorage} from 'quasar'
 
 export default ({ app }) => {
   // @stuck The assumption is that this is safe to do so long
@@ -18,8 +19,11 @@ export default ({ app }) => {
 
 
   // Globals for Blockly
-  window.get = get
-  window.merge = merge
+  globalThis.get = get
+  globalThis.merge = merge
+
+  // Other globals
+  globalThis.LocalStorage = LocalStorage
 
 
   /**

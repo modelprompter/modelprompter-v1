@@ -11,7 +11,12 @@
     q-resize-observer(@resize='resize')
   .hidden(ref='blocklyToolbox')
     slot
-  BlocklyForm(:isFormVisible="isFormVisible" :workspace="workspaceData" ref='$form')
+
+  BlocklyForm(
+    :workspaceID='props.workspaceID'
+    :static='isStatic'
+    :isFormVisible="isFormVisible"
+    ref='$form')
 </template>
 
 <script setup>
@@ -20,7 +25,7 @@ import BlocklyForm from 'components/BlocklyForm.vue'
 
 import Blockly from 'blockly'
 import 'assets/blockly/blocks.js'
-import {onMounted, onUnmounted, shallowRef, inject, ref, watch} from 'vue'
+import {onMounted, onUnmounted, shallowRef, inject, ref, watch, computed} from 'vue'
 import axios from 'axios'
 import {LocalStorage, uid, useQuasar} from 'quasar'
 import {useDatafeedResponses} from '../stores/datafeed'
@@ -61,6 +66,8 @@ let isRunning = $ref(false)
 let isFormVisible = $ref(!props.showForm && typeof props.showForm !== 'undefined')
 
 let title = ref('')
+
+const isStatic = computed(() => (props.static || (!props.static && typeof props.static !== 'undefined')))
 
 /**
  * Mount
@@ -125,9 +132,9 @@ onMounted(() => {
   })
 
   // Load workspace by ID
-  const data = library.find(props.workspaceID)
-  if (data) {
-    load(data, data, true)
+  workspaceData = library.find(props.workspaceID)
+  if (workspaceData) {
+    load(workspaceData, workspaceData, true)
   } else if (props.workspaceID) {
     $q.notify({
       message: 'Workspace not found',
@@ -136,7 +143,7 @@ onMounted(() => {
     })
   }
 
-  title.value = data?.title
+  title.value = workspaceData?.title
   maybeToggleToolbox()
 })
 
@@ -171,7 +178,7 @@ const maybeToggleToolbox = function () {
  * Saves a copy of the current workspace
  */
 const onWorkspaceSave = function () {
-  if (props.static) return
+  if (isStatic.value) return
 
   // See if a workspace exists with id, if it does merge it otherwise push it
   const index = library.workspaces.findIndex(workspace => workspace.id === library.currentWorkspace.id)
@@ -215,8 +222,9 @@ const load = function (data = {}, shouldClear) {
         HTMLTextAreaElement.prototype.focus = function () {}
         block.comment.setVisible(true)
         moveComment(block, comment.x, comment.y)
+      } else if (!block?.comment) {
+        delete data.comments[key]
       }
-      window.b = block
     })
 
     // Allow focus
@@ -332,14 +340,14 @@ watch(() => isRunning, () => {
  * Handles Workspace events
  * - Save data
  */
+// @todo throttle
 let hasLoaded = false
-
-const workspaceEventHandler = throttle((ev) => {
+const workspaceEventHandler = (ev) => {
   // Exclude Mutator bubbles
   if (ev.type === Blockly.Events.BUBBLE_OPEN && ev.bubbleType === 'mutator') {
     return
   }
-  if (!props.static && typeof props.static !== 'undefined') {
+  if (isStatic.value) {
     return
   }
 
@@ -415,6 +423,8 @@ const workspaceEventHandler = throttle((ev) => {
           view.scale = ev.scale
         }
 
+        workspaceData = Blockly.serialization.workspaces.save(workspace)
+
         // Store the workspace and generate an ID
         library.$patch({currentWorkspace: merge({}, {
           id: library.currentWorkspace.id || uid(),
@@ -424,14 +434,12 @@ const workspaceEventHandler = throttle((ev) => {
           },
           view,
           comments: merge({}, library.currentWorkspace.comments || {}, comments),
-          embed: view,
+          form: merge({}, library.currentWorkspace.form || {}),
           workspace: workspaceData,
         })})
-
-        workspaceData = Blockly.serialization.workspaces.save(workspace)
       }
   }
-}, 250, {leading: true, trailing: true})
+}
 
 
 /**
@@ -450,6 +458,30 @@ function onFormToggle ($event) {
   isFormVisible = !isFormVisible
   emit('onFormToggle', $event)
 }
+
+/**
+ * Register Add to Form button
+ */
+!Blockly.ContextMenuRegistry.registry.registry_?.addToForm && Blockly.ContextMenuRegistry.registry.register({
+  id: 'addToForm',
+  displayText: 'Add to form',
+  scopeType: Blockly.ContextMenuRegistry.ScopeType.BLOCK,
+  weight: 6,
+  preconditionFn: scope => {
+    switch (scope.block.type) {
+      case 'text':
+      case 'text_multiline':
+      case 'math_number':
+        return 'enabled'
+    }
+
+    return 'hidden'
+  },
+  callback: scope => {
+    $bus.emit('workspace.block.addToForm', scope.block)
+  }
+})
+
 
 
 /**
