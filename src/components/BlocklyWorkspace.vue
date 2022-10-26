@@ -11,7 +11,7 @@
     q-resize-observer(@resize='resize')
   .hidden(ref='blocklyToolbox')
     slot
-  BlocklyForm(:isFormVisible="isFormVisible" ref='$form')
+  BlocklyForm(:isFormVisible="isFormVisible" :workspace="workspaceData" ref='$form')
 </template>
 
 <script setup>
@@ -26,11 +26,11 @@ import {LocalStorage, uid, useQuasar} from 'quasar'
 import {useDatafeedResponses} from '../stores/datafeed'
 import {useLibraryStore} from 'stores/library'
 import {useSettingsStore} from 'stores/settings'
-import {merge} from 'lodash-es'
+import {merge, throttle} from 'lodash-es'
 import theme from 'assets/blockly/theme.js'
 import toolbox from 'assets/blockly/toolbox.js'
 
-const emit = defineEmits(['onFullscreenToggle', 'onIsRunning'])
+const emit = defineEmits(['onFullscreenToggle', 'onIsRunning', 'onFormToggle'])
 const props = defineProps([
   'title',
   'isMain',
@@ -53,6 +53,7 @@ const blockly = $ref()
 let workspace = shallowRef()
 let code = $ref('')
 let $form = $ref()
+let workspaceData = $ref({})
 
 const $q = useQuasar()
 let isFullscreen = $ref(props.isFullscreen)
@@ -333,12 +334,14 @@ watch(() => isRunning, () => {
  */
 let hasLoaded = false
 
-function workspaceEventHandler (ev) {
+const workspaceEventHandler = throttle((ev) => {
   // Exclude Mutator bubbles
-  if (!hasLoaded || (!props.static && typeof props.static !== 'undefined'))
+  if (ev.type === Blockly.Events.BUBBLE_OPEN && ev.bubbleType === 'mutator') {
     return
-  if (ev.type === Blockly.Events.BUBBLE_OPEN && ev.bubbleType === 'mutator')
+  }
+  if (!props.static && typeof props.static !== 'undefined') {
     return
+  }
 
   let comments = library.currentWorkspace.comments || {}
 
@@ -400,36 +403,35 @@ function workspaceEventHandler (ev) {
     case Blockly.Events.VAR_CREATE:
     case Blockly.Events.VAR_DELETE:
     case Blockly.Events.VAR_RENAME:
-      const view = {
-        left: library.currentWorkspace?.view?.left || 0,
-        top: library.currentWorkspace?.view?.top || 0,
-        scale: library.currentWorkspace?.view?.scale || 1,
+      if (hasLoaded) {
+        const view = {
+          left: library.currentWorkspace?.view?.left || 0,
+          top: library.currentWorkspace?.view?.top || 0,
+          scale: library.currentWorkspace?.view?.scale || 1,
+        }
+        if (ev.type === Blockly.Events.VIEWPORT_CHANGE) {
+          view.left = ev.viewLeft
+          view.top = ev.viewTop
+          view.scale = ev.scale
+        }
+
+        // Store the workspace and generate an ID
+        library.$patch({currentWorkspace: merge({}, {
+          id: library.currentWorkspace.id || uid(),
+          meta: {
+            title: library.currentWorkspace.title || 'Untitled',
+            descrition: library.currentWorkspace.description || ''
+          },
+          view,
+          comments: merge({}, library.currentWorkspace.comments || {}, comments),
+          embed: view,
+          workspace: workspaceData,
+        })})
+
+        workspaceData = Blockly.serialization.workspaces.save(workspace)
       }
-      if (ev.type === Blockly.Events.VIEWPORT_CHANGE) {
-        view.left = ev.viewLeft
-        view.top = ev.viewTop
-        view.scale = ev.scale
-      }
-
-      // Store the workspace and generate an ID
-      const workspaceData = Blockly.serialization.workspaces.save(workspace)
-
-      console.log('set', props.static)
-      library.$patch({currentWorkspace: merge({}, {
-        id: library.currentWorkspace.id || uid(),
-        meta: {
-          title: library.currentWorkspace.title || 'Untitled',
-          descrition: library.currentWorkspace.description || ''
-        },
-        view,
-        comments: merge({}, library.currentWorkspace.comments || {}, comments),
-        embed: view,
-        workspace: workspaceData,
-      })})
-
-      $form && $form.regenerate(workspaceData)
   }
-}
+}, 250, {leading: true, trailing: true})
 
 
 /**
@@ -446,6 +448,7 @@ function onFullscreenToggle ($event) {
  */
 function onFormToggle ($event) {
   isFormVisible = !isFormVisible
+  emit('onFormToggle', $event)
 }
 
 

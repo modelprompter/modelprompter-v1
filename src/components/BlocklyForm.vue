@@ -8,12 +8,14 @@ import {throttle} from 'lodash-es'
 
 const props = defineProps(['workspace', 'isFormVisible'])
 
-watch(() => props.workspace, (workspace) => {
-  regenerate(workspace)
+watch(() => props.isFormVisible, (changes) => {
+  regenerate()
 })
-
+watch(() => props.workspace, (changes) => {
+  regenerate()
+})
 onMounted(() => {
-  regenerate(props.workspace)
+  regenerate()
 })
 
 /**
@@ -21,9 +23,9 @@ onMounted(() => {
  * @param {*} workspace
  */
 // @todo throttle
-const regenerate = throttle(workspace => {
-  if (!workspace) return
-  console.log(workspace)
+const regenerate = throttle(() => {
+  if (!props.workspace?.blocks) return
+  console.log(props.workspace)
 }, 250)
 
 defineExpose({regenerate})
