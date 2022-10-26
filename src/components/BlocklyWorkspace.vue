@@ -329,8 +329,12 @@ let hasLoaded = false
 
 function workspaceEventHandler (ev) {
   let comments = library.currentWorkspace.comments || {}
-  // console.log('Event', ev)
 
+  // Exclude Mutator bubbles
+  if (ev.type === Blockly.Events.BUBBLE_OPEN && ev.bubbleType === 'mutator')
+    return
+
+  // Save data
   switch (ev.type) {
     case Blockly.Events.FINISHED_LOADING:
       hasLoaded = true
