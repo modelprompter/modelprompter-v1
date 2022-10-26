@@ -74,21 +74,21 @@ q-page
       h5 Once blocks are assembled, you can view and share them as simplified forms. For example, the following forms were generated from the blocks above:
 
       .row.q-col-gutter-md.q-mt-xl
-        .q-mb-md.col-xs-12.col-md-4
+        .q-mb-xl.col-xs-12.col-md-4
           q-card
             q-card-section
               .relative(style='height: 300px;')
                 BlocklyWorkspace(ref='form1' @onIsRunning='updateButton("formBtn1", $event)' workspaceID='a0352aba-3515-4e98-871c-fcf48b853a8f' :options='{trashcan: false}' static showForm)
             q-card-actions
               BlocklyToggle.full-width(ref='formBtn1' target='form1' @toggled='toggleWorkspace')
-        .q-mb-md.col-xs-12.col-md-4
+        .q-mb-xl.col-xs-12.col-md-4
           q-card
             q-card-section
               .relative(style='height: 300px;')
                 BlocklyWorkspace(ref='form2' @onIsRunning='updateButton("formBtn2", $event)' workspaceID='e0ebb972-48ef-4e3e-92cc-89efa1d2deda' :options='{trashcan: false}' static showForm)
             q-card-actions
               BlocklyToggle.full-width(ref='formBtn2' target='form2' @toggled='toggleWorkspace')
-        .q-mb-md.col-xs-12.col-md-4
+        .q-mb-xl.col-xs-12.col-md-4
           q-card
             q-card-section
               .relative(style='height: 300px;')

@@ -32,11 +32,12 @@ q-bar(style='position: relative; z-index: 100')
   //- q-space
   //- BlocklyToggle
   q-space
+  q-btn.q-mr-md.text-yellow(dense flat :icon='props.isFormVisible ? "extension" : "text_fields"' @click='$emit("formToggled")')
   q-btn.text-yellow(v-if='!props.hideFullscreenToggle' dense flat icon='open_in_full' @click='$emit("fullscreenToggled", !props.isFullscreen)')
 </template>
 
 <script setup>
 import BlocklyToggle from 'components/BlocklyToggle.vue'
 
-const props = defineProps(['title', 'hideFullscreenToggle', 'isFullscreen'])
+const props = defineProps(['title', 'hideFullscreenToggle', 'isFullscreen', 'isFormVisible'])
 </script>

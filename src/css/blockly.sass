@@ -1,5 +1,6 @@
 body
   .blockly-container
+    z-index: 1
     .blockly
       margin-top: -32px
       padding-top: 32px
@@ -9,6 +10,9 @@ body
 
   .blocklyMainBackground
     stroke: none
+
+  .blockly-container.fullscreen
+    z-index: 1000
 
 .blocklyTreeRow
   height: 4em

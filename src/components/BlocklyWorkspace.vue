@@ -4,15 +4,19 @@
     :title='title'
     :hideFullscreenToggle='hideFullscreenToggle'
     :isFullscreen='isFullscreen'
-    @fullscreenToggled='onFullscreenToggle')
+    :isFormVisible='isFormVisible'
+    @fullscreenToggled='onFullscreenToggle'
+    @formToggled='onFormToggle')
   .blockly(ref='blockly')
     q-resize-observer(@resize='resize')
   .hidden(ref='blocklyToolbox')
     slot
+  BlocklyForm(:isFormVisible="isFormVisible" ref='$form')
 </template>
 
 <script setup>
 import BlocklyWorkspaceToolbar from 'components/BlocklyWorkspaceToolbar.vue'
+import BlocklyForm from 'components/BlocklyForm.vue'
 
 import Blockly from 'blockly'
 import 'assets/blockly/blocks.js'
@@ -36,7 +40,8 @@ const props = defineProps([
   'options',
   'loadData',
   'workspaceID',
-  'static'
+  'static',
+  'showForm'
 ])
 
 const library = useLibraryStore()
@@ -47,10 +52,12 @@ const blocklyToolbox = $ref()
 const blockly = $ref()
 let workspace = shallowRef()
 let code = $ref('')
+let $form = $ref()
 
 const $q = useQuasar()
 let isFullscreen = $ref(props.isFullscreen)
 let isRunning = $ref(false)
+let isFormVisible = $ref(!props.showForm && typeof props.showForm !== 'undefined')
 
 let title = ref('')
 
@@ -152,13 +159,12 @@ const onWorkspaceReload = function (workspace, shouldClear = true) {
  * Toggle the toolbox based on isFullscreen
  */
 const maybeToggleToolbox = function () {
-  if (props.isFullscreen) {
+  if (isFullscreen) {
     workspace.getToolbox().setVisible(true)
   } else {
     workspace.getToolbox().setVisible(false)
   }
 }
-watch(props, maybeToggleToolbox)
 
 /**
  * Saves a copy of the current workspace
@@ -328,11 +334,13 @@ watch(() => isRunning, () => {
 let hasLoaded = false
 
 function workspaceEventHandler (ev) {
-  let comments = library.currentWorkspace.comments || {}
-
   // Exclude Mutator bubbles
+  if (!hasLoaded || (!props.static && typeof props.static !== 'undefined'))
+    return
   if (ev.type === Blockly.Events.BUBBLE_OPEN && ev.bubbleType === 'mutator')
     return
+
+  let comments = library.currentWorkspace.comments || {}
 
   // Save data
   switch (ev.type) {
@@ -380,8 +388,8 @@ function workspaceEventHandler (ev) {
     case Blockly.Events.BLOCK_MOVE:
       comments[ev.blockId] = comments[ev.blockId] || {}
       if (comments[ev.blockId].isOpen && ev.type === Blockly.Events.BLOCK_MOVE) {
-        comments[ev.blockId].x += ev.newCoordinate.x - ev.oldCoordinate.x
-        comments[ev.blockId].y += ev.newCoordinate.y - ev.oldCoordinate.y
+        comments[ev.blockId].x += ev.newCoordinate.x - ev.oldCoordinate?.x
+        comments[ev.blockId].y += ev.newCoordinate.y - ev.oldCoordinate?.y
       }
 
 
@@ -392,31 +400,34 @@ function workspaceEventHandler (ev) {
     case Blockly.Events.VAR_CREATE:
     case Blockly.Events.VAR_DELETE:
     case Blockly.Events.VAR_RENAME:
-      if (hasLoaded && (!props.static && props.static !== '')) {
-        const view = {
-          left: library.currentWorkspace?.view?.left || 0,
-          top: library.currentWorkspace?.view?.top || 0,
-          scale: library.currentWorkspace?.view?.scale || 1,
-        }
-        if (ev.type === Blockly.Events.VIEWPORT_CHANGE) {
-          view.left = ev.viewLeft
-          view.top = ev.viewTop
-          view.scale = ev.scale
-        }
-
-        // Store the workspace and generate an ID
-        library.$patch({currentWorkspace: merge({}, {
-          id: library.currentWorkspace.id || uid(),
-          meta: {
-            title: library.currentWorkspace.title || 'Untitled',
-            descrition: library.currentWorkspace.description || ''
-          },
-          view,
-          comments: merge({}, library.currentWorkspace.comments || {}, comments),
-          embed: view,
-          workspace: Blockly.serialization.workspaces.save(workspace)
-        })})
+      const view = {
+        left: library.currentWorkspace?.view?.left || 0,
+        top: library.currentWorkspace?.view?.top || 0,
+        scale: library.currentWorkspace?.view?.scale || 1,
       }
+      if (ev.type === Blockly.Events.VIEWPORT_CHANGE) {
+        view.left = ev.viewLeft
+        view.top = ev.viewTop
+        view.scale = ev.scale
+      }
+
+      // Store the workspace and generate an ID
+      const workspaceData = Blockly.serialization.workspaces.save(workspace)
+
+      console.log('set', props.static)
+      library.$patch({currentWorkspace: merge({}, {
+        id: library.currentWorkspace.id || uid(),
+        meta: {
+          title: library.currentWorkspace.title || 'Untitled',
+          descrition: library.currentWorkspace.description || ''
+        },
+        view,
+        comments: merge({}, library.currentWorkspace.comments || {}, comments),
+        embed: view,
+        workspace: workspaceData,
+      })})
+
+      $form && $form.regenerate(workspaceData)
   }
 }
 
@@ -426,7 +437,15 @@ function workspaceEventHandler (ev) {
  */
 function onFullscreenToggle ($event) {
   isFullscreen = $event
+  maybeToggleToolbox()
   emit('onFullscreenToggle', $event)
+}
+
+/**
+ * Toggle form
+ */
+function onFormToggle ($event) {
+  isFormVisible = !isFormVisible
 }
 
 
