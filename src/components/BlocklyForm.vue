@@ -87,23 +87,23 @@ onUnmounted(() => {
  * Removes missing fields
  */
 function removeMissingFields () {
-  let found = false
+  setTimeout(() => {
+    !props.static && library.currentWorkspace.form && props.blockDB && Object.keys(library.currentWorkspace.form).forEach(key => {
+      let blocks = []
+      Object.keys(props.blockDB)?.forEach(key => blocks.push(props.blockDB[key]))
 
-  Object.keys(library.currentWorkspace.form).forEach(key => {
-    let blocks = []
-    props.blockDB && Object.keys(props.blockDB)?.forEach(key => blocks.push(props.blockDB[key]))
+      let found = false
+      blocks.some((block, idx) => {
+        if (block.id === key && block.inputList?.length) {
+          return found = true
+        }
+      })
 
-    let found = false
-    blocks.some((block, idx) => {
-      if (block.id === key && block.inputList?.length) {
-        return found = true
+      if (!found) {
+        delete library.currentWorkspace.form[key]
       }
     })
-
-    if (!found) {
-      delete library.currentWorkspace.form[key]
-    }
-  })
+  }, 0)
 }
 
 /**

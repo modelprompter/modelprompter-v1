@@ -435,6 +435,8 @@ const workspaceEventHandler = (ev) => {
           form: merge({}, library.currentWorkspace.form || {}),
           workspace: workspaceData,
         })})
+
+        console.log(library.currentWorkspace.form)
       }
     break
     case Blockly.Events.FINISHED_LOADING:
