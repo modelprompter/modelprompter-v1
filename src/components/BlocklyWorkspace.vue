@@ -14,9 +14,11 @@
 
   BlocklyForm(
     :workspaceID='props.workspaceID'
+    :blockDB='workspace?.blockDB_'
     :static='isStatic'
     :isFormVisible="isFormVisible"
-    ref='$form')
+    ref='$form'
+    @updateField='updateField')
 </template>
 
 <script setup>
@@ -55,7 +57,7 @@ const dataFeed = useDatafeedResponses()
 const $bus = inject('$bus')
 const blocklyToolbox = $ref()
 const blockly = $ref()
-let workspace = shallowRef()
+let workspace = $shallowRef()
 let code = $ref('')
 let $form = $ref()
 let workspaceData = $ref({})
@@ -355,9 +357,6 @@ const workspaceEventHandler = (ev) => {
 
   // Save data
   switch (ev.type) {
-    case Blockly.Events.FINISHED_LOADING:
-      hasLoaded = true
-
     // Comments
     case 'BUBBLE_MOVE':
       comments[ev.blockId] = comments[ev.blockId] || {}
@@ -403,13 +402,8 @@ const workspaceEventHandler = (ev) => {
         comments[ev.blockId].y += ev.newCoordinate.y - ev.oldCoordinate?.y
       }
 
-    // Remove form fields
-    case Blockly.Events.BLOCK_DELETE:
-      if (ev.type === Blockly.Events.BLOCK_DELETE && library.currentWorkspace.form?.[ev.blockId]) {
-        delete library.currentWorkspace.form?.[ev.blockId]
-      }
-
     // Autosave
+    case Blockly.Events.BLOCK_DELETE:
     case Blockly.Events.VIEWPORT_CHANGE:
     case Blockly.Events.BLOCK_CHANGE:
     case Blockly.Events.VAR_CREATE:
@@ -442,6 +436,10 @@ const workspaceEventHandler = (ev) => {
           workspace: workspaceData,
         })})
       }
+    break
+    case Blockly.Events.FINISHED_LOADING:
+      hasLoaded = true
+    break
   }
 }
 
@@ -486,7 +484,13 @@ function onFormToggle ($event) {
   }
 })
 
-
+/**
+ * Updates a block's field from the form
+ */
+function updateField (blockID, key, value) {
+  const block = workspace.getBlockById(blockID)
+  block.setFieldValue(value, key)
+}
 
 /**
  * Final stuff

@@ -17,21 +17,22 @@ import {useLibraryStore} from 'stores/library'
 
 const library = useLibraryStore()
 const $bus = inject('$bus')
-const props = defineProps(['workspaceID', 'workspace', 'isFormVisible', 'static'])
+const props = defineProps(['workspaceID', 'blockDB', 'isFormVisible', 'static'])
+const emit = defineEmits(['updateField'])
 
 /**
  * Computed
  */
 const form = computed(() => {
   if (props.static) {
-    return library.workspaces[props.workspaceID]?.form || {}
+    return library.find(props.workspaceID)?.form || {}
   }
   return library.currentWorkspace?.form || {}
 })
 
 const workspaceData = computed(() => {
   if (props.static) {
-    return library.workspaces[props.workspaceID].workspace?.blocks?.blocks || []
+    return library.find(props.workspaceID)?.workspace?.blocks?.blocks || []
   }
   return library.currentWorkspace.workspace?.blocks?.blocks || []
 })
@@ -44,22 +45,64 @@ watch(() => workspaceData, blocks => {
   if (!props.static && blocks.value) {
     blocks.value.forEach(block => {
       if (library.currentWorkspace?.form?.[block.id]) {
-        const key = Object.keys(block.fields)[0]
-        library.currentWorkspace.form[block.id].value = block.fields[key]
+        let input = props.blockDB[block.id].inputList[0].fieldRow.find(field => field.name)
+        library.currentWorkspace.form[block.id].value = input.getValue()
       }
     })
   }
 }, {deep: true})
+
+// Update workspace from form fields
+watch(() => library.currentWorkspace?.form, form => {
+  if (!props.static) {
+    let blocks = []
+    props.blockDB && Object.keys(props.blockDB)?.forEach(key => blocks.push(props.blockDB[key]))
+
+    blocks.forEach((block, key) => {
+      if (form[block.id] && block.inputList) {
+        let input = block.inputList[0].fieldRow.find(field => field.name)
+        input.setValue(form[block.id].value)
+      }
+    })
+  }
+}, {deep: true})
+
+// Remove missing fields
+watch(() => props.isFormVisible, removeMissingFields)
 
 /**
  * Listeners
  */
 onMounted(() => {
   $bus.on('workspace.block.addToForm', onAddBlockToForm)
+  removeMissingFields()
 })
 onUnmounted(() => {
   $bus.off('workspace.block.addToForm', onAddBlockToForm)
 })
+
+/**
+ * Removes missing fields
+ */
+function removeMissingFields () {
+  let found = false
+
+  Object.keys(library.currentWorkspace.form).forEach(key => {
+    let blocks = []
+    props.blockDB && Object.keys(props.blockDB)?.forEach(key => blocks.push(props.blockDB[key]))
+
+    let found = false
+    blocks.some((block, idx) => {
+      if (block.id === key && block.inputList?.length) {
+        return found = true
+      }
+    })
+
+    if (!found) {
+      delete library.currentWorkspace.form[key]
+    }
+  })
+}
 
 /**
  * Add block to form
@@ -74,21 +117,18 @@ const onAddBlockToForm = (block) => {
 
   // Remove missing fields and set value
   Object.keys(library.currentWorkspace.form).forEach(key => {
-    let found = false
+    let blocks = []
+    props.blockDB && Object.keys(props.blockDB)?.forEach(key => blocks.push(props.blockDB[key]))
 
     // Set initial field value
-    library.currentWorkspace?.workspace?.blocks?.blocks?.some((block, idx) => {
-      if (block.id === key) {
-        let fieldKey = Object.keys(library.currentWorkspace.workspace.blocks.blocks[idx].fields)[0]
-        library.currentWorkspace.form[key].value = library.currentWorkspace.workspace.blocks.blocks[idx].fields[fieldKey]
-        found = true
-      }
-      return found
-    })
+    blocks.some((block, idx) => {
+      if (block.id === key && block.inputList?.length) {
+        let input = block.inputList[0].fieldRow.find(field => field.name)
+        library.currentWorkspace.form[key].value = input.getValue()
 
-    if (!found) {
-      delete library.currentWorkspace.form[key]
-    }
+        return true
+      }
+    })
   })
 }
 
