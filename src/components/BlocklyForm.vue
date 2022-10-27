@@ -19,6 +19,9 @@ const library = useLibraryStore()
 const $bus = inject('$bus')
 const props = defineProps(['workspaceID', 'workspace', 'isFormVisible', 'static'])
 
+/**
+ * Computed
+ */
 const form = computed(() => {
   if (props.static) {
     return library.workspaces[props.workspaceID]?.form || {}
@@ -28,10 +31,25 @@ const form = computed(() => {
 
 const workspaceData = computed(() => {
   if (props.static) {
-    return library.workspaces[props.workspaceID].workspace?.blocks?.blocks || {}
+    return library.workspaces[props.workspaceID].workspace?.blocks?.blocks || []
   }
-  return library.currentWorkspace.workspace?.blocks?.blocks || {}
+  return library.currentWorkspace.workspace?.blocks?.blocks || []
 })
+
+/**
+ * Watchers
+ */
+// Update form fields from workspace
+watch(() => workspaceData, blocks => {
+  if (!props.static && blocks.value) {
+    blocks.value.forEach(block => {
+      if (library.currentWorkspace?.form?.[block.id]) {
+        const key = Object.keys(block.fields)[0]
+        library.currentWorkspace.form[block.id].value = block.fields[key]
+      }
+    })
+  }
+}, {deep: true})
 
 /**
  * Listeners
@@ -58,6 +76,7 @@ const onAddBlockToForm = (block) => {
   Object.keys(library.currentWorkspace.form).forEach(key => {
     let found = false
 
+    // Set initial field value
     library.currentWorkspace?.workspace?.blocks?.blocks?.some((block, idx) => {
       if (block.id === key) {
         let fieldKey = Object.keys(library.currentWorkspace.workspace.blocks.blocks[idx].fields)[0]
@@ -72,6 +91,7 @@ const onAddBlockToForm = (block) => {
     }
   })
 }
+
 </script>
 
 <style lang="sass">

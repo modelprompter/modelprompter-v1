@@ -403,10 +403,14 @@ const workspaceEventHandler = (ev) => {
         comments[ev.blockId].y += ev.newCoordinate.y - ev.oldCoordinate?.y
       }
 
+    // Remove form fields
+    case Blockly.Events.BLOCK_DELETE:
+      if (ev.type === Blockly.Events.BLOCK_DELETE && library.currentWorkspace.form?.[ev.blockId]) {
+        delete library.currentWorkspace.form?.[ev.blockId]
+      }
 
     // Autosave
     case Blockly.Events.VIEWPORT_CHANGE:
-    case Blockly.Events.BLOCK_DELETE:
     case Blockly.Events.BLOCK_CHANGE:
     case Blockly.Events.VAR_CREATE:
     case Blockly.Events.VAR_DELETE:
