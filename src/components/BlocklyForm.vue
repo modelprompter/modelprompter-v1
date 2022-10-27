@@ -43,8 +43,10 @@ const workspaceData = computed(() => {
 // Update form fields from workspace
 watch(() => workspaceData, blocks => {
   if (!props.static && blocks.value) {
-    blocks.value.forEach(block => {
-      if (library.currentWorkspace?.form?.[block.id]) {
+    props.blockDB && Object.keys(props.blockDB).forEach(key => {
+      const block = props.blockDB[key]
+
+      if (library.currentWorkspace.form[block.id]) {
         let input = props.blockDB[block.id].inputList[0].fieldRow.find(field => field.name)
         library.currentWorkspace.form[block.id].value = input.getValue()
       }
@@ -59,8 +61,8 @@ watch(() => library.currentWorkspace?.form, form => {
     props.blockDB && Object.keys(props.blockDB)?.forEach(key => blocks.push(props.blockDB[key]))
 
     blocks.forEach((block, key) => {
-      if (form[block.id] && block.inputList) {
-        let input = block.inputList[0].fieldRow.find(field => field.name)
+      if (form[block.id]) {
+        let input = props.blockDB[block.id].inputList[0].fieldRow.find(field => field.name)
         input.setValue(form[block.id].value)
       }
     })
