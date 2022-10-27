@@ -2,12 +2,8 @@
 .blockly-form(v-if='props.isFormVisible')
   .q-pa-md
     q-card
-      q-card-section(v-for='(field, key) in form' :key='key')
+      q-card-section(v-for='(field, key) in props.formData' :key='key')
         q-input(v-if='field.type === "text"' stack-label filled v-model='field.value' :label='field.label')
-        //- div.row.q-col-gutter-md(v-for='(field, key) in form' :key='key')
-        //-   .col-xs-12.col-md-3
-        //-     //- q-input(v-if='field.type === "text"' filled label='label' v-model='field.label')
-        //-   .col-xs-12.col-md-9
 </template>
 
 <script setup>
@@ -17,56 +13,40 @@ import {useLibraryStore} from 'stores/library'
 
 const library = useLibraryStore()
 const $bus = inject('$bus')
-const props = defineProps(['workspaceID', 'blockDB', 'isFormVisible', 'static'])
+const props = defineProps(['workspaceID', 'workspaceData', 'formData', 'blockDB', 'isFormVisible'])
 const emit = defineEmits(['updateField'])
-
-/**
- * Computed
- */
-const form = computed(() => {
-  if (props.static) {
-    return library.find(props.workspaceID)?.form || {}
-  }
-  return library.currentWorkspace?.form || {}
-})
-
-const workspaceData = computed(() => {
-  if (props.static) {
-    return library.find(props.workspaceID)?.workspace?.blocks?.blocks || []
-  }
-  return library.currentWorkspace.workspace?.blocks?.blocks || []
-})
 
 /**
  * Watchers
  */
 // Update form fields from workspace
-watch(() => workspaceData, blocks => {
-  if (!props.static && blocks.value) {
+watch(() => props.workspaceData, workspace => {
+  const blocks = workspace?.blocks?.blocks || []
+
+  if (!blocks?.length) {
     props.blockDB && Object.keys(props.blockDB).forEach(key => {
       const block = props.blockDB[key]
 
-      if (library.currentWorkspace.form[block.id]) {
+      if (props.formData[block.id]) {
         let input = props.blockDB[block.id].inputList[0].fieldRow.find(field => field.name)
-        library.currentWorkspace.form[block.id].value = input.getValue()
+        props.formData[block.id].value = input.getValue()
       }
     })
   }
 }, {deep: true})
 
 // Update workspace from form fields
-watch(() => library.currentWorkspace?.form, form => {
-  if (!props.static) {
-    let blocks = []
-    props.blockDB && Object.keys(props.blockDB)?.forEach(key => blocks.push(props.blockDB[key]))
+watch(() => props.formData, form => {
+  let blocks = []
+  props.blockDB && Object.keys(props.blockDB)?.forEach(key => blocks.push(props.blockDB[key]))
 
-    blocks.forEach((block, key) => {
-      if (form[block.id]) {
-        let input = props.blockDB[block.id].inputList[0].fieldRow.find(field => field.name)
-        input.setValue(form[block.id].value)
-      }
-    })
-  }
+  // @todo Just update the block that changed
+  blocks.forEach((block, key) => {
+    if (form[block.id]) {
+      let input = props.blockDB[block.id].inputList[0].fieldRow.find(field => field.name)
+      input.setValue(form[block.id].value)
+    }
+  })
 }, {deep: true})
 
 // Remove missing fields
@@ -88,7 +68,7 @@ onUnmounted(() => {
  */
 function removeMissingFields () {
   setTimeout(() => {
-    !props.static && library.currentWorkspace.form && props.blockDB && Object.keys(library.currentWorkspace.form).forEach(key => {
+    props.formData && props.blockDB && Object.keys(props.formData).forEach(key => {
       let blocks = []
       Object.keys(props.blockDB)?.forEach(key => blocks.push(props.blockDB[key]))
 
@@ -100,7 +80,7 @@ function removeMissingFields () {
       })
 
       if (!found) {
-        delete library.currentWorkspace.form[key]
+        delete props.formData[key]
       }
     })
   }, 0)
@@ -109,16 +89,15 @@ function removeMissingFields () {
 /**
  * Add block to form
  */
-const onAddBlockToForm = (block) => {
-  if (props.static) return
+const onAddBlockToForm = (block, workspaceID) => {
+  if (props.workspaceID !== workspaceID) return
 
-  library.currentWorkspace.form = library.currentWorkspace.form || {}
-  library.currentWorkspace.form[block.id] = library.currentWorkspace.form[block.id] || {}
-  library.currentWorkspace.form[block.id].type = block.type
-  library.currentWorkspace.form[block.id].label = library.currentWorkspace.form[block.id].label || block.type
+  props.formData[block.id] = props.formData[block.id] || {}
+  props.formData[block.id].type = block.type
+  props.formData[block.id].label = props.formData[block.id].label || block.type
 
   // Remove missing fields and set value
-  Object.keys(library.currentWorkspace.form).forEach(key => {
+  Object.keys(props.formData).forEach(key => {
     let blocks = []
     props.blockDB && Object.keys(props.blockDB)?.forEach(key => blocks.push(props.blockDB[key]))
 
@@ -126,7 +105,7 @@ const onAddBlockToForm = (block) => {
     blocks.some((block, idx) => {
       if (block.id === key && block.inputList?.length) {
         let input = block.inputList[0].fieldRow.find(field => field.name)
-        library.currentWorkspace.form[key].value = input.getValue()
+        props.formData[key].value = input.getValue()
 
         return true
       }

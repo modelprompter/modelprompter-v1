@@ -14,9 +14,10 @@
 
   BlocklyForm(
     :workspaceID='props.workspaceID'
+    :workspaceData='workspaceData'
     :blockDB='workspace?.blockDB_'
-    :static='isStatic'
     :isFormVisible="isFormVisible"
+    :formData='formData'
     ref='$form'
     @updateField='updateField')
 </template>
@@ -61,6 +62,8 @@ let workspace = $shallowRef()
 let code = $ref('')
 let $form = $ref()
 let workspaceData = $ref({})
+let origFormData = $ref({})
+let formData = $ref({})
 
 const $q = useQuasar()
 let isFullscreen = $ref(props.isFullscreen)
@@ -134,9 +137,9 @@ onMounted(() => {
   })
 
   // Load workspace by ID
-  workspaceData = library.find(props.workspaceID)
-  if (workspaceData) {
-    load(workspaceData, workspaceData, true)
+  const data = library.find(props.workspaceID)
+  if (data) {
+    load(data, data, true)
   } else if (props.workspaceID) {
     $q.notify({
       message: 'Workspace not found',
@@ -145,7 +148,7 @@ onMounted(() => {
     })
   }
 
-  title.value = workspaceData?.title
+  title.value = data?.title
   maybeToggleToolbox()
 })
 
@@ -232,6 +235,9 @@ const load = function (data = {}, shouldClear) {
     // Allow focus
     HTMLTextAreaElement.prototype.focus = $focus
   }
+
+  // Form data
+  formData = origFormData = isStatic.value ? merge({}, library.find(props.workspaceID).form || {}) : merge({}, library.currentWorkspace.form || {})
 
   title.value = data?.title
 }
@@ -337,6 +343,15 @@ watch(() => isRunning, () => {
   }
 })
 
+/**
+ * Persist form data
+ */
+watch(() => formData, () => {
+  if (!isStatic.value) {
+    library.currentWorkspace.form = formData
+  }
+})
+
 
 /**
  * Handles Workspace events
@@ -347,9 +362,6 @@ let hasLoaded = false
 const workspaceEventHandler = (ev) => {
   // Exclude Mutator bubbles
   if (ev.type === Blockly.Events.BUBBLE_OPEN && ev.bubbleType === 'mutator') {
-    return
-  }
-  if (isStatic.value) {
     return
   }
 
@@ -409,6 +421,13 @@ const workspaceEventHandler = (ev) => {
     case Blockly.Events.VAR_CREATE:
     case Blockly.Events.VAR_DELETE:
     case Blockly.Events.VAR_RENAME:
+      // Form and workspace data
+      workspaceData = Blockly.serialization.workspaces.save(workspace)
+
+      if (isStatic.value) {
+        return
+      }
+
       if (hasLoaded) {
         const view = {
           left: library.currentWorkspace?.view?.left || 0,
@@ -421,8 +440,6 @@ const workspaceEventHandler = (ev) => {
           view.scale = ev.scale
         }
 
-        workspaceData = Blockly.serialization.workspaces.save(workspace)
-
         // Store the workspace and generate an ID
         library.$patch({currentWorkspace: merge({}, {
           id: library.currentWorkspace.id || uid(),
@@ -432,11 +449,9 @@ const workspaceEventHandler = (ev) => {
           },
           view,
           comments: merge({}, library.currentWorkspace.comments || {}, comments),
-          form: merge({}, library.currentWorkspace.form || {}),
+          form: isStatic.value ? merge({}, origFormData, library.find(props.workspaceID).form || {}) : merge({}, origFormData, library.currentWorkspace.form || {}),
           workspace: workspaceData,
         })})
-
-        console.log(library.currentWorkspace.form)
       }
     break
     case Blockly.Events.FINISHED_LOADING:
@@ -482,7 +497,7 @@ function onFormToggle ($event) {
     return 'hidden'
   },
   callback: scope => {
-    $bus.emit('workspace.block.addToForm', scope.block)
+    $bus.emit('workspace.block.addToForm', scope.block, props.workspaceID)
   }
 })
 
