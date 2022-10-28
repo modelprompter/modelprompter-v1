@@ -6,7 +6,7 @@ q-page
         .col
           q-card.q-mb-lg.bg-blue
             q-card-section
-              div 📅 <strong>22-10-25</strong> - Hi, thanks for visiting! This project is still a <strong>super early prototype</strong>; it's buggy but in <a href="https://github.com/modelprompter/modelprompter">active development</a>!
+              div 📅 <strong>22-10-27</strong> - Hi, thanks for visiting! This project is still a <strong>super early prototype</strong>; it's buggy but in <a href="https://github.com/modelprompter/modelprompter">active development</a>!
 
       .row.q-col-gutter-md
         .q-mb-md.col-xs-12.col-md-6
@@ -106,7 +106,7 @@ q-page
                 h2 More coming soon
                 q-card.q-mb-lg.bg-blue
                   q-card-section
-                    div 📅 <strong>22-10-25</strong> - Hi, thanks for visiting! This project is still a <strong>super early prototype</strong>; it's buggy but in <a href="https://github.com/modelprompter/modelprompter">active development</a>!
+                    div 📅 <strong>22-10-27</strong> - Hi, thanks for visiting! This project is still a <strong>super early prototype</strong>; it's buggy but in <a href="https://github.com/modelprompter/modelprompter">active development</a>!
         .q-mb-md.col-xs-12.col-md-6
           q-card
             .text-center
