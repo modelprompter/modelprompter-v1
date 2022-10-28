@@ -95,14 +95,14 @@ onMounted(() => {
     },
     move: {
       scrollbars: true,
-      drag: true,
+      wheel: true,
     },
     trashcan: false,
     // @todo make this optional
     // horizontalLayout: true,
     zoom: {
-      controls: false,
-      wheel: true,
+      controls: true,
+      drag: true,
       startScale: 1,
       maxScale: 3,
       minScale: .3,
@@ -286,7 +286,7 @@ const feedSendData = function (feedData) {
  * POST to a server
  * Callbacks will get halted
  */
-const dispatchREST = function (method, url, data, onThen, onError, onFinally) {
+function dispatchREST (method, url, data, onThen, onError, onFinally) {
   setTimeout(() => {
     console.log(`Sending ${method}:`, url, data)
 
