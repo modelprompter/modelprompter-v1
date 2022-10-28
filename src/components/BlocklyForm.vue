@@ -2,10 +2,10 @@
 .blockly-form(v-if='props.isFormVisible')
   .q-pa-md
     q-card
-      q-card-section.bg-blue(v-if='Object.keys(props.formData).length')
+      q-card-section.bg-blue.q-pb-xs(v-if='Object.keys(props.formData).length')
         p(v-for='(field, key) in props.formData' :key='key')
-          q-input(v-if='field.type === "text"' stack-label outlined v-model='field.value' :label='field.label')
-      q-card-section.bg-blue(v-else)
+          q-input.bg-light(v-if='field.type === "text"' stack-label outlined v-model='field.value' :label='field.label')
+      q-card-section.bg-dark(v-else)
         div <strong>No form fields</strong>
         div Right click on a block to add it to the form below
 </template>
