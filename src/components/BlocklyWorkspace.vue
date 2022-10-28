@@ -4,28 +4,43 @@
     :title='title'
     :hideFullscreenToggle='hideFullscreenToggle'
     :isFullscreen='isFullscreen'
-    @fullscreenToggled='onFullscreenToggle')
+    :isFormVisible='isFormVisible'
+    :workspaceID='workspaceID'
+    @fullscreenToggled='onFullscreenToggle'
+    @formToggled='onFormToggle')
   .blockly(ref='blockly')
     q-resize-observer(@resize='resize')
   .hidden(ref='blocklyToolbox')
     slot
+
+  BlocklyForm(
+    :workspaceID='props.workspaceID'
+    :workspaceData='workspaceData'
+    :blockDB='workspace?.blockDB_'
+    :isFormVisible="isFormVisible"
+    :formData='formData'
+    ref='$form'
+    @updateField='updateField')
 </template>
 
 <script setup>
 import BlocklyWorkspaceToolbar from 'components/BlocklyWorkspaceToolbar.vue'
+import BlocklyForm from 'components/BlocklyForm.vue'
 
 import Blockly from 'blockly'
 import 'assets/blockly/blocks.js'
-import {onMounted, onUnmounted, shallowRef, inject, ref, watch} from 'vue'
+import {onMounted, onUnmounted, shallowRef, inject, ref, watch, computed} from 'vue'
 import axios from 'axios'
 import {LocalStorage, uid, useQuasar} from 'quasar'
 import {useDatafeedResponses} from '../stores/datafeed'
 import {useLibraryStore} from 'stores/library'
-import {merge} from 'lodash-es'
+import {useSettingsStore} from 'stores/settings'
+import {merge, throttle} from 'lodash-es'
 import theme from 'assets/blockly/theme.js'
 import toolbox from 'assets/blockly/toolbox.js'
 
-const emit = defineEmits(['onFullscreenToggle'])
+globalThis.Blockly = Blockly
+const emit = defineEmits(['onFullscreenToggle', 'onIsRunning', 'onFormToggle'])
 const props = defineProps([
   'title',
   'isMain',
@@ -35,21 +50,31 @@ const props = defineProps([
   'options',
   'loadData',
   'workspaceID',
-  'static'
+  'static',
+  'showForm'
 ])
 
 const library = useLibraryStore()
+const settings = useSettingsStore()
 const dataFeed = useDatafeedResponses()
 const $bus = inject('$bus')
 const blocklyToolbox = $ref()
 const blockly = $ref()
-let workspace = shallowRef()
+let workspace = $shallowRef()
 let code = $ref('')
+let $form = $ref()
+let workspaceData = $ref({})
+let origFormData = $ref({})
+let formData = $ref({})
 
 const $q = useQuasar()
 let isFullscreen = $ref(props.isFullscreen)
+let isRunning = $ref(false)
+let isFormVisible = $ref(!props.showForm && typeof props.showForm !== 'undefined')
 
 let title = ref('')
+
+const isStatic = computed(() => (props.static || (!props.static && typeof props.static !== 'undefined')))
 
 /**
  * Mount
@@ -149,19 +174,18 @@ const onWorkspaceReload = function (workspace, shouldClear = true) {
  * Toggle the toolbox based on isFullscreen
  */
 const maybeToggleToolbox = function () {
-  if (props.isFullscreen) {
+  if (isFullscreen && !isStatic.value) {
     workspace.getToolbox().setVisible(true)
   } else {
     workspace.getToolbox().setVisible(false)
   }
 }
-watch(props, maybeToggleToolbox)
 
 /**
  * Saves a copy of the current workspace
  */
 const onWorkspaceSave = function () {
-  if (props.static) return
+  if (isStatic.value) return
 
   // See if a workspace exists with id, if it does merge it otherwise push it
   const index = library.workspaces.findIndex(workspace => workspace.id === library.currentWorkspace.id)
@@ -184,6 +208,7 @@ const load = function (data = {}, shouldClear) {
     scale: data.view?.scale || 1,
   }
   shouldClear && Blockly.mainWorkspace.clear()
+  workspace.uid = data.id
 
   // Load data
   Blockly.serialization.workspaces.load(data.workspace || {}, workspace)
@@ -205,13 +230,17 @@ const load = function (data = {}, shouldClear) {
         HTMLTextAreaElement.prototype.focus = function () {}
         block.comment.setVisible(true)
         moveComment(block, comment.x, comment.y)
+      } else if (!block?.comment) {
+        delete data.comments[key]
       }
-      window.b = block
     })
 
     // Allow focus
     HTMLTextAreaElement.prototype.focus = $focus
   }
+
+  // Form data
+  formData = origFormData = isStatic.value ? merge({}, library.find(props.workspaceID).form || {}) : merge({}, library.currentWorkspace.form || {})
 
   title.value = data?.title
 }
@@ -240,7 +269,7 @@ function resize () {
 /**
  * Send data to feed
  */
-globalThis.feedSendData = function (feedData) {
+const feedSendData = function (feedData) {
   const data = {
     title: feedData.title,
     data: feedData.data,
@@ -252,14 +281,12 @@ globalThis.feedSendData = function (feedData) {
   dataFeed.data.unshift(data)
 }
 
-globalThis.LocalStorage = LocalStorage
-
 
 /**
  * POST to a server
  * Callbacks will get halted
  */
-globalThis.dispatchREST = function (method, url, data, onThen, onError, onFinally) {
+const dispatchREST = function (method, url, data, onThen, onError, onFinally) {
   setTimeout(() => {
     console.log(`Sending ${method}:`, url, data)
 
@@ -268,29 +295,35 @@ globalThis.dispatchREST = function (method, url, data, onThen, onError, onFinall
       url,
       data
     }).then((res) => {
-      dataFeed.isRunning && onThen(res.data)
+      isRunning && onThen(res.data)
       return res
     }).catch((err) => {
       onError(err)
     }).then((data) => {
-      dataFeed.isRunning && onFinally(data?.data)
+      isRunning && onFinally(data?.data)
     })
   }, 0)
 }
 
 /**
- * Stop running blocks
+ * Set workspace running state
  */
-globalThis.stopAll = function () {
-  dataFeed.isRunning = false
+const stopWorkspace = function () {
+  isRunning = false
+}
+function setState (state) {
+  isRunning = state
 }
 
 
 /**
  * Run start/close blocks
  */
-watch(() => dataFeed.isRunning, () => {
-  if (dataFeed.isRunning) {
+watch(() => isRunning, () => {
+  settings.ui.sidebar.right.open = true
+  emit('onIsRunning', isRunning)
+
+  if (isRunning) {
     code = Blockly.JavaScript.workspaceToCode(workspace)
     code = `;(function () {
       ${code}
@@ -313,21 +346,32 @@ watch(() => dataFeed.isRunning, () => {
   }
 })
 
+/**
+ * Persist form data
+ */
+watch(() => formData, () => {
+  if (!isStatic.value) {
+    library.currentWorkspace.form = formData
+  }
+})
+
 
 /**
  * Handles Workspace events
  * - Save data
  */
+// @todo throttle
 let hasLoaded = false
+const workspaceEventHandler = (ev) => {
+  // Exclude Mutator bubbles
+  if (ev.type === Blockly.Events.BUBBLE_OPEN && ev.bubbleType === 'mutator') {
+    return
+  }
 
-function workspaceEventHandler (ev) {
   let comments = library.currentWorkspace.comments || {}
-  // console.log('Event', ev)
 
+  // Save data
   switch (ev.type) {
-    case Blockly.Events.FINISHED_LOADING:
-      hasLoaded = true
-
     // Comments
     case 'BUBBLE_MOVE':
       comments[ev.blockId] = comments[ev.blockId] || {}
@@ -369,19 +413,25 @@ function workspaceEventHandler (ev) {
     case Blockly.Events.BLOCK_MOVE:
       comments[ev.blockId] = comments[ev.blockId] || {}
       if (comments[ev.blockId].isOpen && ev.type === Blockly.Events.BLOCK_MOVE) {
-        comments[ev.blockId].x += ev.newCoordinate.x - ev.oldCoordinate.x
-        comments[ev.blockId].y += ev.newCoordinate.y - ev.oldCoordinate.y
+        comments[ev.blockId].x += ev.newCoordinate.x - ev.oldCoordinate?.x
+        comments[ev.blockId].y += ev.newCoordinate.y - ev.oldCoordinate?.y
       }
 
-
     // Autosave
-    case Blockly.Events.VIEWPORT_CHANGE:
     case Blockly.Events.BLOCK_DELETE:
+    case Blockly.Events.VIEWPORT_CHANGE:
     case Blockly.Events.BLOCK_CHANGE:
     case Blockly.Events.VAR_CREATE:
     case Blockly.Events.VAR_DELETE:
     case Blockly.Events.VAR_RENAME:
-      if (hasLoaded && (!props.static && props.static !== '')) {
+      // Form and workspace data
+      workspaceData = Blockly.serialization.workspaces.save(workspace)
+
+      if (isStatic.value) {
+        return
+      }
+
+      if (hasLoaded) {
         const view = {
           left: library.currentWorkspace?.view?.left || 0,
           top: library.currentWorkspace?.view?.top || 0,
@@ -402,10 +452,14 @@ function workspaceEventHandler (ev) {
           },
           view,
           comments: merge({}, library.currentWorkspace.comments || {}, comments),
-          embed: view,
-          workspace: Blockly.serialization.workspaces.save(workspace)
+          form: isStatic.value ? merge({}, origFormData, library.find(props.workspaceID).form || {}) : merge({}, origFormData, library.currentWorkspace.form || {}),
+          workspace: workspaceData,
         })})
       }
+    break
+    case Blockly.Events.FINISHED_LOADING:
+      hasLoaded = true
+    break
   }
 }
 
@@ -415,14 +469,54 @@ function workspaceEventHandler (ev) {
  */
 function onFullscreenToggle ($event) {
   isFullscreen = $event
+  maybeToggleToolbox()
   emit('onFullscreenToggle', $event)
 }
 
+/**
+ * Toggle form
+ */
+function onFormToggle ($event) {
+  isFormVisible = !isFormVisible
+  emit('onFormToggle', $event)
+}
+
+/**
+ * Register Add to Form button
+ */
+!Blockly.ContextMenuRegistry.registry.registry_?.addToForm && Blockly.ContextMenuRegistry.registry.register({
+  id: 'addToForm',
+  displayText: 'Add to form',
+  scopeType: Blockly.ContextMenuRegistry.ScopeType.BLOCK,
+  weight: 6,
+  preconditionFn: scope => {
+    switch (scope.block.type) {
+      case 'text':
+      case 'text_multiline':
+      case 'math_number':
+        return 'enabled'
+    }
+
+    return 'hidden'
+  },
+  callback: scope => {
+    const workspace = library.workspaces.find(workspace => workspace.id === scope.block.workspace.uid)
+    workspace && $bus.emit('workspace.block.addToForm', scope.block, workspace.id)
+  }
+})
+
+/**
+ * Updates a block's field from the form
+ */
+function updateField (blockID, key, value) {
+  const block = workspace.getBlockById(blockID)
+  block.setFieldValue(value, key)
+}
 
 /**
  * Final stuff
  */
-defineExpose({workspace, load, code})
+defineExpose({workspace, load, code, setState})
 </script>
 
 <style scoped>

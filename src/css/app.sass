@@ -11,10 +11,18 @@ pre
 b, strong
   color: $teal
 
+h1, h2, h3, h4, h5, h6
+  &:first-child
+    margin-top: 0
+
 section
   margin-bottom: $pad-md * 16
 
+
 // Helpers
+.bg-light
+  background: $light
+
 .relative
   position: relative
 .flex
@@ -60,6 +68,8 @@ section
   background: $dark
   a
     color: $primary
+
+
 
 // Sidebars
 body.desktop
@@ -160,6 +170,33 @@ body
 // Steppers
 .q-stepper__dot
   flex: none
+
+.q-stepper--dark.q-stepper--bordered, .q-stepper--dark .q-stepper__header--border
+  border-color: $light
+
+// Tabs
+.q-tabs__content
+  background: $dark
+.q-tab--active
+  color: $white
+.q-tab--inactive
+  color: $primary
+.q-tab-panel
+  background: $dark
+
+// cards on steppers
+.q-stepper__content, .q-tab-panel
+  .q-card.q-dark
+    background: lighten($dark, 7%)
+
+.q-stepper__tab
+  color: $yellow
+
+.q-stepper__tab--active
+  color: $white
+
+.q-focus-helper:first-child
+  display: none
 
 // Modals
 .q-dialog

@@ -67,7 +67,7 @@ dataFeed.onEndMethods.push(() => {
  */
 Blockly.common.defineBlocksWithJsonArray([{
   "type": "stop_all",
-  "message0": "Stop everything",
+  "message0": "Stop code",
   "previousStatement": null,
   "nextStatement": null,
   "tooltip": "",
@@ -75,7 +75,7 @@ Blockly.common.defineBlocksWithJsonArray([{
   'style': 'text_blocks',
 }])
 Blockly.JavaScript['stop_all'] = function (block) {
-  return `stopAll();`
+  return `stopWorkspace();`
 }
 
 
@@ -424,7 +424,6 @@ Blockly.JavaScript['json_object_extract_values'] = function (block) {
 
   return [`Object.values(${obj})`, Blockly.JavaScript.ORDER_ATOMIC]
 }
-
 
 
 export default {}

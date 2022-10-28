@@ -9,7 +9,7 @@ export const useLibraryStore = defineStore('library', () => {
   let library = LocalStorage.getItem('library') || {}
 
   // Versioning
-  const version = '0.0.11'
+  const version = '0.0.13'
   if (!library.workspaces) {
     library = {
       version: 0,
@@ -20,7 +20,6 @@ export const useLibraryStore = defineStore('library', () => {
   // Make sure blocks will work
   if ((!library?.version || library?.version < version || library?.version == '1.0') && library.workspaces) {
     if (library.version) {
-      console.log('UPDATE')
       Notify.create({
         message: 'Model Prompter has had a major update to the API and has reset all settings (sorry about that).',
         color: 'negative',
@@ -53,11 +52,20 @@ export const useLibraryStore = defineStore('library', () => {
   watch(workspaces, autosave)
   watch(currentWorkspace, autosave)
 
-  // get workspace with id
+  /**
+   * get workspace with id
+   * @param {*} id
+   * @returns
+   */
   function find (id) {
     return workspaces.find(workspace => workspace.id === id)
   }
-  // Get the index of a workspace by id
+
+  /**
+   * Get the index of a workspace by id
+   * @param {*} id
+   * @returns
+   */
   function findIndex (id) {
     return workspaces.findIndex(workspace => workspace.id === id)
   }

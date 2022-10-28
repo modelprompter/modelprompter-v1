@@ -206,7 +206,7 @@ export default {
           type: 'json_object_key_value',
           inputs: {
             KEY: {
-              shadow: {
+              block: {
                 type: 'text',
                 fields: {
                   // @todo this should be dynamic otherwise we'll get duplicate key bugs
@@ -215,7 +215,7 @@ export default {
               }
             },
             VALUE: {
-              shadow: {
+              block: {
                 type: 'text',
                 fields: {
                   TEXT: ''

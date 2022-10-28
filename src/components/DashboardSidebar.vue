@@ -19,20 +19,20 @@ const settings = useSettingsStore()
 
 const essentialLinks = $ref([
   {
-    title: 'Quick Start',
-    caption: 'Learn about Model Prompter',
+    title: 'Documentation',
+    caption: 'Learn about Model Prompting',
     icon: 'auto_stories',
     link: '/',
   },
   {
     title: 'Workspace',
-    caption: 'Use, remix, and edit blocks',
+    caption: 'Use and edit blocks and forms',
     icon: 'grid_4x4',
     link: '/workspace/',
   },
   {
     title: 'Library',
-    caption: 'Local and community blocks',
+    caption: 'Manage workspaces',
     icon: 'extension',
     link: '/library',
   },

@@ -38,17 +38,39 @@ const routes = [
               default: () => import('src/pages/workspace/Editor.vue'),
               dashboardMain: () => import('src/pages/workspace/DashboardMain.vue'),
               toolbar: () => import('src/components/BlocklyToggle.vue'),
-            }
+            },
+            children: [
+              {
+                name: 'workspace-form',
+                path: '/workspace/:id/form',
+                components: {
+                  default: () => import('src/pages/workspace/Editor.vue'),
+                  dashboardMain: () => import('src/pages/workspace/DashboardMain.vue'),
+                  toolbar: () => import('src/components/BlocklyToggle.vue'),
+                }
+              },
+              {
+                name: 'workspace-detail',
+                path: '/workspace/:id/detail',
+                components: {
+                  default: () => import('src/pages/workspace/Editor.vue'),
+                  dashboardMain: () => import('src/pages/workspace/DashboardMain.vue'),
+                  toolbar: () => import('src/components/BlocklyToggle.vue'),
+                },
+                children: [
+                  {
+                    name: 'workspace-detail-form',
+                    path: '/workspace/:id/detail/form',
+                    components: {
+                      default: () => import('src/pages/workspace/Editor.vue'),
+                      dashboardMain: () => import('src/pages/workspace/DashboardMain.vue'),
+                      toolbar: () => import('src/components/BlocklyToggle.vue'),
+                    }
+                  },
+                ]
+              }
+            ]
           },
-          {
-            name: 'workspace-detail',
-            path: '/workspace/:id/detail',
-            components: {
-              default: () => import('src/pages/workspace/Editor.vue'),
-              dashboardMain: () => import('src/pages/workspace/DashboardMain.vue'),
-              toolbar: () => import('src/components/BlocklyToggle.vue'),
-            }
-          }
         ]
       }
     ]

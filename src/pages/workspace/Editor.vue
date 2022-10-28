@@ -3,7 +3,7 @@ q-page
   .content
     .row.q-col-gutter-md
       .q-mb-md.col-xs-12.col-md-6
-        q-card(v-if='$route.name === "workspace-detail"')
+        q-card(v-if='$route.name === "workspace-detail" || $route.name === "workspace-detail-form"')
           q-card-section
             h1.text-h6.q-mt-none Manage Workspace
             q-input(label='Workspace title' v-model='library.currentWorkspace.title')
@@ -22,11 +22,13 @@ q-page
             div(style='height: 290px; position: relative')
               BlocklyWorkspace(
                 ref='$workspace'
-                :workspaceID='$route.params.id'
+                :workspaceID='$route.params.id || 0'
                 :isMain='isFullscreen'
                 :isFullscreen='isFullscreen'
                 :title='library.currentWorkspace.title'
+                :showForm='showForm'
                 @onFullscreenToggle='toggleFullscreen'
+                @onFormToggle='toggleForm'
               )
 </template>
 
@@ -34,28 +36,40 @@ q-page
 import BlocklyWorkspace from 'src/components/BlocklyWorkspace.vue'
 import CodeIO from 'src/pages/workspace/CodeIO.vue'
 
-import {onMounted, watch, ref, inject, nextTick} from 'vue'
+import {onMounted, onUnmounted, watch, ref, inject, nextTick} from 'vue'
 import {uid, useQuasar} from 'quasar'
 import {useRouter, useRoute} from 'vue-router'
 import {useLibraryStore} from 'stores/library'
+import {useSettingsStore} from 'stores/settings'
 
 const library = useLibraryStore()
+const settings = useSettingsStore()
 const $router = useRouter()
 const $route = useRoute()
 const $bus = inject('$bus')
 const $q = useQuasar()
-let isFullscreen = ref($route.name === 'workspace' || $route.name === 'workspace-new')
+let isFullscreen = ref($route.name === 'workspace' || $route.name === 'workspace-new' || $route.name === 'workspace-form')
 const $workspace = ref(null)
+let showForm = ref(!($route.name === 'workspace-detail-form' || $route.name === 'workspace-form'))
 
 /**
  * Switch between fullscreen and detail
  */
 function toggleFullscreen ($event) {
   isFullscreen.value = $event
+
   if (isFullscreen.value) {
-    $router.push({name: 'workspace', params: {id: $route.params.id}})
+    if ($route.name === 'workspace-detail-form') {
+      $router.push({name: 'workspace-form', params: {id: $route.params.id}})
+    } else {
+      $router.push({name: 'workspace', params: {id: $route.params.id}})
+    }
   } else {
-    $router.push({name: 'workspace-detail', params: {id: $route.params.id}})
+    if ($route.name === 'workspace-form') {
+      $router.push({name: 'workspace-detail-form', params: {id: $route.params.id}})
+    } else {
+      $router.push({name: 'workspace-detail', params: {id: $route.params.id}})
+    }
   }
 
   $bus.emit('workspace.reload', library.currentWorkspace, true)
@@ -71,10 +85,18 @@ onMounted(() => {
     library.$patch({currentWorkspace: {}})
     library.currentWorkspace.id = uid()
     $router.push({name: 'workspace', params: {id: library.currentWorkspace.id}})
+    return
   }
   nextTick(() => {
     $bus.emit('workspace.reload', library.currentWorkspace, true)
   })
+
+  // Set toolbar button target
+  settings.ui.toolbar.toggleBlocksWorkspaceRef = $workspace
+})
+
+onUnmounted(() => {
+  settings.ui.toolbar.toggleBlocksWorkspaceRef = null
 })
 
 function save () {
@@ -131,7 +153,7 @@ function deleteWorkspace () {
     library.workspaces.splice(index, 1)
     $router.push({name: 'library'})
 
-    if (library.currentWorkspace.id === library.currentWorkspace.id) {
+    if (library.workspaces[index]?.id === library.currentWorkspace.id) {
       library.$patch({currentWorkspace: {}})
       $bus.emit('workspace.reload', {id: library.currentWorkspace.id}, true)
       $q.notify({message: 'Active workspace deleted'})
@@ -141,4 +163,23 @@ function deleteWorkspace () {
   })
 }
 
+/**
+ * Redirect to route
+ */
+function toggleForm () {
+  switch ($route.name) {
+    case 'workspace':
+      $router.push({name: 'workspace-form', params: {id: $route.params.id}})
+    break
+    case 'workspace-form':
+      $router.push({name: 'workspace', params: {id: $route.params.id}})
+    break
+    case 'workspace-detail':
+      $router.push({name: 'workspace-detail-form', params: {id: $route.params.id}})
+    break
+    case 'workspace-detail-form':
+      $router.push({name: 'workspace-detail', params: {id: $route.params.id}})
+    break
+  }
+}
 </script>

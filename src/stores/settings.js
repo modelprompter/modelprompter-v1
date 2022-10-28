@@ -18,6 +18,10 @@ export const useSettingsStore = defineStore('settings', () => {
           open: false,
           maximized: false
         }
+      },
+
+      toolbar: {
+        toggleBlocksWorkspaceRef: null
       }
     }
   })
