@@ -22,7 +22,7 @@ q-page
             div(style='height: 290px; position: relative')
               BlocklyWorkspace(
                 ref='$workspace'
-                :workspaceID='$route.params.id'
+                :workspaceID='$route.params.id || 0'
                 :isMain='isFullscreen'
                 :isFullscreen='isFullscreen'
                 :title='library.currentWorkspace.title'
@@ -85,6 +85,7 @@ onMounted(() => {
     library.$patch({currentWorkspace: {}})
     library.currentWorkspace.id = uid()
     $router.push({name: 'workspace', params: {id: library.currentWorkspace.id}})
+    return
   }
   nextTick(() => {
     $bus.emit('workspace.reload', library.currentWorkspace, true)

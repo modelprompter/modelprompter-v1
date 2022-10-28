@@ -5,6 +5,7 @@
     :hideFullscreenToggle='hideFullscreenToggle'
     :isFullscreen='isFullscreen'
     :isFormVisible='isFormVisible'
+    :workspaceID='workspaceID'
     @fullscreenToggled='onFullscreenToggle'
     @formToggled='onFormToggle')
   .blockly(ref='blockly')
@@ -173,7 +174,7 @@ const onWorkspaceReload = function (workspace, shouldClear = true) {
  * Toggle the toolbox based on isFullscreen
  */
 const maybeToggleToolbox = function () {
-  if (isFullscreen) {
+  if (isFullscreen && !isStatic.value) {
     workspace.getToolbox().setVisible(true)
   } else {
     workspace.getToolbox().setVisible(false)

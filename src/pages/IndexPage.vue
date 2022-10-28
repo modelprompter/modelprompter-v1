@@ -114,7 +114,7 @@ q-page
                   ul
                     li <strong>Titles:</strong>
                       ul
-                        li Navigates to edit page
+                        li Navigates to Workspace Detail page
                     li <strong>Icons:</strong>
                       ul
                         li <q-icon name="text_fields"></q-icon> - Show the form
