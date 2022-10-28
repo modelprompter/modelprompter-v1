@@ -38,6 +38,7 @@ import {merge, throttle} from 'lodash-es'
 import theme from 'assets/blockly/theme.js'
 import toolbox from 'assets/blockly/toolbox.js'
 
+globalThis.Blockly = Blockly
 const emit = defineEmits(['onFullscreenToggle', 'onIsRunning', 'onFormToggle'])
 const props = defineProps([
   'title',
@@ -206,6 +207,7 @@ const load = function (data = {}, shouldClear) {
     scale: data.view?.scale || 1,
   }
   shouldClear && Blockly.mainWorkspace.clear()
+  workspace.uid = data.id
 
   // Load data
   Blockly.serialization.workspaces.load(data.workspace || {}, workspace)
@@ -497,7 +499,8 @@ function onFormToggle ($event) {
     return 'hidden'
   },
   callback: scope => {
-    $bus.emit('workspace.block.addToForm', scope.block, props.workspaceID)
+    const workspace = library.workspaces.find(workspace => workspace.id === scope.block.workspace.uid)
+    workspace && $bus.emit('workspace.block.addToForm', scope.block, workspace.id)
   }
 })
 

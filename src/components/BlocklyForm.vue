@@ -23,7 +23,7 @@ const emit = defineEmits(['updateField'])
 watch(() => props.workspaceData, workspace => {
   const blocks = workspace?.blocks?.blocks || []
 
-  if (!blocks?.length) {
+  if (blocks?.length) {
     props.blockDB && Object.keys(props.blockDB).forEach(key => {
       const block = props.blockDB[key]
 
