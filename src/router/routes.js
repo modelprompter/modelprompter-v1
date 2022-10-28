@@ -4,7 +4,16 @@ const routes = [
     path: '/',
     component: () => import('layouts/Base.vue'),
     children: [
-      { path: '', component: () => import('pages/IndexPage.vue') },
+      {
+        path: '/',
+        name: 'docsOverview',
+        component: () => import('pages/IndexPage.vue')
+      },
+      {
+        path: '/docs/workspaces',
+        name: 'docsWorkspaces',
+        component: () => import('pages/IndexPage.vue')
+      },
       { path: '/reset', component: () => import('pages/ResetPage.vue') },
     ]
   },

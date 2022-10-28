@@ -9,8 +9,8 @@ q-page
               div 📅 <strong>22-10-28</strong> - Hi, thanks for visiting! This project is still a <strong>super early prototype</strong>; it's buggy but in <a href="https://github.com/modelprompter/modelprompter">active development</a>!
 
     q-tabs(v-model='tab' align='left')
-      q-tab(name='overview' label='Overview')
-      q-tab(name='workspaces' label='Workspaces')
+      q-route-tab(name='overview' :to='{name: "docsOverview"}' exact label='Overview')
+      q-route-tab(name='workspaces' :to='{name: "docsWorkspaces"}' exact label='Workspaces')
     q-tab-panels(v-model='tab')
       q-tab-panel(name='overview')
         section
@@ -122,8 +122,8 @@ q-page
                         li <q-icon name="open_in_full"></q-icon> - Toggle fullscreen
                 .q-mb-md.col-xs-12.col-md-8
                   p(style='height: 240px; position: relative')
-                    BlocklyWorkspace(ref='workspace1' @onIsRunning='updateButton("workspaceBtn1", $event)' workspaceID='a0352aba-3515-4e98-871c-fcf48b853a8f' :options='{trashcan: false}' static)
-                  BlocklyToggle.full-width(ref='formBtn3' target='form3' @toggled='toggleWorkspace')
+                    BlocklyWorkspace(ref='toolbar1' @onIsRunning='updateButton("toolbar1Btn", $event)' workspaceID='a0352aba-3515-4e98-871c-fcf48b853a8f' :options='{trashcan: false}' static)
+                  BlocklyToggle.full-width(ref='toolbar1Btn' target='toolbar1' @toggled='toggleWorkspace')
 </template>
 
 <script setup>
