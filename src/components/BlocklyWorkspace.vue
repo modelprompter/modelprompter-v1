@@ -265,52 +265,6 @@ function resize () {
   Blockly.svgResize(workspace)
 }
 
-
-/**
- * Send data to feed
- */
-function feedSendData (feedData) {
-  const data = {
-    title: feedData.title,
-    data: feedData.data,
-    image: feedData.image,
-    id: uid(),
-  }
-
-  $bus.emit('data.responses.push', data)
-  dataFeed.data.unshift(data)
-}
-
-
-/**
- * POST to a server
- * Callbacks will get halted
- */
-function dispatchREST (method, url, data, onThen, onError, onFinally) {
-  setTimeout(() => {
-    console.log(`Sending ${method}:`, url, data)
-
-    const api = axios({
-      method,
-      url,
-      data
-    }).then((res) => {
-      isRunning && onThen(res.data)
-      return res
-    }).catch((err) => {
-      onError(err)
-    }).then((data) => {
-      isRunning && onFinally(data?.data)
-    })
-  }, 0)
-}
-
-/**
- * Set workspace running state
- */
-function stopWorkspace () {
-  isRunning = false
-}
 function setState (state) {
   isRunning = state
 }
@@ -324,6 +278,54 @@ watch(() => isRunning, () => {
   emit('onIsRunning', isRunning)
 
   if (isRunning) {
+    /**
+     * Send data to feed
+     */
+    const feedSendData = function (feedData) {
+      const data = {
+        title: feedData.title,
+        data: feedData.data,
+        image: feedData.image,
+        id: uid(),
+      }
+
+      $bus.emit('data.responses.push', data)
+      dataFeed.data.unshift(data)
+    }
+
+    /**
+     * POST to a server
+     * Callbacks will get halted
+     */
+    const dispatchREST = function (method, url, data, onThen, onError, onFinally) {
+      setTimeout(() => {
+        console.log(`Sending ${method}:`, url, data)
+
+        const api = axios({
+          method,
+          url,
+          data
+        }).then((res) => {
+          isRunning && onThen(res.data)
+          return res
+        }).catch((err) => {
+          onError(err)
+        }).then((data) => {
+          isRunning && onFinally(data?.data)
+        })
+      }, 0)
+    }
+
+    /**
+     * Set workspace running state
+     */
+    const stopWorkspace = function () {
+      isRunning = false
+    }
+
+    /**
+     * Run code
+     */
     code = Blockly.JavaScript.workspaceToCode(workspace)
     code = `;(function () {
       ${code}
