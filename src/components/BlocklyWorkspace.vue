@@ -269,7 +269,7 @@ function resize () {
 /**
  * Send data to feed
  */
-globalThis.feedSendData = function (feedData) {
+function feedSendData (feedData) {
   const data = {
     title: feedData.title,
     data: feedData.data,
@@ -286,7 +286,7 @@ globalThis.feedSendData = function (feedData) {
  * POST to a server
  * Callbacks will get halted
  */
-globalThis.dispatchREST = function (method, url, data, onThen, onError, onFinally) {
+function dispatchREST (method, url, data, onThen, onError, onFinally) {
   setTimeout(() => {
     console.log(`Sending ${method}:`, url, data)
 
@@ -308,7 +308,7 @@ globalThis.dispatchREST = function (method, url, data, onThen, onError, onFinall
 /**
  * Set workspace running state
  */
-globalThis.stopWorkspace = function () {
+function stopWorkspace () {
   isRunning = false
 }
 function setState (state) {
