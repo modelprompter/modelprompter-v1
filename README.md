@@ -83,3 +83,7 @@ npm run dream-server-low
   }
 }
 ```
+
+
+# Environment Variables
+To customize your local install, copy and rename `template.env` to `.env` and replace the values with your own.
