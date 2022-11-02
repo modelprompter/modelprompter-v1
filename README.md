@@ -26,32 +26,15 @@ git submodule update --init --recursive
 
 
 
-# Setting up GPUs
-## Locally
-### [AUTOMATIC1111's Stable Diffusion Webgui](https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki)
 
-AUTOMATIC1111's UI and server are great companions to Model Prompter, providing upscaling, img2img, and other extras.
+# Data
 
-1. Download repositories: `git submodule update --init --recursive`
-2. `cd servers/AUTOMATIC1111/stable-diffusion-webui`
-3. Finish setup based on your system. It's best to just do the manual setup since you'll need to manually download all the big models anyways: https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki
-4. Go back to the project root and run:
+Currently, everything is stored with `LocalStorage` as there's no backend. `LocalStorage` (with a capital L) is a wrapper around the browsers default `localStorage` that supports enums beyond strings and numbers, and is available in your browsers devtools.
 
-```bash
-npm run dream-server
+## Library
 
-npm run dream-server-med
+This stores all of your workspaces, as well as unsaved changes in the current workspace. Here's what it looks like with `LocalStorage.getItem('library')`:
 
-# Edge case for Nvidia 16xx
-npm run dream-server-16xx
-
-# 4GB VRAM (slow but will work with enough RAM)
-npm run dream-server-low
-```
-
-# Dev Notes
-
-## Workspace
 ```js
 {
   library: {
@@ -64,20 +47,14 @@ npm run dream-server-low
         meta: {
           title: '',
           description: '',
+          longDescription: '',
         },
         view: {
           scale: 0,
           left: 0,
           top: 0
         },
-        frame: {
-          scale: 0,
-          left: 0,
-          top: 0
-        },
-        toolbox: [],
         workspace: {},
-        autosave: {}
       },
     ]
   }
@@ -86,4 +63,11 @@ npm run dream-server-low
 
 
 # Environment Variables
-To customize your local install, copy and rename `template.env` to `.env` and replace the values with your own.
+To customize your local install, copy and rename `template.env` to `.env` and replace the values with your own. The following are the defaults:
+
+```bash
+# If true, it'll inject the Plausible Analytics script: https://plausible.io/
+# Analytics are only applied when hosted, not while using locally
+# To finish the setup, register a Plausible account and add the domain
+USE_PLAUSIBLE=FALSE
+```
