@@ -60,6 +60,11 @@ function toggleLeftSidebar () {
     settings.ui.sidebar.right.open = true
     settings.ui.sidebar.right.maximized = false
   }
+
+  if (settings.ui.sidebar.left.open) {
+    settings.ui.sidebar.right.maximized = false
+    settings.ui.sidebar.right.open = false
+  }
 }
 function toggleRightSidebar () {
   settings.ui.sidebar.right.open = !settings.ui.sidebar.right.open
@@ -68,6 +73,15 @@ function toggleRightSidebar () {
     settings.ui.sidebar.right.open = true
     settings.ui.sidebar.left.open = true
     settings.ui.sidebar.left.maximized = false
+  }
+
+  if (settings.ui.sidebar.right.open) {
+    settings.ui.sidebar.left.wasOpened = settings.ui.sidebar.left.open
+    settings.ui.sidebar.left.open = false
+  }
+
+  if (!settings.ui.sidebar.right.open && settings.ui.sidebar.left.wasOpened) {
+    settings.ui.sidebar.left.open = true
   }
 }
 </script>

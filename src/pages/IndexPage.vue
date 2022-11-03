@@ -6,7 +6,7 @@ q-page
         .col
           q-card.q-mb-lg.bg-blue
             q-card-section
-              div 📅 <strong>22-11-01</strong> - Hi, thanks for visiting! This project is still a <strong>super early prototype</strong>; it's buggy but in <a href="https://github.com/modelprompter/modelprompter">active development</a>!
+              div 📅 <strong>22-11-03</strong> - Hi, thanks for visiting! This project is still a <strong>super early prototype</strong>; it's buggy but in <a href="https://github.com/modelprompter/modelprompter">active development</a>!
 
     q-tabs(v-model='tab' align='left')
       q-route-tab(name='overview' :to='{name: "docsOverview"}' exact label='Overview')

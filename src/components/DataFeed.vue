@@ -1,6 +1,6 @@
 <template lang="pug">
-div#datafeed(:class='{"mp-drawer-is-maximized": settings.ui.sidebar.right.maximized}')
-  q-drawer(v-model='settings.ui.sidebar.right.open' bordered overlay side='right')
+div#datafeed(:class='{"mp-drawer-is-maximized": settings.ui.sidebar.right.maximized, "mp-drawer-is-open": settings.ui.sidebar.right.open}')
+  q-drawer(v-model='settings.ui.sidebar.right.open' bordered side='right')
     q-list
       q-item-label(header)
         q-btn.full-width.bg-dark.text-white(color='light' v-if='settings.ui.sidebar.right.maximized' icon='last_page' @click='settings.ui.sidebar.right.maximized = false')

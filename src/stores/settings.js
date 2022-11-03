@@ -3,8 +3,11 @@ import {defineStore} from 'pinia'
 import {watch} from 'vue'
 import {LocalStorage} from 'quasar'
 import {defaultsDeep} from 'lodash-es'
+import {useQuasar} from 'quasar'
 
 export const useSettingsStore = defineStore('settings', () => {
+  const $q = useQuasar()
+
   let settings = defaultsDeep(LocalStorage.getItem('settings') || {}, {
     servers: [],
 
@@ -13,6 +16,7 @@ export const useSettingsStore = defineStore('settings', () => {
         left: {
           open: false,
           maximized: false,
+          wasOpened: false, // Caches state before right sidebar was opened
         },
         right: {
           open: false,
@@ -25,6 +29,11 @@ export const useSettingsStore = defineStore('settings', () => {
       }
     }
   })
+
+  // Force settings
+  settings.ui.sidebar.left.open = !$q.platform.is.mobile
+  settings.ui.sidebar.right.open = false
+  settings.ui.sidebar.right.maximized = false
 
   /**
    * Saves this store locally
