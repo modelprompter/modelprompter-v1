@@ -6,9 +6,9 @@ div(:class='{"mp-drawer-is-maximized": settings.ui.sidebar.left.maximized}')
         EssentialLink(v-for='link in essentialLinks' :key='link.title' v-bind='link')
         slot.q-mt-xl(name='dashboardSidebar')
           router-view(name='dashboardSidebar')
-      .q-pa-md.q-pt-md.col-md-9.col-lg-10.colx-11.col-xs-12
-        slot(name='dashboardMain')
-          router-view(name='dashboardMain')
+      //- .q-pa-md.q-pt-md.col-md-9.col-lg-10.colx-11.col-xs-12
+      //-   slot(name='dashboardMain')
+      //-     router-view(name='dashboardMain')
 </template>
 
 <script setup>
