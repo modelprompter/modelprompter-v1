@@ -320,7 +320,12 @@ function setState (state) {
  * Run start/close blocks
  */
 watch(() => isRunning, () => {
+  if (settings.ui.sidebar.left.open) {
+    settings.ui.sidebar.left.wasOpened = true
+  }
+  settings.ui.sidebar.left.open = false
   settings.ui.sidebar.right.open = true
+
   emit('onIsRunning', isRunning)
 
   if (isRunning) {

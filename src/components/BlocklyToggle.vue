@@ -17,7 +17,7 @@ const emit = defineEmits(['toggled'])
 let isRunning = $ref(false)
 
 function toggleBlocks () {
-  if (settings.ui.toolbar.toggleBlocksWorkspaceRef) {
+  if (typeof settings.ui.toolbar.toggleBlocksWorkspaceRef?.setState === 'function') {
     isRunning = !isRunning
     settings.ui.toolbar.toggleBlocksWorkspaceRef.setState(isRunning)
   } else if (!props.target) {
