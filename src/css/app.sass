@@ -107,6 +107,15 @@ body.body--dark .q-header, body.body--dark .q-footer, body.body--dark .q-drawer
   z-index: 3000 !important
   opacity: 1 !important
 
+.desktop
+  .mp-drawer-is-open .q-drawer
+    z-index: 3000 !important
+  .mp-drawer-is-open + .q-page-container
+    padding-right: 500px !important
+
+    .blockly-container.fullscreen
+      padding-right: 510px
+
 body
   .q-dark.q-popup-edit
     background: lighten($dark, 10%) !important
