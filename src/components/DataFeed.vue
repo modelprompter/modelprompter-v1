@@ -1,14 +1,13 @@
 <template lang="pug">
 div#datafeed(:class='{"mp-drawer-is-maximized": settings.ui.sidebar.right.maximized, "mp-drawer-is-open": settings.ui.sidebar.right.open}')
-  q-drawer(v-model='settings.ui.sidebar.right.open' bordered side='right')
-    q-list
-      q-item-label(header)
+  q-drawer.q-pa-md(v-model='settings.ui.sidebar.right.open' bordered side='right')
+    .column.no-wrap(style='height: 100%;')
+      div.q-pb-md
         q-btn.full-width.bg-dark.text-white(color='light' v-if='settings.ui.sidebar.right.maximized' icon='last_page' @click='settings.ui.sidebar.right.maximized = false')
           span.q-ml-sm Close Data Feed
         q-btn.full-width.bg-dark.text-white(color='light' v-else icon='first_page' @click='settings.ui.sidebar.right.maximized = true')
           span.q-ml-sm Open Data Feed
-    .q-px-md.q-pb-md
-      .row.q-col-gutter-none
+      div(:class="{row: !$q.platform.is.mobile && settings.ui.sidebar.right.open}" style='height: 100%; overflow-y: auto;')
         //- div.q-pa-xs(v-for='(item, i) in dataFeed.data' :data='item' :class='[settings.ui.sidebar.right.maximized ? "col-xs-6 col-sm-4 col-md-3 col-lg-2 col-xl-1" : "col-6"]')
         div.q-pa-xs(v-for='(item, i) in dataFeed.data' :data='item' :class='[settings.ui.sidebar.right.maximized ? "col-xs-12 col-sm-6 col-md-4 col-lg-3 col-xl-2" : "col-12"]')
           q-card
@@ -28,7 +27,9 @@ div#datafeed(:class='{"mp-drawer-is-maximized": settings.ui.sidebar.right.maximi
 <script setup>
 import {useDatafeedResponses} from '../stores/datafeed'
 import {useSettingsStore} from '../stores/settings'
+import {useQuasar} from 'quasar'
 
+const $q = useQuasar()
 const props = defineProps(['data'])
 const dataFeed = useDatafeedResponses()
 const settings = useSettingsStore()
