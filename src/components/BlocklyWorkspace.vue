@@ -102,6 +102,7 @@ onMounted(() => {
     // horizontalLayout: true,
     zoom: {
       controls: true,
+      wheel: true,
       drag: true,
       startScale: 1,
       maxScale: 3,
