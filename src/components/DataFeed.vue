@@ -7,13 +7,14 @@ div#datafeed(:class='{"mp-drawer-is-maximized": settings.ui.sidebar.right.maximi
           span.q-ml-sm Close Data Feed
         q-btn.full-width.bg-dark.text-white(color='light' v-else icon='first_page' @click='settings.ui.sidebar.right.maximized = true')
           span.q-ml-sm Open Data Feed
-      div(:class="{row: !$q.platform.is.mobile && settings.ui.sidebar.right.open}" style='height: 100%; overflow-y: auto;')
-        //- div.q-pa-xs(v-for='(item, i) in dataFeed.data' :data='item' :class='[settings.ui.sidebar.right.maximized ? "col-xs-6 col-sm-4 col-md-3 col-lg-2 col-xl-1" : "col-6"]')
-        div.q-pa-xs(v-for='(item, i) in dataFeed.data' :data='item' :class='[settings.ui.sidebar.right.maximized ? "col-xs-12 col-sm-6 col-md-4 col-lg-3 col-xl-2" : "col-12"]')
-          q-card
-            q-img.clickable(v-if='item.image' :src='item.image' @click='expandImage(item)')
-            q-card-section(v-else)
-              pre {{item.data}}
+      div(style='height: 100%; overflow-y: auto;')
+        div(:class="{masonry: !$q.platform.is.mobile && settings.ui.sidebar.right.maximized}")
+          //- div.q-pa-xs(v-for='(item, i) in dataFeed.data' :data='item' :class='[settings.ui.sidebar.right.maximized ? "col-xs-12 col-sm-6 col-md-4 col-lg-3 col-xl-2" : "col-12"]')
+          div.q-pa-xs(v-for='(item, i) in dataFeed.data' :data='item')
+            q-card
+              q-img.clickable(v-if='item.image' :src='item.image' @click='expandImage(item)')
+              q-card-section(v-else)
+                pre {{item.data}}
 
     //- Image Modal
     q-dialog(v-model='imageModal')
