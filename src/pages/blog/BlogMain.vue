@@ -5,7 +5,7 @@ q-page
       .col
         q-card.q-mb-lg.bg-blue
           q-card-section
-            div 📅 <strong>22-11-03</strong> - Hi, thanks for visiting! The blog will be up soon 🎉
+            div 📅 <strong>22-11-04</strong> - Hi, thanks for visiting! The blog will be up soon 🎉
 
         q-card.q-mb-lg
           q-card-section

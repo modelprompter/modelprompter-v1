@@ -425,5 +425,28 @@ Blockly.JavaScript['json_object_extract_values'] = function (block) {
   return [`Object.values(${obj})`, Blockly.JavaScript.ORDER_ATOMIC]
 }
 
+/**
+ * Shuffle
+ */
+Blockly.common.defineBlocksWithJsonArray([{
+  "type": "list_shuffle",
+  "message0": "Shuffle %1",
+  'style': 'math_blocks',
+  "args0": [
+    {
+      "type": "input_value",
+      "name": "DATA"
+    }
+  ],
+  "output": null,
+  "tooltip": "",
+  "helpUrl": ""
+}])
+
+Blockly.JavaScript['list_shuffle'] = function (block) {
+  const obj = Blockly.JavaScript.valueToCode(block, 'DATA', Blockly.JavaScript.ORDER_NONE) || []
+
+  return [`shuffle(${obj})`, Blockly.JavaScript.ORDER_ATOMIC]
+}
 
 export default {}

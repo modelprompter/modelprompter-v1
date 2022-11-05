@@ -35,7 +35,7 @@ import {LocalStorage, uid, useQuasar} from 'quasar'
 import {useDatafeedResponses} from '../stores/datafeed'
 import {useLibraryStore} from 'stores/library'
 import {useSettingsStore} from 'stores/settings'
-import {merge, throttle} from 'lodash-es'
+import {merge, throttle, shuffle as _shuffle} from 'lodash-es'
 import theme from 'assets/blockly/theme.js'
 import toolbox from 'assets/blockly/toolbox.js'
 
@@ -316,6 +316,24 @@ function setState (state) {
   isRunning = state
 }
 
+/**
+ * Shuffle arrays and lists
+ */
+const shuffle = function (collection) {
+  if (typeof collection === 'array') {
+    return _shuffle(collection)
+  } else if (typeof collection === 'object') {
+    const keys = _shuffle(Object.keys(collection))
+    const shuffled = {}
+    keys.forEach(key => {
+      shuffled[key] = collection[key]
+    })
+    return shuffled
+  } else {
+    return collection
+  }
+}
+
 
 /**
  * Run start/close blocks
@@ -526,7 +544,7 @@ defineExpose({
   workspace, load, code, setState,
 
   // DO NOT DELETE: Without using the methods directly the minifier will remove them
-  feedSendData, dispatchREST, stopWorkspace
+  feedSendData, dispatchREST, stopWorkspace, shuffle
 })
 </script>
 

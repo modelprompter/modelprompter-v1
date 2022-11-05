@@ -234,6 +234,10 @@ export default {
         },
         {
           kind: 'block',
+          type: 'list_shuffle'
+        },
+        {
+          kind: 'block',
           type: 'json_object_merge'
         },
         {
