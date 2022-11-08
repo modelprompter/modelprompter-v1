@@ -35,7 +35,7 @@ import {LocalStorage, uid, useQuasar} from 'quasar'
 import {useDatafeedResponses} from '../stores/datafeed'
 import {useLibraryStore} from 'stores/library'
 import {useSettingsStore} from 'stores/settings'
-import {merge, throttle} from 'lodash-es'
+import {merge, throttle, shuffle as _shuffle} from 'lodash-es'
 import theme from 'assets/blockly/theme.js'
 import toolbox from 'assets/blockly/toolbox.js'
 
@@ -301,7 +301,9 @@ const dispatchREST = function (method, url, data, onThen, onError, onFinally) {
     }).catch((err) => {
       onError(err)
     }).then((data) => {
-      isRunning && onFinally(data?.data)
+      if (isRunning) {
+        onFinally(data?.data)
+      }
     })
   }, 0)
 }
@@ -311,9 +313,28 @@ const dispatchREST = function (method, url, data, onThen, onError, onFinally) {
  */
 const stopWorkspace = function () {
   isRunning = false
+  $bus.emit('button.blocklyToggle', isRunning)
 }
 function setState (state) {
   isRunning = state
+}
+
+/**
+ * Shuffle arrays and lists
+ */
+const shuffle = function (collection) {
+  if (Array.isArray(collection)) {
+    return _shuffle(collection)
+  } else if (typeof collection === 'object') {
+    const keys = _shuffle(Object.keys(collection))
+    const shuffled = {}
+    keys.forEach(key => {
+      shuffled[key] = collection[key]
+    })
+    return shuffled
+  } else {
+    return collection
+  }
 }
 
 
@@ -526,7 +547,7 @@ defineExpose({
   workspace, load, code, setState,
 
   // DO NOT DELETE: Without using the methods directly the minifier will remove them
-  feedSendData, dispatchREST, stopWorkspace
+  feedSendData, dispatchREST, stopWorkspace, shuffle
 })
 </script>
 

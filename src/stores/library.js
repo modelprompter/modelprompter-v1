@@ -9,7 +9,7 @@ export const useLibraryStore = defineStore('library', () => {
   let library = LocalStorage.getItem('library') || {}
 
   // Versioning
-  const version = '0.0.16'
+  const version = '0.0.19'
   if (!library.workspaces) {
     library = {
       version: 0,
