@@ -301,7 +301,9 @@ const dispatchREST = function (method, url, data, onThen, onError, onFinally) {
     }).catch((err) => {
       onError(err)
     }).then((data) => {
-      isRunning && onFinally(data?.data)
+      if (isRunning) {
+        onFinally(data?.data)
+      }
     })
   }, 0)
 }
@@ -311,6 +313,7 @@ const dispatchREST = function (method, url, data, onThen, onError, onFinally) {
  */
 const stopWorkspace = function () {
   isRunning = false
+  $bus.emit('button.blocklyToggle', isRunning)
 }
 function setState (state) {
   isRunning = state
