@@ -320,7 +320,7 @@ function setState (state) {
  * Shuffle arrays and lists
  */
 const shuffle = function (collection) {
-  if (typeof collection === 'array') {
+  if (Array.isArray(collection)) {
     return _shuffle(collection)
   } else if (typeof collection === 'object') {
     const keys = _shuffle(Object.keys(collection))
