@@ -13,8 +13,10 @@ div#datafeed(:class='{"mp-drawer-is-maximized": settings.ui.sidebar.right.maximi
           div.q-pa-xs(v-for='(item, i) in dataFeed.data' :data='item')
             q-card
               q-img.clickable(v-if='item.image' :src='item.image' @click='expandImage(item)')
-              q-card-section(v-else)
+              q-card-section(v-if='!item.image && !item.title')
                 pre {{item.data}}
+              q-card-section(v-if='item.title')
+                div(v-html='item.title')
 
     //- Image Modal
     q-dialog(v-model='imageModal')
