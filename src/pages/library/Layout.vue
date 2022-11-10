@@ -12,12 +12,15 @@ q-page.q-pa-md
   q-tab-panels(v-model='tab')
     q-tab-panel(name='session')
       LibrarySession
+    q-tab-panel(name='repos')
+      LibraryRepos
     q-tab-panel(name='reset')
       LibraryReset
 </template>
 
 <script setup>
 import LibrarySession from 'pages/library/Session.vue'
+import LibraryRepos from 'pages/library/Repos.vue'
 import LibraryReset from 'pages/library/Reset.vue'
 
 const tab = $ref('session')

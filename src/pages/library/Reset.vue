@@ -9,18 +9,7 @@
 
 <script setup>
 import { useQuasar } from 'quasar'
-import { useSettingsStore } from 'stores/settings'
-import { onMounted } from 'vue'
-
 const $q = useQuasar()
-const settings = useSettingsStore()
-
-onMounted(() => {
-  settings.ui.sidebar.left.maximized = false
-  settings.ui.sidebar.right.maximized = false
-  settings.ui.sidebar.left.open = false
-  settings.ui.sidebar.right.open = false
-})
 
 function resetData () {
   $q.notify({
