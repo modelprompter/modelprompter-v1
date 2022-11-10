@@ -1,45 +1,61 @@
 <template lang="pug">
-q-page.q-pa-md
-  q-tabs(v-model='tab' align='left')
-    q-route-tab(:to="{name: 'librarySession'}" name='session' label='Session Library')
-    q-route-tab(:to="{name: 'libraryRepos'}" name='repos' label='Repositories')
-    q-space
-    router-link.q-mr-lg.text-red.align-right(:to='{path: "/reset"}' style="text-decoration: none")
-      q-icon.q-mr-sm(name='delete')
-      | Reset
+q-table(:rows='library.workspaces' :columns='columns' row-key='id' :grid="$q.screen.lt.lg" :rows-per-page-options='[10, 25, 50, 0]')
+  //- Add rows
+  template(v-slot:top)
+    q-btn.gt-sm(icon='library_add' color='green' label='New Workspace' @click='addWorkspace')
+    q-space.gt-sm
+    q-btn.gt-sm(icon='data_object' color='blue' label='Import/Export Library' @click='viewLibraryCode')
 
-  q-tab-panels(v-model='tab')
-    q-tab-panel(name='session')
-      //- h1.text-h6.q-my-md.flex
-      //-   | Session Library
-      //-   q-space
+    .row.flex
+      q-btn.lt-md.full-width(icon='data_object' color='blue' label='Import/Export Library' @click='viewLibraryCode')
+      q-btn.lt-md.full-width(icon='library_add' color='green' label='Create New Workspace' @click='addWorkspace')
 
-      //-   .text-right
-      //-     router-link.text-red.align-right(:to='{path: "/reset"}' style="text-decoration: none")
-      //-       q-icon.q-mr-sm(name='delete')
-      //-       | Reset
-    q-tab-panel(name='repos')
+  //- Rows with inline-edit
+  template(v-slot:body='props')
+    q-tr(:props='props')
+      q-td(key='title' :props='props') {{ props.row.title }}
+      q-td(key='description' :props='props') {{props.row.description}}
+      q-td(key='actions' :props='props')
+        .q-gutter-sm
+          q-btn-group
+            q-btn(icon='folder' @click='openWorkspace(props)' label='Open')
+            q-btn(icon='data_object' color='blue' @click='viewCode(props.row)' label='Code')
+            q-btn(icon='fork_right' color='orange' @click='remix(props.row)' label='Remix')
+            q-btn(color='negative' icon='delete' @click='deleteWorkspace(props)' label='Delete')
+
+  //- Responsive
+  template(v-slot:item='props')
+    .col-xs-12.col-sm-6.col-md-4.q-pa-xs
+      q-card
+        q-card-section
+          div.text-h6 {{ props.row.title }}
+        q-card-section
+          div.text-body2 {{ props.row.description }}
+        q-card-section
+          q-btn-group.full-width
+            q-btn(color='negative' icon='delete' @click='deleteWorkspace(props)' label='Delete')
+            q-btn(icon='fork_right' color='orange' @click='remix(props.row)' label='Remix')
+            q-btn(color='blue' icon='data_object' @click='viewCode(props.row)' label='Code')
+            q-btn(icon='folder' @click='openWorkspace(props)' label='Open')
 </template>
 
 <script setup>
-import {useLibraryStore} from 'stores/library'
+import {inject} from 'vue'
 import {useQuasar, uid} from 'quasar'
-import {useSettingsStore} from 'stores/settings'
 import {useRouter} from 'vue-router'
-import {inject, onMounted} from 'vue'
+import {useLibraryStore} from 'stores/library'
 import CodeIO from 'src/pages/workspace/CodeIO.vue'
+import LibrarySession from 'src/pages/library/Session.vue'
 
 const $router = useRouter()
 const $bus = inject('$bus')
 const $q = useQuasar()
-const settings = useSettingsStore()
 const columns = $ref([
   { name: 'title', align: 'left', field: 'title', label: 'Title' },
   { name: 'description', align: 'left', field: 'description', label: 'Description' },
   { name: 'actions', align: 'left', field: 'actions', label: 'Actions'},
 ])
 const library = useLibraryStore()
-const tab = $ref('session')
 
 /**
  * Delete workspace

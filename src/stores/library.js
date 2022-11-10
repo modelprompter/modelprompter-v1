@@ -9,11 +9,12 @@ export const useLibraryStore = defineStore('library', () => {
   let library = LocalStorage.getItem('library') || {}
 
   // Versioning
-  const version = '0.0.19'
+  const version = '0.0.20'
   if (!library.workspaces) {
     library = {
       version: 0,
-      workspaces: {}
+      workspaces: {},
+      repos: {}
     }
   }
 
@@ -31,23 +32,28 @@ export const useLibraryStore = defineStore('library', () => {
     library = {}
   }
 
+  // @fixme - This is a bit convoluted
   // Load default workspace if it doesn't exist
   let _currentWorkspace
   let _workspaces
+  let _repos
 
   if (!library.currentWorkspace) {
     _currentWorkspace = defaultWorkspace.library?.currentWorkspace || defaultWorkspace.library?.workspaces[0]
     _workspaces = defaultWorkspace.library?.workspaces || []
+    _repos = defaultWorkspace.library?.repos || []
   } else {
     _currentWorkspace = library.currentWorkspace
     _workspaces = library.workspaces || []
+    _repos = library.repos || []
   }
 
   const currentWorkspace = $ref(_currentWorkspace)
   const workspaces = $ref(_workspaces)
+  const repos = $ref(_repos)
 
   const autosave = throttle(() => {
-    LocalStorage.set('library', {workspaces, currentWorkspace, version})
+    LocalStorage.set('library', {workspaces, currentWorkspace, version, repos})
   }, 250, {trailing: true})
   watch(workspaces, autosave)
   watch(currentWorkspace, autosave)
@@ -70,5 +76,5 @@ export const useLibraryStore = defineStore('library', () => {
     return workspaces.findIndex(workspace => workspace.id === id)
   }
 
-  return {workspaces, currentWorkspace, autosave, find, findIndex}
+  return {repos, workspaces, currentWorkspace, autosave, find, findIndex}
 })

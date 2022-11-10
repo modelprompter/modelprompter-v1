@@ -1,4 +1,3 @@
-
 const routes = [
   {
     path: '/',
@@ -14,7 +13,6 @@ const routes = [
         name: 'docsWorkspaces',
         component: () => import('pages/IndexPage.vue')
       },
-      { path: '/reset', component: () => import('pages/ResetPage.vue') },
     ]
   },
 
@@ -35,8 +33,8 @@ const routes = [
         name: 'workspace-new',
         path: '/workspace',
         components: {
-          default: () => import('src/pages/workspace/Editor.vue'),
-          dashboardMain: () => import('src/pages/workspace/DashboardMain.vue'),
+          default: () => import('pages/workspace/Editor.vue'),
+          dashboardMain: () => import('pages/workspace/DashboardMain.vue'),
           toolbar: () => import('src/components/BlocklyToggle.vue'),
         },
         children: [
@@ -44,8 +42,8 @@ const routes = [
             name: 'workspace',
             path: '/workspace/:id',
             components: {
-              default: () => import('src/pages/workspace/Editor.vue'),
-              dashboardMain: () => import('src/pages/workspace/DashboardMain.vue'),
+              default: () => import('pages/workspace/Editor.vue'),
+              dashboardMain: () => import('pages/workspace/DashboardMain.vue'),
               toolbar: () => import('src/components/BlocklyToggle.vue'),
             },
             children: [
@@ -53,8 +51,8 @@ const routes = [
                 name: 'workspace-form',
                 path: '/workspace/:id/form',
                 components: {
-                  default: () => import('src/pages/workspace/Editor.vue'),
-                  dashboardMain: () => import('src/pages/workspace/DashboardMain.vue'),
+                  default: () => import('pages/workspace/Editor.vue'),
+                  dashboardMain: () => import('pages/workspace/DashboardMain.vue'),
                   toolbar: () => import('src/components/BlocklyToggle.vue'),
                 }
               },
@@ -62,8 +60,8 @@ const routes = [
                 name: 'workspace-detail',
                 path: '/workspace/:id/detail',
                 components: {
-                  default: () => import('src/pages/workspace/Editor.vue'),
-                  dashboardMain: () => import('src/pages/workspace/DashboardMain.vue'),
+                  default: () => import('pages/workspace/Editor.vue'),
+                  dashboardMain: () => import('pages/workspace/DashboardMain.vue'),
                   toolbar: () => import('src/components/BlocklyToggle.vue'),
                 },
                 children: [
@@ -71,8 +69,8 @@ const routes = [
                     name: 'workspace-detail-form',
                     path: '/workspace/:id/detail/form',
                     components: {
-                      default: () => import('src/pages/workspace/Editor.vue'),
-                      dashboardMain: () => import('src/pages/workspace/DashboardMain.vue'),
+                      default: () => import('pages/workspace/Editor.vue'),
+                      dashboardMain: () => import('pages/workspace/DashboardMain.vue'),
                       toolbar: () => import('src/components/BlocklyToggle.vue'),
                     }
                   },
@@ -90,12 +88,26 @@ const routes = [
     component: () => import('layouts/Base.vue'),
     children: [
       {
-        name: 'library',
+        name: 'librarySession',
         path: '/library',
         components: {
-          default: () => import('src/pages/workspace/DashboardMain.vue')
+          default: () => import('pages/library/Layout.vue')
         },
-      }
+      },
+      {
+        name: 'libraryRepos',
+        path: '/library/repos',
+        components: {
+          default: () => import('pages/library/Layout.vue')
+        },
+      },
+      {
+        name: 'libraryReset',
+        path: '/library/reset',
+        components: {
+          default: () => import('pages/library/Layout.vue')
+        }
+      },
     ]
   },
 
