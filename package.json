@@ -7,6 +7,7 @@
   "private": true,
   "scripts": {
     "start": "npx quasar dev",
+    "build": "npx quasar build && echo '/* /index.html  200' | cat > dist/spa/_redirects",
     "clone-servers": "git submodule update --init --recursive",
     "dream-server": "python servers/AUTOMATIC1111/stable-diffusion-webui/webui.py --listen",
     "dream-server-med": "python servers/AUTOMATIC1111/stable-diffusion-webui/webui.py --medvram --opt-split-attention --listen",
