@@ -18,9 +18,7 @@ function resetData () {
     position: 'top',
     timeout: 1000
   })
-  setTimeout(() => {
-    localStorage.clear()
-    location.reload()
-  }, 500)
+  localStorage.clear()
+  location.reload()
 }
 </script>

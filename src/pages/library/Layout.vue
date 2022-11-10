@@ -2,7 +2,7 @@
 q-page.q-pa-md
   q-tabs(v-model='tab' align='left')
     q-route-tab(:to="{name: 'librarySession'}" name='session' label='Session Library')
-    q-route-tab(:to="{name: 'libraryRepos'}" name='repos' label='Repositories')
+    //- q-route-tab(:to="{name: 'libraryRepos'}" name='repos' label='Repositories')
     q-space
     q-route-tab.text-red(:to="{name: 'libraryReset'}" name='reset' label='Delete all data')
   q-tab-panels(v-model='tab')

@@ -86,7 +86,7 @@ onMounted(() => {
 
   // Create workspace
   const options = merge({}, {
-    media: "media/",
+    media: "/media/",
     grid: {
       spacing: 20,
       length: 20,

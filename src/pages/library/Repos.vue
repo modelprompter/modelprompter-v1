@@ -11,10 +11,10 @@ q-table(:rows='library.repos' :columns='columns' row-key='id' :grid="$q.screen.l
     q-tr(:props='props')
       q-td(key='title' :props='props') {{ props.row.title }}
       q-td(key='source' :props='props') {{props.row.source}}
+      q-td(key='active' :props='props')
+        q-toggle(v-model='props.row.active')
       q-td(key='actions' :props='props')
-        .q-gutter-sm
-          q-toggle(v-model='props.row.active')
-          q-btn(color='negative' icon='delete' @click='deleteWorkspace(props)' label='Delete')
+        q-btn(color='negative' icon='delete' @click='deleteWorkspace(props)' label='Delete')
 </template>
 
 <script setup>
