@@ -5,10 +5,6 @@ q-page.q-pa-md
     q-route-tab(:to="{name: 'libraryRepos'}" name='repos' label='Repositories')
     q-space
     q-route-tab.text-red(:to="{name: 'libraryReset'}" name='reset' label='Delete all data')
-    //- router-link.q-mr-lg.text-red.align-right(:to='{path: "/reset"}' style="text-decoration: none")
-      q-icon.q-mr-sm(name='delete')
-      | Reset
-
   q-tab-panels(v-model='tab')
     q-tab-panel(name='session')
       LibrarySession
@@ -23,5 +19,5 @@ import LibrarySession from 'pages/library/Session.vue'
 import LibraryRepos from 'pages/library/Repos.vue'
 import LibraryReset from 'pages/library/Reset.vue'
 
-const tab = $ref('session')
+const tab = $ref('')
 </script>

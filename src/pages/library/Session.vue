@@ -1,5 +1,5 @@
 <template lang="pug">
-q-table(title='Workspaces' :rows='library.workspaces' :columns='columns' row-key='id' :grid="$q.screen.lt.lg" :rows-per-page-options='[10, 25, 50, 0]')
+q-table(:rows='library.workspaces' :columns='columns' row-key='id' :grid="$q.screen.lt.lg" :rows-per-page-options='[10, 25, 50, 0]')
   //- Add rows
   template(v-slot:top)
     q-btn.gt-sm(icon='library_add' color='green' label='New Workspace' @click='addWorkspace')
@@ -9,6 +9,7 @@ q-table(title='Workspaces' :rows='library.workspaces' :columns='columns' row-key
     .row.flex
       q-btn.lt-md.full-width(icon='data_object' color='blue' label='Import/Export Library' @click='viewLibraryCode')
       q-btn.lt-md.full-width(icon='library_add' color='green' label='Create New Workspace' @click='addWorkspace')
+
   //- Rows with inline-edit
   template(v-slot:body='props')
     q-tr(:props='props')
@@ -21,6 +22,7 @@ q-table(title='Workspaces' :rows='library.workspaces' :columns='columns' row-key
             q-btn(icon='data_object' color='blue' @click='viewCode(props.row)' label='Code')
             q-btn(icon='fork_right' color='orange' @click='remix(props.row)' label='Remix')
             q-btn(color='negative' icon='delete' @click='deleteWorkspace(props)' label='Delete')
+
   //- Responsive
   template(v-slot:item='props')
     .col-xs-12.col-sm-6.col-md-4.q-pa-xs
@@ -38,25 +40,22 @@ q-table(title='Workspaces' :rows='library.workspaces' :columns='columns' row-key
 </template>
 
 <script setup>
-import {useLibraryStore} from 'stores/library'
+import {inject} from 'vue'
 import {useQuasar, uid} from 'quasar'
-import {useSettingsStore} from 'stores/settings'
 import {useRouter} from 'vue-router'
-import {inject, onMounted} from 'vue'
+import {useLibraryStore} from 'stores/library'
 import CodeIO from 'src/pages/workspace/CodeIO.vue'
 import LibrarySession from 'src/pages/library/Session.vue'
 
 const $router = useRouter()
 const $bus = inject('$bus')
 const $q = useQuasar()
-const settings = useSettingsStore()
 const columns = $ref([
   { name: 'title', align: 'left', field: 'title', label: 'Title' },
   { name: 'description', align: 'left', field: 'description', label: 'Description' },
   { name: 'actions', align: 'left', field: 'actions', label: 'Actions'},
 ])
 const library = useLibraryStore()
-const tab = $ref('session')
 
 /**
  * Delete workspace
