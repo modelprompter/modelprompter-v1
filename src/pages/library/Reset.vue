@@ -1,11 +1,10 @@
 <template lang="pug">
 .text-white.text-center.q-pa-md.flex.flex-center
-  div.q-mt-xl
-    .text-h1 Reset Data?
-    .text-h4.q-mt-xl This will reset <b>everything</b> and cannot be undone
-
-    q-btn.q-mt-xl.q-mr-xl(color='light' label='No, take me back' :to='{path: "/"}')
-    q-btn.q-mt-xl(color='red' label='Yes, reset data' @click='resetData' :to='{path: "/"}')
+  q-card
+    q-card-section.q-pa-xl
+      .text-h1 Reset Data?
+      .text-h4.q-mt-xl This will reset <b>everything</b> and cannot be undone
+      q-btn.q-mt-xl(color='red' label='Yes, reset data' @click='resetData' :to='{path: "/"}')
 </template>
 
 <script setup>
