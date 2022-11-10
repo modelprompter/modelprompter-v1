@@ -90,12 +90,19 @@ const routes = [
     component: () => import('layouts/Base.vue'),
     children: [
       {
-        name: 'library',
+        name: 'librarySession',
         path: '/library',
         components: {
-          default: () => import('src/pages/workspace/DashboardMain.vue')
+          default: () => import('src/pages/library/Layout.vue')
         },
-      }
+      },
+      {
+        name: 'libraryRepos',
+        path: '/library/repos',
+        components: {
+          default: () => import('src/pages/library/Layout.vue')
+        },
+      },
     ]
   },
 
