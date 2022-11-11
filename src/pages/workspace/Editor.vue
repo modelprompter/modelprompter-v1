@@ -48,7 +48,7 @@ const $router = useRouter()
 const $route = useRoute()
 const $bus = inject('$bus')
 const $q = useQuasar()
-let isFullscreen = ref($route.name === 'workspace' || $route.name === 'workspace-new' || $route.name === 'workspace-form')
+let isFullscreen = ref($route.name === 'workspace' || $route.name === 'new' || $route.name === 'workspace-form')
 const $workspace = ref(null)
 let showForm = ref(!($route.name === 'workspace-detail-form' || $route.name === 'workspace-form'))
 
@@ -79,6 +79,7 @@ function toggleFullscreen ($event) {
  * Loads the current workspace or the one with ID
  */
 onMounted(() => {
+  console.log('onMounted', $route.params.id)
   if (!$route.params.id && library.currentWorkspace.id) {
     $router.push({name: 'workspace', params: {id: library.currentWorkspace.id}})
   } else if (!$route.params.id) {

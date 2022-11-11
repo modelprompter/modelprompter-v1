@@ -1,9 +1,9 @@
 <template lang="pug">
 div(:class='{"mp-drawer-is-maximized": settings.ui.sidebar.left.maximized}')
-  q-drawer.q-pt-md(v-model='settings.ui.sidebar.left.open' bordered)
+  q-drawer.q-pt-md(v-model='settings.ui.sidebar.left.open' bordered :show-if-above='false')
     q-list.q-px-md.q-pb-md.row.items-stretch
       .q-mb-md(:class='[settings.ui.sidebar.left.maximized ? "col-md-3 col-lg-2 col-xl-1 col-xs-12" : "col-12 col-xs-12"]')
-        template(v-for='(link, key)  in essentialLinks' :key='key')
+        template(v-for='(link, key)  in sidebarRoutes' :key='key')
           q-item(clickable tag='a' :to='link.to' :href='link.href' :target='link.href ? "_blank" : null')
             q-item-section(v-if='link.icon' avatar)
               q-icon(:name='link.icon')
@@ -20,33 +20,52 @@ div(:class='{"mp-drawer-is-maximized": settings.ui.sidebar.left.maximized}')
 
 <script setup>
 import {useSettingsStore} from '../stores/settings'
+import {useRouter, useRoute} from 'vue-router'
+import {onMounted} from 'vue'
+import {useLibraryStore} from 'stores/library'
 
+const $route = useRoute()
+const library = useLibraryStore()
 const settings = useSettingsStore()
-const essentialLinks = $ref([
-  {
-    title: 'Documentation',
-    caption: 'Learn about Model Prompting',
-    icon: 'auto_stories',
-    to: '/',
-  },
-  {
-    title: 'Workspace',
-    caption: 'Use and edit blocks and forms',
-    icon: 'grid_4x4',
-    to: '/workspace/',
-  },
-  {
-    title: 'Library',
-    caption: 'Manage workspaces',
-    icon: 'extension',
-    to: '/library',
-  },
-  {
-    title: 'Blog',
-    caption: 'Tutorials, news, and devlog',
-    icon: 'rss_feed',
-    href: 'https://modelprompter.notion.site/Model-Prompter-0d1872f91470464189abc4386074965c',
+let sidebarRoutes = $ref([])
+
+onMounted(() => {
+  let workspaceRoute = '/'
+  if ($route.params.id) {
+    workspaceRoute = '/workspace/' + $route.params.id
+  } else if (library.currentWorkspace.id) {
+    workspaceRoute = '/workspace/' + library.currentWorkspace.id
   }
-])
+
+
+  sidebarRoutes = [
+    //- @todo 22-11-10 We can eventually remove this, but keeping it now for future reference
+    // {
+    //   title: 'Documentation',
+    //   caption: 'Learn about Model Prompting',
+    //   icon: 'auto_stories',
+    //   to: '/',
+    // },
+    // {
+    //   title: 'Blog',
+    //   caption: 'Tutorials, news, and devlog',
+    //   icon: 'rss_feed',
+    //   href: 'https://modelprompter.notion.site/Model-Prompter-0d1872f91470464189abc4386074965c',
+    // },
+    {
+      title: 'Workspace',
+      caption: 'Use and edit blocks and forms',
+      icon: 'grid_4x4',
+      to: workspaceRoute,
+    },
+    {
+      title: 'Library',
+      caption: 'Manage workspaces',
+      icon: 'extension',
+      to: '/library',
+    },
+  ]
+})
+
 
 </script>
