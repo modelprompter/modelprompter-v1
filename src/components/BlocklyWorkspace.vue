@@ -92,10 +92,11 @@ onMounted(() => {
       length: 20,
       colour: "#4f4b94",
       snap: true,
+      scrollbars: true
     },
     move: {
       scrollbars: true,
-      wheel: true,
+      // wheel: true,
     },
     trashcan: false,
     // @todo make this optional
