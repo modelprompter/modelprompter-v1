@@ -1,5 +1,4 @@
 <template lang="pug">
-//- @todo 22-11-10 We can eventually remove this, but keeping it now for future reference
 q-page
   .content
     section.q-mb-none
@@ -7,7 +6,7 @@ q-page
         .col
           q-card.q-mb-lg.bg-blue
             q-card-section
-              div 📅 <strong>22-11-07</strong> - Hi, thanks for visiting! This project is still a <strong>super early prototype</strong>; it's buggy but in <a href="https://github.com/modelprompter/modelprompter">active development</a>!
+              div 📅 <strong>22-11-12</strong> - Hi, thanks for visiting! Beta has been pushed back to <strong>December 1st</strong>. More info will be available soon!
 
     q-tabs(v-model='tab' align='left')
       q-route-tab(name='overview' :to='{name: "docsOverview"}' exact label='Overview')
@@ -25,9 +24,9 @@ q-page
                     img(src='~/src/assets/logo-title.png' style='width: 100%; vertical-align: middle;')
 
                   div.text-h5
-                    strong.text-white Automate AI's and API's
+                    strong.text-white Connect AI models & web services together ✨🧑‍💻✨
                 q-card-section
-                  p Use programmable blocks to automate prompts to Stable Diffusion, Colab Notebooks, bots, webhooks, and any API. <strong>Then use more blocks to configure how the data is organized and displayed!</strong>
+                  p Explore and use programmable blocks to automate prompts to Stable Diffusion, Colab Notebooks, bots, webhooks, and any web service.
                   p.q-mt-sm.text-center
                     a(href='https://github.com/ModelPrompter/modelprompter') GitHub
                     span.q-mx-sm ·
@@ -38,13 +37,13 @@ q-page
             .col-12.col-md-6
               q-card
                 .text-center
-                  div(style='height: 290px; position: relative')
+                  div(style='height: 270px; position: relative')
                     BlocklyWorkspace(ref='workspace1' @onIsRunning='updateButton("workspaceBtn1", $event)' workspaceID='a0352aba-3515-4e98-871c-fcf48b853a8f' :options='{trashcan: false}' static)
                   div.q-mt-md
                     div.text-h5
                       strong.text-white Try it!
                 q-card-section
-                  p The blocks above will load 50 images and prompts from <a href="https://lexica.art">Lexica.art</a> and display them in a grid. <strong>Try editing the prompt and pressing "Run Blocks" below to view the data feed.</strong>
+                  p The blocks above will load 50 images and prompts from the <a href="https://lexica.art">Lexica.art</a> database and display them in a grid. <strong>Try editing the prompt and pressing "Run Blocks" below to load 50 related images and prompts.</strong>
                   div.q-mb-sm
                     BlocklyToggle.full-width(ref='workspaceBtn1' target='workspace1' @toggled='toggleWorkspace')
 
@@ -66,7 +65,7 @@ q-page
             q-card-section
               .row.q-col-gutter-md
                 .col-12.col-md-6
-                  h2 Interact with AIs and APIs
+                  h2 Chain together AI and web services
                   p Use data from any source you have access to, like Google Sheets, Notion Databases, Wikipedia, Twitter, or any other API on the web. <strong>With the Model Prompter client (coming soon), you'll even be able to use cURL to scrape any URL whether it has an API or not!</strong>
                   p Here we load a random topic title from Wikipedia and use it to prompt for 50 images from Lexica.
                   div.q-mt-xl
