@@ -1,6 +1,6 @@
 <template lang="pug">
 div(:class='{"mp-drawer-is-maximized": settings.ui.sidebar.left.maximized}')
-  q-drawer.q-pt-md(v-model='settings.ui.sidebar.left.open' bordered :show-if-above='false')
+  q-drawer.q-pt-md(v-model='settings.ui.sidebar.left.open' bordered :show-if-above='!inFrame')
     q-list.q-px-md.q-pb-md.row.items-stretch
       .q-mb-md(:class='[settings.ui.sidebar.left.maximized ? "col-md-3 col-lg-2 col-xl-1 col-xs-12" : "col-12 col-xs-12"]')
         template(v-for='(link, key)  in sidebarRoutes' :key='key')
@@ -15,19 +15,26 @@ div(:class='{"mp-drawer-is-maximized": settings.ui.sidebar.left.maximized}')
           router-view(name='dashboardSidebar')
       //- .q-pa-md.q-pt-md.col-md-9.col-lg-10.colx-11.col-xs-12
       //-   slot(name='dashboardMain')
-      //-     router-view(name='dashboardMain')
+      //-     router-showIfAboveview(name='dashboardMain')
 </template>
 
 <script setup>
 import {useSettingsStore} from '../stores/settings'
 import {useRouter, useRoute} from 'vue-router'
-import {onMounted} from 'vue'
+import {onMounted, computed} from 'vue'
 import {useLibraryStore} from 'stores/library'
 
 const $route = useRoute()
 const library = useLibraryStore()
 const settings = useSettingsStore()
 let sidebarRoutes = $ref([])
+const inIframe = $computed(() => {
+  try {
+    return window.self !== window.top
+  } catch (e) {
+    return true
+  }
+})
 
 onMounted(() => {
   let workspaceRoute = '/'
@@ -39,19 +46,12 @@ onMounted(() => {
 
 
   sidebarRoutes = [
-    //- @todo 22-11-10 We can eventually remove this, but keeping it now for future reference
-    // {
-    //   title: 'Documentation',
-    //   caption: 'Learn about Model Prompting',
-    //   icon: 'auto_stories',
-    //   to: '/',
-    // },
-    // {
-    //   title: 'Blog',
-    //   caption: 'Tutorials, news, and devlog',
-    //   icon: 'rss_feed',
-    //   href: 'https://modelprompter.notion.site/Model-Prompter-0d1872f91470464189abc4386074965c',
-    // },
+    {
+      title: 'Documentation',
+      caption: 'Learn about Model Prompting',
+      icon: 'auto_stories',
+      to: '/',
+    },
     {
       title: 'Workspace',
       caption: 'Use and edit blocks and forms',
@@ -63,6 +63,12 @@ onMounted(() => {
       caption: 'Manage workspaces',
       icon: 'extension',
       to: '/library',
+    },
+    {
+      title: 'Blog',
+      caption: 'Tutorials, news, and devlog',
+      icon: 'rss_feed',
+      href: 'https://modelprompter.notion.site/Model-Prompter-0d1872f91470464189abc4386074965c',
     },
   ]
 })

@@ -1,21 +1,20 @@
 const routes = [
-  //- @todo 22-11-10 We can eventually remove this, but keeping it now for future reference
-  // {
-  //   path: '/',
-  //   component: () => import('layouts/Base.vue'),
-  //   children: [
-  //     {
-  //       path: '/',
-  //       name: 'docsOverview',
-  //       component: () => import('pages/IndexPage.vue')
-  //     },
-  //     {
-  //       path: '/docs/workspaces',
-  //       name: 'docsWorkspaces',
-  //       component: () => import('pages/IndexPage.vue')
-  //     },
-  //   ]
-  // },
+  {
+    path: '/',
+    component: () => import('layouts/Base.vue'),
+    children: [
+      {
+        path: '/',
+        name: 'docsOverview',
+        component: () => import('pages/IndexPage.vue')
+      },
+      {
+        path: '/docs/workspaces',
+        name: 'docsWorkspaces',
+        component: () => import('pages/IndexPage.vue')
+      },
+    ]
+  },
   {
     path: '/',
     component: () => import('layouts/Base.vue'),
