@@ -228,15 +228,15 @@ export default {
         },
         {
           kind: 'block',
+          type: 'json_object_merge'
+        },
+        {
+          kind: 'block',
           type: 'list_get_random',
         },
         {
           kind: 'block',
           type: 'list_shuffle'
-        },
-        {
-          kind: 'block',
-          type: 'json_object_merge'
         },
         {
           kind: 'block',

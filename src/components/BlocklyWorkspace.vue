@@ -346,11 +346,10 @@ const joinList = function (list, delimiter = ',') {
   if (Array.isArray(list)) {
     return list.join(delimiter)
   } else if (typeof list === 'object') {
-    return Object.keys(list).join(delimiter)
+    return Object.values(list).join(delimiter)
   }
   return list
 }
-
 
 /**
  * Run start/close blocks

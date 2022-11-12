@@ -1,5 +1,5 @@
 <template lang="pug">
-q-table(:rows='library.workspaces' :columns='columns' row-key='id' :grid="$q.screen.lt.lg" :rows-per-page-options='[10, 25, 50, 0]')
+q-table(:rows='library.workspaces' :columns='columns' row-key='id' :grid="$q.screen.lt.lg" :rows-per-page-options='[10, 25, 50, 0]' wrap-cells)
   //- Add rows
   template(v-slot:top)
     q-btn.gt-sm(icon='library_add' color='green' label='New Workspace' @click='addWorkspace')
@@ -14,7 +14,7 @@ q-table(:rows='library.workspaces' :columns='columns' row-key='id' :grid="$q.scr
   template(v-slot:body='props')
     q-tr(:props='props')
       q-td(key='title' :props='props') {{ props.row.title }}
-      q-td(key='description' :props='props') {{props.row.description}}
+      q-td(key='description' :props='props' style='white-space: pre-wrap') {{props.row.description}}
       q-td(key='actions' :props='props')
         .q-gutter-sm
           q-btn-group
