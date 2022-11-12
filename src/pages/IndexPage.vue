@@ -1,4 +1,5 @@
 <template lang="pug">
+//- @todo 22-11-10 We can eventually remove this, but keeping it now for future reference
 q-page
   .content
     section.q-mb-none

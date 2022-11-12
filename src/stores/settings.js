@@ -31,7 +31,7 @@ export const useSettingsStore = defineStore('settings', () => {
   })
 
   // Force settings
-  settings.ui.sidebar.left.open = !$q.platform.is.mobile
+  settings.ui.sidebar.left.open = false //!$q.platform.is.mobile
   settings.ui.sidebar.right.open = false
   settings.ui.sidebar.right.maximized = false
 

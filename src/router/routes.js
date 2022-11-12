@@ -1,37 +1,44 @@
 const routes = [
+  //- @todo 22-11-10 We can eventually remove this, but keeping it now for future reference
+  // {
+  //   path: '/',
+  //   component: () => import('layouts/Base.vue'),
+  //   children: [
+  //     {
+  //       path: '/',
+  //       name: 'docsOverview',
+  //       component: () => import('pages/IndexPage.vue')
+  //     },
+  //     {
+  //       path: '/docs/workspaces',
+  //       name: 'docsWorkspaces',
+  //       component: () => import('pages/IndexPage.vue')
+  //     },
+  //   ]
+  // },
   {
     path: '/',
     component: () => import('layouts/Base.vue'),
     children: [
       {
+        name: 'new',
         path: '/',
-        name: 'docsOverview',
-        component: () => import('pages/IndexPage.vue')
-      },
-      {
-        path: '/docs/workspaces',
-        name: 'docsWorkspaces',
-        component: () => import('pages/IndexPage.vue')
-      },
+        components: {
+          default: () => import('pages/workspace/Editor.vue'),
+          dashboardMain: () => import('pages/workspace/DashboardMain.vue'),
+          toolbar: () => import('src/components/BlocklyToggle.vue'),
+        },
+      }
     ]
   },
-
-  // {
-  //   path: '/quick',
-  //   component: () => import('layouts/QuickPrompter.vue'),
-  //   children: [
-  //     { path: '/quick', component: () => import('pages/quick/Prompter.vue') },
-  //     { path: '/quick/gpus', component: () => import('pages/quick/GPUs.vue') }
-  //   ]
-  // },
 
   {
     path: '/workspace',
     component: () => import('layouts/Base.vue'),
     children: [
       {
-        name: 'workspace-new',
-        path: '/workspace',
+        name: 'workspace',
+        path: '/workspace/:id',
         components: {
           default: () => import('pages/workspace/Editor.vue'),
           dashboardMain: () => import('pages/workspace/DashboardMain.vue'),
@@ -39,8 +46,17 @@ const routes = [
         },
         children: [
           {
-            name: 'workspace',
-            path: '/workspace/:id',
+            name: 'workspace-form',
+            path: '/workspace/:id/form',
+            components: {
+              default: () => import('pages/workspace/Editor.vue'),
+              dashboardMain: () => import('pages/workspace/DashboardMain.vue'),
+              toolbar: () => import('src/components/BlocklyToggle.vue'),
+            }
+          },
+          {
+            name: 'workspace-detail',
+            path: '/workspace/:id/detail',
             components: {
               default: () => import('pages/workspace/Editor.vue'),
               dashboardMain: () => import('pages/workspace/DashboardMain.vue'),
@@ -48,38 +64,18 @@ const routes = [
             },
             children: [
               {
-                name: 'workspace-form',
-                path: '/workspace/:id/form',
+                name: 'workspace-detail-form',
+                path: '/workspace/:id/detail/form',
                 components: {
                   default: () => import('pages/workspace/Editor.vue'),
                   dashboardMain: () => import('pages/workspace/DashboardMain.vue'),
                   toolbar: () => import('src/components/BlocklyToggle.vue'),
                 }
               },
-              {
-                name: 'workspace-detail',
-                path: '/workspace/:id/detail',
-                components: {
-                  default: () => import('pages/workspace/Editor.vue'),
-                  dashboardMain: () => import('pages/workspace/DashboardMain.vue'),
-                  toolbar: () => import('src/components/BlocklyToggle.vue'),
-                },
-                children: [
-                  {
-                    name: 'workspace-detail-form',
-                    path: '/workspace/:id/detail/form',
-                    components: {
-                      default: () => import('pages/workspace/Editor.vue'),
-                      dashboardMain: () => import('pages/workspace/DashboardMain.vue'),
-                      toolbar: () => import('src/components/BlocklyToggle.vue'),
-                    }
-                  },
-                ]
-              }
             ]
-          },
+          }
         ]
-      }
+      },
     ]
   },
 

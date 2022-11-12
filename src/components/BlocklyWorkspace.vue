@@ -92,10 +92,11 @@ onMounted(() => {
       length: 20,
       colour: "#4f4b94",
       snap: true,
+      scrollbars: true
     },
     move: {
       scrollbars: true,
-      wheel: true,
+      // wheel: true,
     },
     trashcan: false,
     // @todo make this optional
@@ -339,6 +340,18 @@ const shuffle = function (collection) {
 
 
 /**
+ * Joins arrays and object keys with a delimiter
+ */
+const joinList = function (list, delimiter = ',') {
+  if (Array.isArray(list)) {
+    return list.join(delimiter)
+  } else if (typeof list === 'object') {
+    return Object.values(list).join(delimiter)
+  }
+  return list
+}
+
+/**
  * Run start/close blocks
  */
 watch(() => isRunning, () => {
@@ -547,7 +560,7 @@ defineExpose({
   workspace, load, code, setState,
 
   // DO NOT DELETE: Without using the methods directly the minifier will remove them
-  feedSendData, dispatchREST, stopWorkspace, shuffle
+  feedSendData, dispatchREST, stopWorkspace, shuffle, joinList
 })
 </script>
 

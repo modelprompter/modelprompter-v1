@@ -71,19 +71,17 @@ export default {
         },
         {
           kind: 'block',
-          type: 'text_join'
-        },
-        {
-          kind: 'block',
-          type: 'text_create_join_container'
-        },
-        {
-          kind: 'block',
-          type: 'text_create_join_item'
-        },
-        {
-          kind: 'block',
-          type: 'text_append'
+          type: 'text_join_list',
+          inputs: {
+            WITH: {
+              block: {
+                type: 'text',
+                fields: {
+                  TEXT: ', '
+                }
+              }
+            },
+          }
         },
         {
           kind: 'block',
@@ -149,18 +147,6 @@ export default {
         },
         {
           kind: 'block',
-          type: 'math_single'
-        },
-        {
-          kind: 'block',
-          type: 'math_trig'
-        },
-        {
-          kind: 'block',
-          type: 'math_constant'
-        },
-        {
-          kind: 'block',
           type: 'math_number_property'
         },
         {
@@ -187,10 +173,22 @@ export default {
           kind: 'block',
           type: 'math_random_float'
         },
-        {
-          kind: 'block',
-          type: 'math_atan2'
-        },
+        // {
+        //   kind: 'block',
+        //   type: 'math_single'
+        // },
+        // {
+        //   kind: 'block',
+        //   type: 'math_trig'
+        // },
+        // {
+        //   kind: 'block',
+        //   type: 'math_constant'
+        // },
+        // {
+        //   kind: 'block',
+        //   type: 'math_atan2'
+        // },
       ]
     },
     {
@@ -230,15 +228,15 @@ export default {
         },
         {
           kind: 'block',
+          type: 'json_object_merge'
+        },
+        {
+          kind: 'block',
           type: 'list_get_random',
         },
         {
           kind: 'block',
           type: 'list_shuffle'
-        },
-        {
-          kind: 'block',
-          type: 'json_object_merge'
         },
         {
           kind: 'block',
@@ -263,50 +261,6 @@ export default {
         {
           kind: 'block',
           type: 'lists_create_with'
-        },
-        {
-          kind: 'block',
-          type: 'lists_create_with_container'
-        },
-        {
-          kind: 'block',
-          type: 'lists_create_with_item'
-        },
-        {
-          kind: 'block',
-          type: 'lists_indexOf'
-        },
-        {
-          kind: 'block',
-          type: 'lists_getIndex'
-        },
-        {
-          kind: 'block',
-          type: 'lists_setIndex'
-        },
-        {
-          kind: 'block',
-          type: 'lists_getSublist'
-        },
-        {
-          kind: 'block',
-          type: 'lists_sort'
-        },
-        {
-          kind: 'block',
-          type: 'lists_split'
-        },
-        {
-          kind: 'block',
-          type: 'lists_create_with'
-        },
-        {
-          kind: 'block',
-          type: 'lists_create_with_container'
-        },
-        {
-          kind: 'block',
-          type: 'lists_create_with_item'
         },
         {
           kind: 'block',
