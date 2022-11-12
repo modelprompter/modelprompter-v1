@@ -34,12 +34,14 @@ import DataFeed from '../components/DataFeed.vue'
 import DashboardSidebar from '../components/DashboardSidebar.vue'
 import {useDatafeedResponses} from '../stores/datafeed'
 import { useSettingsStore } from '../stores/settings'
+import { useLibraryStore } from '../stores/library'
 import {watch, computed, onMounted} from 'vue'
 import {useRoute} from 'vue-router'
 
 const pkg = $ref(PKG)
 const $route = useRoute()
 const settings = useSettingsStore()
+const library = useLibraryStore()
 const dataFeed = useDatafeedResponses()
 let workspaceRoute = $ref('/')
 

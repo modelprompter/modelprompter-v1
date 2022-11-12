@@ -449,4 +449,34 @@ Blockly.JavaScript['list_shuffle'] = function (block) {
   return [`shuffle(${obj})`, Blockly.JavaScript.ORDER_ATOMIC]
 }
 
+/**
+ * Join
+ */
+Blockly.common.defineBlocksWithJsonArray([{
+  "type": "text_join_list",
+  "message0": "Join List %1 with %2",
+  'style': 'text_blocks',
+  "args0": [
+    {
+      "type": "input_value",
+      "name": "JOIN"
+    },
+    {
+      "type": "input_value",
+      "name": "WITH"
+    }
+  ],
+  output: null,
+  "tooltip": "",
+  "helpUrl": ""
+}])
+
+Blockly.JavaScript['text_join_list'] = function(block) {
+  const data = {
+    join: Blockly.JavaScript.valueToCode(block, 'JOIN', Blockly.JavaScript.ORDER_ATOMIC),
+    with: Blockly.JavaScript.valueToCode(block, 'WITH', Blockly.JavaScript.ORDER_ATOMIC)
+  }
+  return [`joinList(${data.join}, ${data.with})`, Blockly.JavaScript.ORDER_NONE]
+}
+
 export default {}
