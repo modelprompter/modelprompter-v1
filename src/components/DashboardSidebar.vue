@@ -1,6 +1,6 @@
 <template lang="pug">
 div(:class='{"mp-drawer-is-maximized": settings.ui.sidebar.left.maximized}')
-  q-drawer.q-pt-md(v-model='settings.ui.sidebar.left.open' bordered :show-if-above='!inFrame')
+  q-drawer.q-pt-md(v-model='settings.ui.sidebar.left.open' bordered :show-if-above='!inIframe')
     q-list.q-px-md.q-pb-md.row.items-stretch
       .q-mb-md(:class='[settings.ui.sidebar.left.maximized ? "col-md-3 col-lg-2 col-xl-1 col-xs-12" : "col-12 col-xs-12"]')
         template(v-for='(link, key)  in sidebarRoutes' :key='key')
@@ -68,7 +68,8 @@ onMounted(() => {
       title: 'Blog',
       caption: 'Tutorials, news, and devlog',
       icon: 'rss_feed',
-      href: 'https://modelprompter.notion.site/Model-Prompter-0d1872f91470464189abc4386074965c',
+      to: '/blog',
+      // href: 'https://modelprompter.notion.site/Model-Prompter-0d1872f91470464189abc4386074965c',
     },
   ]
 })
