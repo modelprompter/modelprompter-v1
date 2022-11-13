@@ -6,8 +6,9 @@ q-layout(view='hHh LpR fFf' :class='{"mp-has-maximized-drawer": hasExpandedDrawe
       q-btn.text-yellow(flat dense round :icon='settings.ui.sidebar.left.open ? "close" : "menu"' aria-label='Menu' @click='toggleLeftSidebar')
       q-toolbar-title
         span
-          router-link.text-decoration-none.text-white(:to='workspaceRoute')
-            img.q-mr-sm(src='~/src/assets/logo-title-favicon.png' height=32 style='vertical-align: middle')
+          router-link.text-decoration-none.text-white(to='/')
+            img.gt-md.q-mr-sm(src='~/src/assets/logo-title-favicon.png' height=32 style='vertical-align: middle')
+            img.lt-lg.q-mr-sm(src='~/src/assets/logo-title-favicon.png' height=32 style='vertical-align: middle')
           a(href='https://github.com/modelprompter/modelprompter/releases' target='_blank')
             small.q-ml-sm(style='font-size: .65em; display: inline-block; transform: translate(0, -3px)') {{pkg.version}}
       q-space

@@ -6,6 +6,7 @@ $pad-md: map.get($space-md, x)
 // Core
 a
   color: $primary
+  // text-shadow: 0 0 0.1em $primary
 pre
   overflow-x: auto
 b, strong
@@ -81,6 +82,9 @@ body.desktop
     .q-drawer
       width: 512px !important
       max-width: 100% !important
+#datafeed:not(.mp-drawer-is-open)
+  > div > .q-drawer
+    transform: translateX(512px) !important
 
 #datafeed
   .q-drawer__content
