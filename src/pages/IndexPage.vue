@@ -24,9 +24,9 @@ q-page
                     img(src='~/src/assets/logo-title.png' style='width: 100%; vertical-align: middle;')
 
                   div.text-h5
-                    strong.text-white Connect AI models & web services together ✨🧑‍💻✨
+                    strong.text-white Connect AI models & web services together
                 q-card-section
-                  p Explore and use programmable blocks to automate prompts to Stable Diffusion, Colab Notebooks, bots, webhooks, and any web service.
+                  p Explore and use programmable blocks to automate prompts to Stable Diffusion, Colab Notebooks, bots, webhooks, and any other web service.
                   p.q-mt-sm.text-center
                     a(href='https://github.com/ModelPrompter/modelprompter') GitHub
                     span.q-mx-sm ·
