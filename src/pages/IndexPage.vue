@@ -6,14 +6,14 @@ q-page
         .col
           q-card.q-mb-lg.bg-blue
             q-card-section
-              div 📅 <strong>22-11-12</strong> - Hi, thanks for visiting! Beta has been pushed back to <strong>December 1st</strong>. More info will be available soon!
+              div 📅 <strong>22-11-12</strong> - Hi, thanks for visiting! Beta has been pushed back to <strong>December 1st</strong> so do check back. More info will be available soon on <a href="/blog">The Model Prompter Notion</a>!
 
     q-tabs(v-model='tab' align='left')
-      q-route-tab(name='overview' :to='{name: "docsOverview"}' exact label='Overview')
-      q-route-tab(name='workspaces' :to='{name: "docsWorkspaces"}' exact label='Workspaces')
+      q-route-tab(name='overview' :to='{name: "docsOverview"}' exact label='Intro')
+      q-route-tab(name='workspaces' :to='{name: "docsWorkspaces"}' exact label='🏗 Coming soon')
     q-tab-panels(v-model='tab')
       q-tab-panel(name='overview')
-        section
+        div
           .row.q-col-gutter-md
             .q-mb-md.col-xs-12.col-md-6.col-lg-4
               q-card
@@ -21,9 +21,9 @@ q-page
                   img(src='~/src/assets/logo-title.png' style='vertical-align: middle; max-height: 48px; width: auto; max-width: 100%')
                 q-card-section
                   div.text-h5
-                    strong.text-white Connect AI models & web services together to create bots, content generators, and automated workflows
+                    strong.text-white Connect web services and AI models to create and remix bots, content generators, and automated workflows
                 q-card-section
-                  div Model Prompter is a highly customizable API playground that uses a visual block interface to help you connect different ideas, web services, and AI models ✨🧑‍💻✨
+                  div Model Prompter is a customizable API playground that uses a visual block interface to help you connect different ideas, web services, and AI models together ✨🧑‍💻✨
                 q-card-section
                   p
                     q-btn.full-width(to='/blog' color='blue' icon='info_outline')
@@ -35,31 +35,34 @@ q-page
                 //-   p.text-center
                 //-     q-btn(disabled) Login (coming soon)
                 div.text-center
-                  a.q-mr-md(href="https://github.com/modelprompter/modelprompter" target="_blank")
-                    img(src="https://img.shields.io/github/stars/ModelPrompter/modelprompter?label=Star%20on%20GtiHub&style=social")
-                  a.q-mr-md(href="https://twitter.com/modelprompter" target="_blank")
-                    img(src="https://img.shields.io/twitter/follow/modelprompter?label=Follow%20%40ModelPrompter&style=social")
-                  a.q-mr-md(href="https://discord.gg/GFJ2ftEQWF" target="_blank")
-                    img(src="https://img.shields.io/discord/1032046629768937484?label=%F0%9F%92%AC%20Chat%20on%20Discord&style=social")
+                  a.q-mr-md(href='https://github.com/modelprompter/modelprompter' target='_blank')
+                    img(src='https://img.shields.io/github/stars/ModelPrompter/modelprompter?label=Star%20on%20GtiHub&style=social')
+                  a.q-mr-md(href='https://twitter.com/modelprompter' target='_blank')
+                    img(src='https://img.shields.io/twitter/follow/modelprompter?label=Follow%20%40ModelPrompter&style=social')
+                  a.q-mr-md(href='https://discord.gg/GFJ2ftEQWF' target='_blank')
+                    img(src='https://img.shields.io/discord/1032046629768937484?label=%F0%9F%92%AC%20Chat%20on%20Discord&style=social')
                 div &nbsp;
             .col-12.col-md-6.col-lg-8
               q-card
                 div(style='height: 270px; position: relative')
                   BlocklyWorkspace(ref='workspace1' @onIsRunning='updateButton("workspaceBtn1", $event)' workspaceID='a0352aba-3515-4e98-871c-fcf48b853a8f' :options='{trashcan: false}' static)
                 q-card-section
-                  div.q-mt-md
-                    div.text-h5
-                      strong.text-white Let's build an idea generator 💡 (coming soon)
-                q-card-section
-                  div These blocks generate 50 random topics from Wikipedia. By default images are turned off, but you can turn them on by setting <strong>"Show Images"</strong> to <strong>true</strong> and running the blocks again.
-                  div.text-center.q-pa-sm
-                    small
-                      strong NSFW warning:
-                      span  some generated content may bypass the filter
+                  p.text-h5
+                    strong.text-white Quickstart Introduction
+                  p <strong>Above are 2 blocks:</strong> the block to the left sets a variable called "<code>Prompt</code>" to the value attached to it, in this case a text block set to "studio ghibli purple clouds". When you press the <strong>Run Blocks</strong> button below, "<code>Prompt</code>" will be used to query <a href="https://lexica.art">Lexica.art</a> to match your prompt to a contextually similar prompt and image.
+                  p (more info coming soon)
+                  p
+                  //- div In future tutorials we'll build virtual assistants and bots that can help us see the idea all the way through.
+                  //- div These blocks generate 50 random topics from Wikipedia. By default images are turned off, but you can turn them on by setting <strong>"Show Images"</strong> to <strong>true</strong> and running the blocks again.
+                  //- div.text-center.q-pa-sm
+                  //- small
+                  //-                       strong NSFW warning:
+                  //-                       span  some generated content may bypass the filter
                   //- p By the end of this guide you'll have learned how to discover, use, and connect AI models and web services to generate stories and illustrations, videos and thumbnails, content for blogs, and more!
                   div.q-mb-sm
                     BlocklyToggle.full-width(ref='workspaceBtn1' target='workspace1' @toggled='toggleWorkspace')
 
+      q-tab-panel(name='workspaces')
         section
           q-card.q-mb-xl
             q-card-section
@@ -117,26 +120,6 @@ q-page
                         BlocklyWorkspace(ref='form3' @onIsRunning='updateButton("formBtn3", $event)' workspaceID='c2129a2b-1c90-4442-90ba-7c8e3fe9fc10' :options='{trashcan: false}' static showForm)
                     q-card-actions
                       BlocklyToggle.full-width(ref='formBtn3' target='form3' @toggled='toggleWorkspace')
-      q-tab-panel(name='workspaces')
-        section.q-mb-none
-          q-card
-            q-card-section
-              .row.q-col-gutter-md
-                .q-mb-md.col-xs-12.col-md-4
-                  h2.q-mb-none The Toolbar
-                  ul
-                    li <strong>Titles:</strong>
-                      ul
-                        li Navigates to Workspace Detail page
-                    li <strong>Icons:</strong>
-                      ul
-                        li <q-icon name="text_fields"></q-icon> - Show the form
-                        li <q-icon name="extension"></q-icon> - Show the blocks
-                        li <q-icon name="open_in_full"></q-icon> - Toggle fullscreen
-                .q-mb-md.col-xs-12.col-md-8
-                  p(style='height: 240px; position: relative')
-                    BlocklyWorkspace(ref='toolbar1' @onIsRunning='updateButton("toolbar1Btn", $event)' workspaceID='a0352aba-3515-4e98-871c-fcf48b853a8f' :options='{trashcan: false}' static)
-                  BlocklyToggle.full-width(ref='toolbar1Btn' target='toolbar1' @toggled='toggleWorkspace')
 </template>
 
 <script setup>
