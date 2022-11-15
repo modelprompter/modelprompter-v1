@@ -62,7 +62,7 @@ section
   z-index: 1
 
 
-body.mobile
+body.mobile, body.within-iframe
   .q-drawer__opener ~ *
     top: 50px !important
 
@@ -75,14 +75,14 @@ body.mobile
 
 // Masonry
 .masonry
-  column-width: 350px
+  column-width: 500px
   column-gap: 0.5em
 
 // Masks
 .mask
   position: fixed
   background: rgba(0, 0, 0, 0.75)
-  z-index: 1000
+  z-index: 1500
   top: 0
   left: 0
   right: 0
@@ -93,13 +93,12 @@ body.mobile
 body.desktop
   #datafeed:not(.mp-drawer-is-maximized)
     .q-drawer
-      width: 512px !important
-      max-width: 100% !important
+      width: 80% !important
 #datafeed:not(.mp-drawer-is-open)
   > div > .q-drawer
-    transform: translateX(512px) !important
+    transform: translateX(100%) !important
 
-#datafeed
+#datafeed500px
   .q-drawer__content
     overflow: hidden
 
@@ -108,6 +107,7 @@ body.body--dark .q-header, body.body--dark .q-footer, body.body--dark .q-drawer
 
 .q-drawer
   transition: width 0.3s ease, background 0.3s ease, opacity 0.3s ease
+
 
   .q-item
     color: $primary
@@ -119,6 +119,7 @@ body.body--dark .q-header, body.body--dark .q-footer, body.body--dark .q-drawer
 .q-drawer-container
   transition: opacity 0.3s ease
 
+// Right sidebar
 .mp-has-maximized-drawer .mp-drawer-is-maximized .q-drawer
   width: 100% !important
   background: #1e1e3fdd
