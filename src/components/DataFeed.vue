@@ -8,7 +8,7 @@ div#datafeed(:class='{"mp-drawer-is-maximized": settings.ui.sidebar.right.maximi
         q-btn.full-width.bg-dark.text-white(color='light' v-else icon='first_page' @click='settings.ui.sidebar.right.maximized = true')
           span.q-ml-sm Open Data Feed
       div(style='height: 100%; overflow-y: auto;')
-        div(:class="{masonry: !$q.platform.is.mobile && settings.ui.sidebar.right.maximized}")
+        div(:class="{masonry: !$q.platform.is.mobile && settings.ui.sidebar.right.open}")
           //- div.q-pa-xs(v-for='(item, i) in dataFeed.data' :data='item' :class='[settings.ui.sidebar.right.maximized ? "col-xs-12 col-sm-6 col-md-4 col-lg-3 col-xl-2" : "col-12"]')
           div.q-pa-xs(v-for='(item, i) in dataFeed.data' :data='item')
             q-card
