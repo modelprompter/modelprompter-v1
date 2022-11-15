@@ -78,16 +78,26 @@ body.mobile
   column-width: 350px
   column-gap: 0.5em
 
+// Masks
+.mask
+  position: fixed
+  background: rgba(0, 0, 0, 0.75)
+  z-index: 1000
+  top: 0
+  left: 0
+  right: 0
+  bottom: 0
 
 // Sidebars
+
 body.desktop
   #datafeed:not(.mp-drawer-is-maximized)
     .q-drawer
-      width: 1024px !important
+      width: 512px !important
       max-width: 100% !important
 #datafeed:not(.mp-drawer-is-open)
   > div > .q-drawer
-    transform: translateX(1024px) !important
+    transform: translateX(512px) !important
 
 #datafeed
   .q-drawer__content

@@ -1,5 +1,7 @@
 <template lang="pug">
 q-layout(view='hHh LpR fFf' :class='{"mp-has-maximized-drawer": hasExpandedDrawer, "mp-left-drawer-open": settings.ui.sidebar.left.open}')
+  .mask(v-if='settings.ui.sidebar.left.open || settings.ui.sidebar.right.open' @click='closeSidebars')
+
   //- Toolbar
   q-header(elevated)
     q-toolbar
@@ -64,6 +66,11 @@ watch(() => dataFeed.isRunning, () => {
     settings.ui.sidebar.right.open = true
   }
 })
+
+function closeSidebars () {
+  settings.ui.sidebar.left.open = false
+  settings.ui.sidebar.right.open = false
+}
 
 // @fixme let's clean this up a bit
 function toggleLeftSidebar () {
