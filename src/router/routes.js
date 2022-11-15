@@ -9,7 +9,7 @@ const routes = [
         component: () => import('pages/IndexPage.vue')
       },
       {
-        path: '/docs/workspaces',
+        path: '/overview/workspaces',
         name: 'docsWorkspaces',
         component: () => import('pages/IndexPage.vue')
       },

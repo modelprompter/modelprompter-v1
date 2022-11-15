@@ -15,6 +15,9 @@ b, strong
 h1, h2, h3, h4, h5, h6
   &:first-child
     margin-top: 0
+p > code
+  color: $red
+  font-weight: bold
 
 section
   margin-bottom: $pad-md * 16
@@ -58,10 +61,10 @@ section
   padding-top: $toolbar-min-height
   z-index: 1
 
-.mp-left-drawer-open .fullscreen
-  left: 300px !important
-  width: auto !important
-  right: 0 !important
+
+body.mobile
+  .q-drawer__opener ~ *
+    top: 50px !important
 
 
 // Header
@@ -80,11 +83,11 @@ section
 body.desktop
   #datafeed:not(.mp-drawer-is-maximized)
     .q-drawer
-      width: 512px !important
+      width: 1024px !important
       max-width: 100% !important
 #datafeed:not(.mp-drawer-is-open)
   > div > .q-drawer
-    transform: translateX(512px) !important
+    transform: translateX(1024px) !important
 
 #datafeed
   .q-drawer__content
@@ -122,11 +125,6 @@ body.body--dark .q-header, body.body--dark .q-footer, body.body--dark .q-drawer
 .desktop
   .mp-drawer-is-open .q-drawer
     z-index: 3000 !important
-  .mp-drawer-is-open + .q-page-container
-    padding-right: 500px !important
-
-    .blockly-container.fullscreen
-      padding-right: 510px
 
 body
   .q-dark.q-popup-edit

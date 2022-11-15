@@ -65,6 +65,7 @@ watch(() => dataFeed.isRunning, () => {
   }
 })
 
+// @fixme let's clean this up a bit
 function toggleLeftSidebar () {
   settings.ui.sidebar.left.open = !settings.ui.sidebar.left.open
 
@@ -89,7 +90,7 @@ function toggleRightSidebar () {
   }
 
   if (settings.ui.sidebar.right.open) {
-    settings.ui.sidebar.left.wasOpened = settings.ui.sidebar.left.open
+    settings.ui.sidebar.left.wasOpened = false//settings.ui.sidebar.left.open
     settings.ui.sidebar.left.open = false
   }
 

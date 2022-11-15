@@ -1,6 +1,6 @@
 <template lang="pug">
 div(:class='{"mp-drawer-is-maximized": settings.ui.sidebar.left.maximized}')
-  q-drawer.q-pt-md(v-model='settings.ui.sidebar.left.open' bordered)
+  q-drawer.q-pt-md(v-model='settings.ui.sidebar.left.open' bordered overlay)
     q-list.q-px-md.q-pb-md.row.items-stretch
       .q-mb-md(:class='[settings.ui.sidebar.left.maximized ? "col-md-3 col-lg-2 col-xl-1 col-xs-12" : "col-12 col-xs-12"]')
         template(v-for='(link, key)  in sidebarRoutes' :key='key')
