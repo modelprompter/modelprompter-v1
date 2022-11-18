@@ -47,7 +47,7 @@ onMounted(() => {
 
   sidebarRoutes = [
     {
-      title: 'Documentation',
+      title: 'Quickstart',
       caption: 'Learn about Model Prompting',
       icon: 'auto_stories',
       to: '/',
