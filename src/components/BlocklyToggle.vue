@@ -1,20 +1,23 @@
 <template lang="pug">
-q-btn(v-if='!isRunning' icon='extension' @click='toggleBlocks')
-  span.q-ml-sm Run blocks
-q-btn(v-else color='red' icon='extension' @click='toggleBlocks')
-  span.q-ml-sm Stop blocks
+div
+  Teleport(:disabled='!teleportTarget' :to='teleportTarget')
+    q-btn.full-width(v-if='!isRunning' icon='extension' @click='toggleBlocks')
+      span.q-ml-sm Run blocks
+    q-btn.full-width(v-else color='red' icon='extension' @click='toggleBlocks')
+      span.q-ml-sm Stop blocks
 </template>
 
 <script setup>
 import {useSettingsStore} from 'stores/settings'
 import {useDatafeedResponses} from 'stores/datafeed'
-import {inject, onMounted, onUnmounted} from 'vue'
+import {inject, onMounted, onUnmounted, watch} from 'vue'
 
 const $bus = inject('$bus')
 const dataFeed = useDatafeedResponses()
 const settings = useSettingsStore()
 const props = defineProps(['target'])
 const emit = defineEmits(['toggled'])
+const teleportTarget = $ref(null)
 
 let isRunning = $ref(false)
 
@@ -52,7 +55,19 @@ function toggleBlocks () {
     isRunning = !isRunning
     emit('toggled', props.target, isRunning)
   }
+
+  if (isRunning) {
+    teleportTarget = '#global-blockly-toggle'
+  } else {
+    teleportTarget = ''
+  }
 }
+
+watch(() => settings.ui.sidebar.right.open, (isOpen) => {
+  if (!isOpen) {
+    teleportTarget = null
+  }
+})
 
 /**
  * Force set state

@@ -6,7 +6,7 @@ q-page
         .col
           q-card.q-mb-lg.bg-blue
             q-card-section
-              div 📅 <strong>22-11-12</strong> - Hi, thanks for visiting! Beta has been pushed back to <strong>December 1st</strong> so do check back. More info will be available soon on <a href="/blog">The Model Prompter Notion</a>!
+              div 📅 <strong>22-11-20</strong> - Hi, thanks for visiting! Beta has been pushed back to <strong>December 1st</strong> so do check back. Check out <a href="/blog">The Model Prompter Notion</a> for more!
 
     q-tabs(v-model='tab' align='left')
       q-route-tab(name='overview' :to='{name: "docsOverview"}' exact label='Intro')
