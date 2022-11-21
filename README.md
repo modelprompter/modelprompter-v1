@@ -81,7 +81,7 @@
   - NodeJS: https://nodejs.org/en/download/
 - **Clone the repo:** `git clone https://github.com/modelprompter/modelprompter`
 - **Install dependencies:** `npm install`
-- **Start with:**  `npm start`
+- **Start Model Prompter:**  `npm start`
   - Will automatically launch a new browser tab at http://localhost:9000
 
 > <br>

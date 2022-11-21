@@ -15,6 +15,7 @@ q-layout(view='hHh LpR fFf' :class='{"mp-has-maximized-drawer": hasExpandedDrawe
             small.q-ml-sm(style='font-size: .65em; display: inline-block; transform: translate(0, -3px)') {{pkg.version}}
       q-space
       router-view(name='toolbar')
+      #global-blockly-toggle
       q-btn.text-yellow.q-ml-md(flat dense round :icon='settings.ui.sidebar.right.open ? "close" : "menu"' aria-label='Menu' @click='toggleRightSidebar')
 
   //- Sidebars
