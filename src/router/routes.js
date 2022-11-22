@@ -117,6 +117,13 @@ const routes = [
           default: () => import('pages/blog/Layout.vue')
         },
       },
+      {
+        name: 'blogCatch',
+        path: '/blog/:catchAll(.*)*',
+        components: {
+          default: () => import('pages/blog/Layout.vue')
+        },
+      },
     ]
   },
 
