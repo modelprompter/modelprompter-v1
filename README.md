@@ -10,17 +10,13 @@
 
 <p>
   Assemble blocks and chain together AI and API services to design bots, content generators, and automated workflows.
-<p>
-
-<br>
+</p>
 
 <div align="center">
   <p>
     <a class="q-mr-md" href="https://github.com/modelprompter/modelprompter" target="_blank"><img src="https://img.shields.io/github/stars/ModelPrompter/modelprompter?label=Star%20on%20GtiHub&amp;style=social"></a>&nbsp;&nbsp;<a class="q-mr-md" href="https://twitter.com/modelprompter" target="_blank"><img src="https://img.shields.io/twitter/follow/modelprompter?label=Follow%20%40ModelPrompter&amp;style=social"></a>&nbsp;&nbsp;<a class="q-mr-md" href="https://discord.gg/GFJ2ftEQWF" target="_blank"><img src="https://img.shields.io/discord/1032046629768937484?label=%F0%9F%92%AC%20Chat%20on%20Discord&amp;style=social"></a>
   </p>
-  <br>
   <hr>
-  <br>
   <!-- <p>
     <sub>
       Built with ❤︎ by
@@ -34,16 +30,36 @@
 
 
 
-![Model Prompter](https://user-images.githubusercontent.com/110780894/193438704-61face5c-08a9-4a3e-8951-993b62293856.jpeg)
+![Model Prompter](https://user-images.githubusercontent.com/110780894/202960954-0dbef6ac-8e3b-4c4f-b75a-c12fbc9cd808.png)
+![image](https://user-images.githubusercontent.com/110780894/202961282-ba7d21c1-1002-4db6-8ec3-4a7daea3e079.png)
+
 
 <table>
   <tr>
-    <td><img src="" /></td>
-    <td><img src="" /></td>
+    <td>
+      <h3>Quickstart</h3>
+      <img src="https://user-images.githubusercontent.com/110780894/202962761-73ef6f95-788f-4c5c-bbd1-026a4d52bab2.png" />
+    </td>
+    <td>
+      <h3>Workspaces</h3>
+      <img src="https://user-images.githubusercontent.com/110780894/202962967-b5508ac4-2465-4135-82a4-aaa5f1238d3b.png" />
+    </td>
   </tr>
   <tr>
-    <td><img src="" /></td>
-    <td><img src="" /></td>
+    <td>
+      <h3>Blocks as forms & data feed</h3>
+      <img src="https://user-images.githubusercontent.com/110780894/202963195-6b894204-792a-4e6b-9cbf-f5c074a29062.png" />
+    </td>
+    <td>
+      <h3>Library</h3>
+      <img src="https://user-images.githubusercontent.com/110780894/202963039-e0e94f07-ddb3-406d-86ee-ec96ecc999bd.png" />
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <h3>In-app Notion.so integration</h3>
+      <img src="https://user-images.githubusercontent.com/110780894/202963316-1dba49df-d2b8-4fd0-8458-d167abfbb52b.png" />
+    </td>
   </tr>
 </table>
 
@@ -54,20 +70,14 @@
 # Features
 
 ### API blocks
+**Works with REST APIs:**
 - `GET`
 - `POST`
 - `PUT`
 - `DELETE`
 - (more coming soon)
 
-
-### Customize the way results are displayed and behave
-
-### View and share blocks as simplified forms
-
-### Block library with synced remote libraries
-
-### And more
+> more info coming soon
 
 <br>
 <br>
