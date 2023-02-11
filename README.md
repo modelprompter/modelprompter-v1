@@ -14,7 +14,7 @@
 
 <div align="center">
   <p>
-    <a class="q-mr-md" href="https://github.com/modelprompter/modelprompter" target="_blank"><img src="https://img.shields.io/github/stars/ModelPrompter/modelprompter?label=Star%20on%20GtiHub&amp;style=social"></a>&nbsp;&nbsp;<a class="q-mr-md" href="https://twitter.com/modelprompter" target="_blank"><img src="https://img.shields.io/twitter/follow/modelprompter?label=Follow%20%40ModelPrompter&amp;style=social"></a>&nbsp;&nbsp;<a class="q-mr-md" href="https://discord.gg/GFJ2ftEQWF" target="_blank"><img src="https://img.shields.io/discord/1032046629768937484?label=%F0%9F%92%AC%20Chat%20on%20Discord&amp;style=social"></a>
+    <a class="q-mr-md" href="https://github.com/modelprompter/modelprompter" target="_blank"><img src="https://img.shields.io/github/stars/ModelPrompter/modelprompter?label=Star%20on%20GtiHub&amp;style=social"></a>
   </p>
   <hr>
   <!-- <p>
