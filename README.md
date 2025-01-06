@@ -1,3 +1,5 @@
+> 24-01-06 - Coming Soon! I started this project just before ChatGPT was announced and will be revisiting the idea again soon!
+
 <div align="center">
   <a href="https://modelprompter.com">
     <img src="./src/assets/branding-on-white.png" alt="Model Prompter" />
